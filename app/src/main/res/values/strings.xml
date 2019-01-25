@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SakaiApp</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_sites">Sites</string>
+    <string name="nav_notifications">Notifications</string>
+    <string name="nav_chats">Chat</string>
 </resources>
