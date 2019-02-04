@@ -4,4 +4,8 @@
     <string name="nav_sites">Sites</string>
     <string name="nav_notifications">Notifications</string>
     <string name="nav_chats">Chat</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="logo_description">Logo for Sakai</string>
 </resources>

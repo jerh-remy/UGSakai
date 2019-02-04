@@ -3,100 +3,72 @@ package com.sakai.ug.sakaiapp;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.sakai.ug.sakaiapp.fragments.ChatFragment;
 import com.sakai.ug.sakaiapp.fragments.HomeFragment;
 import com.sakai.ug.sakaiapp.fragments.NotificationFragment;
 import com.sakai.ug.sakaiapp.fragments.SiteFragment;
 
+
+
 public class MainActivity extends AppCompatActivity {
 
-    private HomeFragment homeFragment = new HomeFragment();
-    private SiteFragment siteFragment = new SiteFragment();
-    private NotificationFragment notificationFragment = new NotificationFragment();
+    final HomeFragment homeFragment = new HomeFragment();
+    final SiteFragment siteFragment = new SiteFragment();
+    final NotificationFragment notificationFragment = new NotificationFragment();
+    final ChatFragment chatFragment = new ChatFragment();
+    final FragmentManager fm = getSupportFragmentManager();
+    Fragment active = homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final ViewPager pager = findViewById(R.id.pager);
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bnNavigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
-            @Override
-            public Fragment getItem(int i) {
-                switch (i) {
-                    case 0:
-                        return homeFragment;
-                    case 1:
-                        return siteFragment;
-                    case 2:
-                        return notificationFragment;
-                    default:
-                        return new NotificationFragment(); // this is just a placeholder
-                }
-            }
+        fm.beginTransaction().add(R.id.fragment_container, homeFragment, "1").commit();
+        fm.beginTransaction().add(R.id.fragment_container, siteFragment, "2").hide(siteFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, notificationFragment, "3").hide(notificationFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, chatFragment, "4").hide(chatFragment).commit();
 
-            @Override
-            public int getCount() {
-                return 4;
-            }
-        });
-
-        final BottomNavigationView bnNavigation = findViewById(R.id.bnNavigation);
-        bnNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.action_home:
-                        pager.setCurrentItem(0);
-                        break;
-                    case R.id.action_sites:
-                        pager.setCurrentItem(1);
-                        break;
-                    case R.id.action_notifications:
-                        pager.setCurrentItem(2);
-                        break;
-                    default:
-                        pager.setCurrentItem(3);
-                }
-
-                return true;
-            }
-        });
-
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                switch (i) {
-                    case 0:
-                        bnNavigation.setSelectedItemId(R.id.action_home);
-                        break;
-                    case 1:
-                        bnNavigation.setSelectedItemId(R.id.action_sites);
-                        break;
-                    case 2:
-                        bnNavigation.setSelectedItemId(R.id.action_notifications);
-                        break;
-
-                    default:
-                        bnNavigation.setSelectedItemId(R.id.action_chat);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
     }
+
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_home:
+                    fm.beginTransaction().hide(active).show(homeFragment).commit();
+                    active = homeFragment;
+                    return true;
+                case R.id.action_sites:
+                    fm.beginTransaction().hide(active).show(siteFragment).commit();
+                    active = siteFragment;
+                    return true;
+                case R.id.action_notifications:
+                    fm.beginTransaction().hide(active).show(notificationFragment).commit();
+                    active = notificationFragment;
+                    return true;
+                case R.id.action_chat:
+                    fm.beginTransaction().hide(active).show(chatFragment).commit();
+                    active = chatFragment;
+                    return true;
+
+            }
+
+            return false;
+        }
+    };
+
 }
