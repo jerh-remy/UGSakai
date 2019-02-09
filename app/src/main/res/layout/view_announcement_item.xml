@@ -25,13 +25,13 @@
             android:layout_height="wrap_content"
             android:text="CSCD421"
             android:textColor="@android:color/black"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lorem ipsum dolor it I dunno wah I'm rally saying but it is to fill the space"
+            android:text="Please note that the First Interim Assessment comes off next week Monday at 8:00am."
             android:textSize="16sp" />
     </LinearLayout>
 
