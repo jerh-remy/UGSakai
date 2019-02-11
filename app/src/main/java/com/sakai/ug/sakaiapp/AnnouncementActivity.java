@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.mikepenz.materialdrawer.Drawer;
+
 public class AnnouncementActivity extends AppCompatActivity {
 
     @Override
@@ -18,5 +20,7 @@ public class AnnouncementActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         NavigationDrawerUtil.getDrawer(this,toolbar);
+
     }
+
 }

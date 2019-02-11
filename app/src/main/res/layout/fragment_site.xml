@@ -82,6 +82,63 @@
 
         <include layout="@layout/view_course_item" />
 
+        <include layout="@layout/view_course_item" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eee" />
+
+        <include layout="@layout/view_course_item" />
+
+        <include layout="@layout/view_course_item" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eee" />
+
+        <include layout="@layout/view_course_item" />
+
+        <include layout="@layout/view_course_item" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eee" />
+
+        <include layout="@layout/view_course_item" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eee" />
+
+        <include layout="@layout/view_course_item" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eee" />
+
+        <include layout="@layout/view_course_item" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eee" />
+
+        <include layout="@layout/view_course_item" />
+
+        <include layout="@layout/view_course_item" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eee" />
+
+        <include layout="@layout/view_course_item" />
+
 
         <FrameLayout
             android:layout_width="match_parent"

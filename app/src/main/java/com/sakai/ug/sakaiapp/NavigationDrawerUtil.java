@@ -10,13 +10,11 @@ import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.sakai.ug.sakaiapp.fragments.SiteFragment;
 
 public class NavigationDrawerUtil {
 
@@ -46,13 +44,13 @@ public class NavigationDrawerUtil {
         SecondaryDrawerItem s5 = new SecondaryDrawerItem().withIdentifier(6).withName("Gradebook").withIcon(R.drawable.gradebook);
 
         //create the drawer and remember the `Drawer` result object
-        Drawer result = new DrawerBuilder()
+        final Drawer result = new DrawerBuilder()
                 .withActivity(activity)
                 .withToolbar(toolbar)
                 .withSelectedItem(-1)
                 .withActionBarDrawerToggle(true)
-                .withActionBarDrawerToggleAnimated(true)
                 .withAccountHeader(accHeader)
+                .withCloseOnClick(true)
                 .addDrawerItems(
                         all_sites,
                         tools,
@@ -90,11 +88,15 @@ public class NavigationDrawerUtil {
                     Intent intent = new Intent(activity, GradebookActivity.class);
                     view.getContext().startActivity(intent);
                 }
-                return true;
+                return false;
             }
         }).build();
 
         result.addStickyFooterItem(new PrimaryDrawerItem().withName("\u00A9 2019 UG Sakai"));
+
     }
+
+
+
 
 }
