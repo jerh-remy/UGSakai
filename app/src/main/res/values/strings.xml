@@ -14,4 +14,10 @@
     <string name="nav_gradebook">Gradebook</string>
     <string name="nav_assignments">Assignments</string>
     <string name="profpic" />
+    <string name="bio_data">Bio</string>
+    <string name="student_info">Student Info</string>
+    <string name="social_net">Social Networking</string>
+    <string name="student_name">Ewoenam Tay</string>
+    <string name="student_id">10568557</string>
+
 </resources>

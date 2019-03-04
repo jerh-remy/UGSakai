@@ -1,28 +1,96 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigation_drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/container"/>
-
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <android.support.v7.widget.Toolbar
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            app:theme="@style/MyActionBar"
-            android:id="@+id/toolbar">
-        </android.support.v7.widget.Toolbar>
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/course_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CSCD 411"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:textSize="15dp"
+
+                    />
+                <TextView
+                    android:id="@+id/course_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MANAGEMENT IN COMPUTING"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:textSize="20dp"
+                    />
+                <TextView
+                    android:id="@+id/course_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DESCRIPTION"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="30dp"
+
+                    />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp">
+                    <TextView
+                        android:background="#EEEEEE"
+                        android:id="@+id/course_desc_body"
+                        android:padding="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="Also, many thanks to the hundreds of students who have taken 537 over the
+        years. In particular, the Fall ’08 class who encouraged the first written form of
+        these notes (they were sick of not having any kind of textbook to read — pushy
+        students!), and then praised them enough for us to keep going (including one hilarious
+        “ZOMG! You should totally write a textbook!” comment in our course
+        evaluations that year)."/>
+
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
+                >
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ms Tay"
+                    android:gravity="center"
+                    android:drawableTop="@drawable/ic_person_dp"
+
+                    />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="566 students"
+                    android:gravity="center"
+                    android:drawableTop="@drawable/ic_students_dp"
+                    />
+
+
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
-</RelativeLayout>
+
+
+</LinearLayout>
