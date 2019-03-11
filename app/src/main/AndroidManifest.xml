@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sakai.ug.sakaiapp">
 
+    <!--Internet Permission-->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,29 +30,11 @@
 
         </activity>
 
-        <activity android:name=".AnnouncementActivity">
+        <activity android:name=".Conversation" >
 
         </activity>
-
-        <activity android:name=".AssignmentsActivity">
-
-        </activity>
-
-        <activity android:name=".GradebookActivity">
-
-        </activity>
-
-        <activity android:name=".ResourcesActivity">
-
-        </activity>
-
-        <activity android:name=".ProfileActivity">
-
-        </activity>
-
-        <activity android:name=".SyllabusActivity">
-
-        </activity>
+        <activity android:name=".course_site_details.AssignmentDetailActivity"/>
+        <activity android:name=".course_site_details.AnnouncementDetailActivity" />
 
 
     </application>

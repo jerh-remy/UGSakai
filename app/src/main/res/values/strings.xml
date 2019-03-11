@@ -4,13 +4,15 @@
     <string name="nav_sites">Sites</string>
     <string name="nav_notifications">Notifications</string>
     <string name="nav_chats">Chat</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="logo_description">Logo for Sakai</string>
-    <string name="Testing">Test</string>
+    <string name="logo_description">Logo for Sakai Mobile</string>
     <string name="nav_announcements">Announcements</string>
     <string name="nav_resources">Resources</string>
     <string name="nav_gradebook">Gradebook</string>
     <string name="nav_assignments">Assignments</string>
     <string name="profpic" />
+    <string name="bio_data">Bio</string>
+    <string name="student_info">Student Info</string>
+    <string name="social_net">Social Networking</string>
+    <string name="student_name">Ewoenam Tay</string>
+    <string name="student_id">10568557</string>
 </resources>

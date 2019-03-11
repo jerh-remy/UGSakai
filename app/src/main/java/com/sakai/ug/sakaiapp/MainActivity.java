@@ -8,10 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.sakai.ug.sakaiapp.fragments.ChatFragment;
-import com.sakai.ug.sakaiapp.fragments.HomeFragment;
-import com.sakai.ug.sakaiapp.fragments.NotificationFragment;
-import com.sakai.ug.sakaiapp.fragments.SiteFragment;
+import com.sakai.ug.sakaiapp.main_fragments.ChatFragment;
+import com.sakai.ug.sakaiapp.main_fragments.HomeFragment;
+import com.sakai.ug.sakaiapp.main_fragments.NotificationFragment;
+import com.sakai.ug.sakaiapp.main_fragments.SiteFragment;
 
 
 
