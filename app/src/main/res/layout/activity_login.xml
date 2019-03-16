@@ -30,13 +30,13 @@
         android:layout_marginBottom="32dp"
         android:text="Mobile"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/etStudentId"
+        app:layout_constraintBottom_toTopOf="@+id/etUsername"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/etStudentId"
+        android:id="@+id/etUsername"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -67,8 +67,8 @@
 
     <Button
         android:id="@+id/btnLogin"
-        android:background="@color/primary_dark"
-        android:textColor="@color/md_white_1000"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@android:color/white"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
