@@ -25,6 +25,10 @@ public class AddCookiesInterceptor implements Interceptor {
     // I recommend you do this, and don't change this default value.
     private Context context;
 
+    public Context getContext() {
+        return context;
+    }
+
     public AddCookiesInterceptor(Context context) {
         this.context = context;
     }

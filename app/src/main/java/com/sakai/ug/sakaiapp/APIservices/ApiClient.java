@@ -13,31 +13,37 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    public static final String BASE_URL = " http://c7181ecf.ngrok.io/direct/";
+    public static final String BASE_URL = "http://a5d03f85.ngrok.io/direct/";
     public Retrofit retrofit = null;
-    public OkHttpClient okHttpClient;
-    private Context context;
+    public OkHttpClient okHttpClient = null;
+    private Context context = null;
 
 
-    public OkHttpClient getOkHttpClient() {
+    public OkHttpClient getOkHttpClient(Context context)
+    {
+        SendSavedCookiesInterceptor sendSavedCookiesInterceptor = new SendSavedCookiesInterceptor(context);
+        SaveReceivedCookiesInterceptor saveReceivedCookiesInterceptor = new SaveReceivedCookiesInterceptor(context);
 
-        okHttpClient = new OkHttpClient();
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.addInterceptor(new AddCookiesInterceptor(context));
-        builder.addInterceptor(new ReceivedCookiesInterceptor(context));
-        okHttpClient = builder.build();
-        return okHttpClient;
+        return new OkHttpClient.Builder()
+                .followRedirects(true)
+                .followSslRedirects(true)
+                .retryOnConnectionFailure(true)
+                .addInterceptor(sendSavedCookiesInterceptor)
+                .addInterceptor(saveReceivedCookiesInterceptor)
+                .build();
+
     }
 
     Gson gson = new GsonBuilder()
             .setLenient()
             .create();
 
-    public Retrofit getApiClient() {
+        public Retrofit getApiClient(Context context) {
+
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .client(getOkHttpClient())
+                    .client(getOkHttpClient(context))
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }

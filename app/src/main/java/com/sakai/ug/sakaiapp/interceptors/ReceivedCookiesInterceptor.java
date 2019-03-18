@@ -14,7 +14,13 @@ public class ReceivedCookiesInterceptor implements Interceptor {
     private Context context;
     public ReceivedCookiesInterceptor(Context context) {
         this.context = context;
-    } // AddCookiesInterceptor()
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    // AddCookiesInterceptor()
     @Override
     public Response intercept(Chain chain) throws IOException {
         Response originalResponse = chain.proceed(chain.request());
