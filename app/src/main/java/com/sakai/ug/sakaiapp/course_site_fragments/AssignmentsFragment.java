@@ -5,24 +5,35 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.sakai.ug.sakaiapp.APIservices.ApiClient;
+import com.sakai.ug.sakaiapp.APIservices.ApiInterface;
+import com.sakai.ug.sakaiapp.CourseSiteActivity;
 import com.sakai.ug.sakaiapp.R;
 import com.sakai.ug.sakaiapp.adapters.AssignmentAdapter;
 import com.sakai.ug.sakaiapp.course_site_details.AssignmentDetailActivity;
-import com.sakai.ug.sakaiapp.models.AssignmentModel;
+import com.sakai.ug.sakaiapp.models.assignment.Assignment;
 
-import java.util.ArrayList;
-import java.util.List;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AssignmentsFragment extends Fragment implements AssignmentAdapter.onAssignmentItemClickListener {
 
-    private List<AssignmentModel> assignmentList;
+    private Assignment assignment = new Assignment();
     RecyclerView recyclerView;
+    private AssignmentAdapter assignmentAdapter;
+    ApiClient apiClient = new ApiClient();
+    ApiInterface apiInterface;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
@@ -32,142 +43,46 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
         View view = inflater.inflate(R.layout.fragment_assignments, container, false);
 
 
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            retrieveAssignments();
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
         recyclerView = view.findViewById(R.id.assignments_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
-
-        assignmentList = new ArrayList<>();
-
-
-        assignmentList.add(
-                new AssignmentModel(
-                        "Computer System Security",
-                        "10:27am",
-                        R.drawable.assignment,
-                        R.drawable.ic_attach_file_black_24dp
-
-                )
-        );
-        assignmentList.add(
-                new AssignmentModel(
-                        "Computer System Security",
-                        "10:27am",
-                        R.drawable.assignment,
-                        R.drawable.ic_attach_file_black_24dp
-
-                )
-        );
-        assignmentList.add(
-                new AssignmentModel(
-                        "Computer System Security",
-                        "10:27am",
-                        R.drawable.assignment,
-                        R.drawable.ic_attach_file_black_24dp
-
-                )
-        );
-        assignmentList.add(
-                new AssignmentModel(
-                        "Computer System Security",
-                        "10:27am",
-                        R.drawable.assignment,
-                        R.drawable.ic_attach_file_black_24dp
-
-                )
-        );
-        assignmentList.add(
-                new AssignmentModel(
-                        "Computer System Security",
-                        "10:27am",
-                        R.drawable.assignment,
-                        R.drawable.ic_attach_file_black_24dp
-
-                )
-        );
-        assignmentList.add(
-                new AssignmentModel(
-                        "Computer System Security",
-                        "10:27am",
-                        R.drawable.assignment,
-                        R.drawable.ic_attach_file_black_24dp
-
-                )
-        );
-        assignmentList.add(
-                new AssignmentModel(
-                        "Computer System Security",
-                        "10:27am",
-                        R.drawable.assignment,
-                        R.drawable.ic_attach_file_black_24dp
-
-                )
-        );
-        assignmentList.add(
-                new AssignmentModel(
-                        "Computer System Security",
-                        "10:27am",
-                        R.drawable.assignment,
-                        R.drawable.ic_attach_file_black_24dp
-
-                )
-        );
-        assignmentList.add(
-                new AssignmentModel(
-                        "Computer System Security",
-                        "10:27am",
-                        R.drawable.assignment,
-                        R.drawable.ic_attach_file_black_24dp
-
-                )
-        );
-        assignmentList.add(
-                new AssignmentModel(
-                        "Computer System Security",
-                        "10:27am",
-                        R.drawable.assignment,
-                        R.drawable.ic_attach_file_black_24dp
-
-                )
-        );
-        assignmentList.add(
-                new AssignmentModel(
-                        "Computer System Security",
-                        "10:27am",
-                        R.drawable.assignment,
-                        R.drawable.ic_attach_file_black_24dp
-
-                )
-        );
-        assignmentList.add(
-                new AssignmentModel(
-                        "Computer System Security",
-                        "10:27am",
-                        R.drawable.assignment,
-                        R.drawable.ic_attach_file_black_24dp
-
-                )
-        );
-        assignmentList.add(
-                new AssignmentModel(
-                        "Computer System Security",
-                        "10:27am",
-                        R.drawable.assignment,
-                        R.drawable.ic_attach_file_black_24dp
-
-                )
-        );
-
-
-        AssignmentAdapter adapter = new AssignmentAdapter(assignmentList, this.getActivity(), this);
-        recyclerView.setAdapter(adapter);
+        apiInterface = apiClient.getApiClient(this.getContext()).create(ApiInterface.class);
+        retrieveAssignments();
 
         return view;
     }
 
+    private void retrieveAssignments() {
+        Call<Assignment> call = apiInterface.getSiteAssignment();
+
+        call.enqueue(new Callback<Assignment>() {
+            @Override
+            public void onResponse(Call<Assignment> call, Response<Assignment> response) {
+                Log.d("Success", "onResponse: Successful");
+                assignment = response.body();
+                assignmentAdapter = new AssignmentAdapter(assignment, getContext(), AssignmentsFragment.this::onItemClick);
+                recyclerView.setAdapter(assignmentAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<Assignment> call, Throwable t) {
+                Log.d("Fail", "onFailure: Request failed");
+                Log.d("Status", t.getMessage());
+                Toast.makeText(getContext(), "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     @Override
     public void onItemClick(int position) {
-        assignmentList.get(position);
+        assignment.getAssignmentCollection().get(position);
         Intent intent = new Intent(getActivity(), AssignmentDetailActivity.class);
         startActivity(intent);
     }

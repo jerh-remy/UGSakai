@@ -10,18 +10,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sakai.ug.sakaiapp.R;
-import com.sakai.ug.sakaiapp.models.AssignmentModel;
+import com.sakai.ug.sakaiapp.models.assignment.Assignment;
 
 import java.util.List;
 
 public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder> {
 
-    private List<AssignmentModel> assignmentList;
-    private final onAssignmentItemClickListener listener;
+    private Assignment assignment = new Assignment();
     private Context context;
+    private final onAssignmentItemClickListener listener;
 
-    public AssignmentAdapter(List<AssignmentModel> assignmentList, Context context, onAssignmentItemClickListener listener) {
-        this.assignmentList = assignmentList;
+    public AssignmentAdapter(Assignment assignment, Context context, onAssignmentItemClickListener listener) {
+        this.assignment = assignment;
         this.context = context;
         this.listener = listener;
     }
@@ -35,17 +35,17 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
     @Override
     public void onBindViewHolder(@NonNull AssignmentAdapter.AssignmentViewHolder assignmentViewHolder, int i) {
 
-        AssignmentModel Assignment = assignmentList.get(i);
-        assignmentViewHolder.textViewTime.setText(Assignment.getTime());
-        assignmentViewHolder.textViewTitle.setText(Assignment.getTitle());
-        assignmentViewHolder.imageView.setImageDrawable(context.getResources().getDrawable(Assignment.getImage()));
-        assignmentViewHolder.imageView2.setImageDrawable(context.getResources().getDrawable(Assignment.getImage2()));
+
+        assignmentViewHolder.textViewTime.setText(assignment.getAssignmentCollection().get(i).getTimeCreated().getDisplay());
+        assignmentViewHolder.textViewTitle.setText(assignment.getAssignmentCollection().get(i).getTitle());
+        assignmentViewHolder.imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.assignment));
+        assignmentViewHolder.imageView2.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_attach_file_black_24dp));
 
     }
 
     @Override
     public int getItemCount() {
-        return assignmentList.size();
+        return assignment.getAssignmentCollection().size();
     }
 
 

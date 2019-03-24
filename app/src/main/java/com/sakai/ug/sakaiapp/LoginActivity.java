@@ -16,8 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sakai.ug.sakaiapp.APIservices.ApiClient;
 import com.sakai.ug.sakaiapp.APIservices.ApiInterface;
-import com.sakai.ug.sakaiapp.interceptors.AddCookiesInterceptor;
-import com.sakai.ug.sakaiapp.interceptors.ReceivedCookiesInterceptor;
+
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -40,7 +39,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-       if (SharedPreferencesManager.getInstance(this).isLoggedIn()) {
+        if (SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             //finish();
             startActivity(new Intent(this, MainActivity.class));
         }
@@ -48,11 +47,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         username = findViewById(R.id.etUsername);
         password = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
-
         btnLogin.setOnClickListener(this);
 
     }
 
+    //when access to internet is possible
     private void UserLogin() {
         //defining a progress dialog to show while signing up
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -63,27 +62,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final String _username = username.getText().toString().trim();
         final String _password = password.getText().toString().trim();
 
-        //retrofit stuff
-        /*String BASE_URL = " http://c7181ecf.ngrok.io/direct/";
-        Retrofit retrofit = null;
-
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-        OkHttpClient okHttpClient = new OkHttpClient();
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.addInterceptor(new AddCookiesInterceptor(getApplicationContext()));
-        builder.addInterceptor(new ReceivedCookiesInterceptor(getApplicationContext()));
-        okHttpClient = builder.build();
-
-        if (retrofit == null) {
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(okHttpClient)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build();
-        }
-*/
         apiInterface = apiClient.getApiClient(getApplicationContext()).create(ApiInterface.class);
         //apiInterface = apiClient.getApiClient().create(ApiInterface.class);
         Call<String> call = apiInterface.login(_username, _password);
@@ -117,19 +95,65 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    //when access to internet isn't possible
+   /* private void UserLogin2()
+    {
+        //getting the user details
+        final String _username = username.getText().toString().trim();
+        final String _password = password.getText().toString().trim();
+
+        if(_username.equals("admin")  && _password.equals("1234"))
+        {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+    }*/
+
+
+
+
     @Override
     public void onClick(View v) {
-        if(username.getText().toString().equals(""))
-        {
+        if (username.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), "Please enter username", Toast.LENGTH_LONG).show();
-        }
-        else if(password.getText().toString().equals("")){
+        } else if (password.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), "Please enter password", Toast.LENGTH_LONG).show();
-        }
-        else{
+        } else {
             UserLogin();
         }
     }
 
+    //TODO get back to this when user session timeout is fully understood
+/*
+    public void backgroundUserLogin() {
+        //getting the user details from shared preferences
+        final String _username = SharedPreferencesManager.getInstance(getApplicationContext()).getUsername();
+        final String _password = SharedPreferencesManager.getInstance(getApplicationContext()).getPassword();
+        apiInterface = apiClient.getApiClient(getApplicationContext()).create(ApiInterface.class);
+        Call<String> call = apiInterface.login(_username, _password);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.code() == 201) {
+                    Log.d("Status", "onResponse: background login");
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Log.d("Status", Integer.toString(response.code()));
+                    //Toast.makeText(getApplicationContext(), "Please check your credentials and try again", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.d("error", "onFailure: failed");
+                //Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+*/
 
 }

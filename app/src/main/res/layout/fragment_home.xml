@@ -23,7 +23,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
-            android:text="5th February, 2019" />
+            android:text="5th February, 2019"/>
+
+        <TextView
+            android:id = "@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="300dp"
+            android:text="LOGOUT"
+            android:textSize="17sp"/>
 
         <TextView
             android:layout_width="match_parent"

@@ -4,8 +4,6 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sakai.ug.sakaiapp.interceptors.AddCookiesInterceptor;
-import com.sakai.ug.sakaiapp.interceptors.ReceivedCookiesInterceptor;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -13,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    public static final String BASE_URL = "http://a5d03f85.ngrok.io/direct/";
+    public static final String BASE_URL = "http://sakaiapp.ngrok.io/direct/";
     public Retrofit retrofit = null;
     public OkHttpClient okHttpClient = null;
     private Context context = null;

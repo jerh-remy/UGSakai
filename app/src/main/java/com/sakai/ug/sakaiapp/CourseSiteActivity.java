@@ -71,12 +71,7 @@ public class CourseSiteActivity extends AppCompatActivity {
                 ).withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-                        if (profile instanceof IDrawerItem && profile.getIdentifier() == 100)
-                        {
-                            Intent i = new Intent(getBaseContext(), ProfileActivity.class);
-                            view.getContext().startActivity(i);
-                        }
-
+                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                         return false;
                     }
                 })

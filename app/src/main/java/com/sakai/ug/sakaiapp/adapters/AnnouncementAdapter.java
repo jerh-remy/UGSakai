@@ -11,20 +11,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sakai.ug.sakaiapp.R;
-import com.sakai.ug.sakaiapp.models.AnnouncementModel;
-
-import java.util.List;
+import com.sakai.ug.sakaiapp.models.announcement.Announcement;
 
 
 public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementAdapter.AnnouncementViewHolder> {
 
 
-    private List<AnnouncementModel> announceList;
+    private Announcement announcement = new Announcement();
     private Context context;
     private final onAnnouncementItemClickListener listener;
 
-    public AnnouncementAdapter(List<AnnouncementModel> announceList, Context context, onAnnouncementItemClickListener listener) {
-        this.announceList = announceList;
+    public AnnouncementAdapter(Announcement announcement, Context context, onAnnouncementItemClickListener listener) {
+        this.announcement = announcement;
         this.context = context;
         this.listener = listener;
     }
@@ -41,19 +39,18 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementAdapte
     @Override
     public void onBindViewHolder(@NonNull AnnouncementViewHolder announcementViewHolder, int i) {
 
-        AnnouncementModel Announce = announceList.get(i);
-        announcementViewHolder.textViewTitle.setText(Announce.getCourse_code());
-        announcementViewHolder.textViewShortDesc.setText(Announce.getShortdesc());
-        announcementViewHolder.imageView.setImageDrawable(context.getResources().getDrawable(Announce.getImage()));
+        announcementViewHolder.textViewTitle.setText(announcement.getAnnouncementCollection().get(i).getTitle());
+        announcementViewHolder.textViewShortDesc.setText(announcement.getAnnouncementCollection().get(i).getBody());
+        announcementViewHolder.imageView.setImageDrawable(announcementViewHolder.imageView.getResources().getDrawable(R.drawable.ic_announcement));
 
     }
 
     @Override
     public int getItemCount() {
-        return announceList.size();
+        return announcement.getAnnouncementCollection().size();
     }
 
-    class AnnouncementViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
+    class AnnouncementViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView textViewTitle, textViewShortDesc;
         ImageView imageView;
@@ -75,7 +72,6 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementAdapte
             onAnnouncementItemClickListener.onItemClick(getAdapterPosition());
         }
     }
-
 
 
     public interface onAnnouncementItemClickListener {
