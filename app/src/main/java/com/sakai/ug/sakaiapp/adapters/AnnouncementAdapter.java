@@ -1,7 +1,9 @@
 package com.sakai.ug.sakaiapp.adapters;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sakai.ug.sakaiapp.R;
+import com.sakai.ug.sakaiapp.course_site_details.AnnouncementDetailActivity;
 import com.sakai.ug.sakaiapp.models.announcement.Announcement;
 
 
@@ -40,7 +43,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementAdapte
     public void onBindViewHolder(@NonNull AnnouncementViewHolder announcementViewHolder, int i) {
 
         announcementViewHolder.textViewTitle.setText(announcement.getAnnouncementCollection().get(i).getTitle());
-        announcementViewHolder.textViewShortDesc.setText(announcement.getAnnouncementCollection().get(i).getBody());
+        announcementViewHolder.textViewShortDesc.setText(Html.fromHtml(announcement.getAnnouncementCollection().get(i).getBody()));
         announcementViewHolder.imageView.setImageDrawable(announcementViewHolder.imageView.getResources().getDrawable(R.drawable.ic_announcement));
 
     }
@@ -70,6 +73,12 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementAdapte
         @Override
         public void onClick(View v) {
             onAnnouncementItemClickListener.onItemClick(getAdapterPosition());
+            Intent goToOneAnnouncement = new Intent(context, AnnouncementDetailActivity.class);
+            goToOneAnnouncement.putExtra("AN_TITLE", announcement.getAnnouncementCollection().get(getAdapterPosition()).getTitle());
+            goToOneAnnouncement.putExtra("AN_SAVED_BY", announcement.getAnnouncementCollection().get(getAdapterPosition()).getCreatedByDisplayName());
+            //goToOneAnnouncement.putExtra("AN_MODIFIED_DATE", announcement.getAnnouncementCollection().get(getAdapterPosition()).getTitle());
+            goToOneAnnouncement.putExtra("AN_BODY", announcement.getAnnouncementCollection().get(getAdapterPosition()).getBody());
+            context.startActivity(goToOneAnnouncement);
         }
     }
 

@@ -12,17 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.sakai.ug.sakaiapp.APIservices.AnnouncementInterface;
 import com.sakai.ug.sakaiapp.APIservices.ApiClient;
-import com.sakai.ug.sakaiapp.APIservices.ApiInterface;
+import com.sakai.ug.sakaiapp.APIservices.LoginSessionInterface;
 import com.sakai.ug.sakaiapp.R;
 import com.sakai.ug.sakaiapp.adapters.AnnouncementAdapter;
 import com.sakai.ug.sakaiapp.course_site_details.AnnouncementDetailActivity;
 import com.sakai.ug.sakaiapp.models.announcement.Announcement;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +31,7 @@ public class AnnouncementFragment extends Fragment implements AnnouncementAdapte
     RecyclerView recyclerView;
     private AnnouncementAdapter adapter;
     ApiClient apiClient = new ApiClient();
-    ApiInterface apiInterface;
+    AnnouncementInterface announcementInterface;
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
@@ -42,11 +39,18 @@ public class AnnouncementFragment extends Fragment implements AnnouncementAdapte
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+
+        Bundle bundle2 = this.getArguments();
+        final String courseid = bundle2.getString("COURSE_ID");
+        Log.d("SiteIDSakai(Announcement)", "Course id: " + courseid);
+
+
         View view = inflater.inflate(R.layout.fragment_announcements, container, false);
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            retrieveAnnouncements();
+            retrieveAnnouncements(courseid);
             swipeRefreshLayout.setRefreshing(false);
         });
 
@@ -55,8 +59,8 @@ public class AnnouncementFragment extends Fragment implements AnnouncementAdapte
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
 
-        apiInterface = apiClient.getApiClient(this.getContext()).create(ApiInterface.class);
-        retrieveAnnouncements();
+        announcementInterface = apiClient.getApiClient(this.getContext()).create(AnnouncementInterface.class);
+        retrieveAnnouncements(courseid);
 
         return view;
 
@@ -65,13 +69,13 @@ public class AnnouncementFragment extends Fragment implements AnnouncementAdapte
     @Override
     public void onItemClick(int position) {
         announcement.getAnnouncementCollection().get(position);
-        Intent intent = new Intent(getActivity(), AnnouncementDetailActivity.class);
-        startActivity(intent);
+        /*Intent intent = new Intent(getActivity(), AnnouncementDetailActivity.class);
+        startActivity(intent);*/
     }
 
-    public void retrieveAnnouncements()
-    {
-        Call<Announcement> call = apiInterface.getSiteAnnouncement();
+
+    public void retrieveAnnouncements(String courseid) {
+        Call<Announcement> call = announcementInterface.getSiteAnnouncement(courseid);
 
         call.enqueue(new Callback<Announcement>() {
             @Override

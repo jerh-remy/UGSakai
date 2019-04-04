@@ -1,6 +1,7 @@
 package com.sakai.ug.sakaiapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,18 +10,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sakai.ug.sakaiapp.CourseSiteActivity;
 import com.sakai.ug.sakaiapp.R;
-import com.sakai.ug.sakaiapp.models.CourseSiteModel;
+import com.sakai.ug.sakaiapp.course_site_details.AssignmentDetailActivity;
+import com.sakai.ug.sakaiapp.models.site.Site;
 
 import java.util.List;
 
 public class CourseSiteAdapter extends RecyclerView.Adapter<CourseSiteAdapter.CourseSiteViewHolder>{
 
-    private List<CourseSiteModel> coursesiteList;
+    private Site coursesiteList;
     private final CourseSiteAdapter.onCourseSiteItemClickListener listener;
     private Context context;
 
-    public CourseSiteAdapter(List<CourseSiteModel> coursesiteList, Context context, CourseSiteAdapter.onCourseSiteItemClickListener listener) {
+    public CourseSiteAdapter(Site coursesiteList, Context context, CourseSiteAdapter.onCourseSiteItemClickListener listener) {
         this.coursesiteList = coursesiteList;
         this.context = context;
         this.listener = listener;
@@ -35,16 +38,15 @@ public class CourseSiteAdapter extends RecyclerView.Adapter<CourseSiteAdapter.Co
     @Override
     public void onBindViewHolder(@NonNull CourseSiteAdapter.CourseSiteViewHolder courseSiteViewHolder, int i) {
 
-        CourseSiteModel courseSite = coursesiteList.get(i);
-        courseSiteViewHolder.textViewLecturerName.setText(courseSite.getCourseLecturer());
-        courseSiteViewHolder.textViewCourseSiteTitle.setText(courseSite.getCourseSiteTitle());
-        courseSiteViewHolder.imageView.setImageDrawable(context.getResources().getDrawable(courseSite.getImage()));
+        courseSiteViewHolder.textViewLecturerName.setText(coursesiteList.getSiteCollection().get(i).getProps().getContactName());
+        courseSiteViewHolder.textViewCourseSiteTitle.setText(coursesiteList.getSiteCollection().get(i).getEntityTitle());
+        courseSiteViewHolder.imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_sites));
 
     }
 
     @Override
     public int getItemCount() {
-        return coursesiteList.size();
+        return coursesiteList.getSiteCollection().size();
     }
 
 
@@ -69,6 +71,9 @@ public class CourseSiteAdapter extends RecyclerView.Adapter<CourseSiteAdapter.Co
         @Override
         public void onClick(View v) {
             onCourseSiteItemClickListener.onItemClick(getAdapterPosition());
+            Intent goToOneSite = new Intent(context, CourseSiteActivity.class);
+            goToOneSite.putExtra("SITE_ID", coursesiteList.getSiteCollection().get(getAdapterPosition()).getEntityId());
+            context.startActivity(goToOneSite);
         }
     }
 

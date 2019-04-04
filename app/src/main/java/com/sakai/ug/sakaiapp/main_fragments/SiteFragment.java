@@ -7,22 +7,35 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sakai.ug.sakaiapp.APIservices.AnnouncementInterface;
+import com.sakai.ug.sakaiapp.APIservices.ApiClient;
+import com.sakai.ug.sakaiapp.APIservices.SitesInterface;
 import com.sakai.ug.sakaiapp.CourseSiteActivity;
 import com.sakai.ug.sakaiapp.R;
+import com.sakai.ug.sakaiapp.adapters.AnnouncementAdapter;
 import com.sakai.ug.sakaiapp.adapters.CourseSiteAdapter;
-import com.sakai.ug.sakaiapp.models.CourseSiteModel;
+import com.sakai.ug.sakaiapp.course_site_fragments.AnnouncementFragment;
+import com.sakai.ug.sakaiapp.models.site.Site;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourseSiteItemClickListener {
 
-    List<CourseSiteModel> courseSiteList;
     RecyclerView recyclerView;
+    CourseSiteAdapter adapter;
+    ApiClient apiClient = new ApiClient();
+    SitesInterface sitesInterface;
+    Site site = new Site();
 
     @Nullable
     @Override
@@ -35,52 +48,25 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
-        courseSiteList = new ArrayList<>();
 
-        courseSiteList.add(
-                new CourseSiteModel(
-                        "CSCD 418: Systems Security",
-                        "Dr. Winfred Yaokumah",
-                        R.drawable.ic_sites
-                ));
+        sitesInterface = apiClient.getApiClient(this.getContext()).create(SitesInterface.class);
 
-        courseSiteList.add(
-                new CourseSiteModel(
-                        "CSCD 416: Systems Programming",
-                        "Dr. Solomon Mensah",
-                        R.drawable.ic_sites
-                ));
+        Call<Site> siteCall = sitesInterface.getSites();
+        siteCall.enqueue(new Callback<Site>() {
+            @Override
+            public void onResponse(Call<Site> call, Response<Site> response) {
+                Log.d("SiteResponse", "onResponse: " + response.body());
+                site = response.body();
+                adapter = new CourseSiteAdapter(site, getContext(), SiteFragment.this::onItemClick);
+                recyclerView.setAdapter(adapter);
+            }
 
-        courseSiteList.add(
-                new CourseSiteModel(
-                        "CSCD 434: Mobile Computing",
-                        "Mr. Paul Ammah",
-                        R.drawable.ic_sites
-                ));
+            @Override
+            public void onFailure(Call<Site> call, Throwable t) {
+                Log.d("Failure", "onFailure: " + t.getMessage());
+            }
+        });
 
-        courseSiteList.add(
-                new CourseSiteModel(
-                        "CSCD 424: Expert Systems",
-                        "Dr. Ernest Gyebi",
-                        R.drawable.ic_sites
-                ));
-
-        courseSiteList.add(
-                new CourseSiteModel(
-                        "CSCD 408: Networking 2",
-                        "Dr. Ernest Gyebi",
-                        R.drawable.ic_sites
-                ));
-
-        courseSiteList.add(
-                new CourseSiteModel(
-                        "CSCD 428: Compilers",
-                        "Mr. Michael Soli",
-                        R.drawable.ic_sites
-                ));
-
-        CourseSiteAdapter adapter = new CourseSiteAdapter(courseSiteList, this.getActivity(), this);
-        recyclerView.setAdapter(adapter);
         return view;
 
     }
@@ -88,8 +74,8 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
 
     @Override
     public void onItemClick(int position) {
-        courseSiteList.get(position);
-        Intent intent = new Intent(getActivity(), CourseSiteActivity.class);
-        startActivity(intent);
+        site.getSiteCollection().get(position);
+        /*Intent intent = new Intent(getActivity(), CourseSiteActivity.class);
+        startActivity(intent);*/
     }
 }

@@ -1,8 +1,6 @@
 package com.sakai.ug.sakaiapp.main_fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -19,7 +17,12 @@ import com.sakai.ug.sakaiapp.SharedPreferencesManager;
 
 public class HomeFragment extends Fragment {
 
-    TextView logout;
+    TextView logout, welcome;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
@@ -27,6 +30,9 @@ public class HomeFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        welcome = view.findViewById(R.id.welcome_username);
+        welcome.setText(SharedPreferencesManager.getInstance(getContext()).getFullname());
 
         logout = view.findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {

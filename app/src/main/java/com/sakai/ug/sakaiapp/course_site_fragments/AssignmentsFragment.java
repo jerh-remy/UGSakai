@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.sakai.ug.sakaiapp.APIservices.ApiClient;
-import com.sakai.ug.sakaiapp.APIservices.ApiInterface;
-import com.sakai.ug.sakaiapp.CourseSiteActivity;
+import com.sakai.ug.sakaiapp.APIservices.AssignmentInterface;
+import com.sakai.ug.sakaiapp.APIservices.LoginSessionInterface;
 import com.sakai.ug.sakaiapp.R;
 import com.sakai.ug.sakaiapp.adapters.AssignmentAdapter;
 import com.sakai.ug.sakaiapp.course_site_details.AssignmentDetailActivity;
@@ -32,7 +32,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
     RecyclerView recyclerView;
     private AssignmentAdapter assignmentAdapter;
     ApiClient apiClient = new ApiClient();
-    ApiInterface apiInterface;
+    AssignmentInterface assignmentInterface;
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
@@ -40,12 +40,16 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        Bundle bundle2 = this.getArguments();
+        String courseid = bundle2.getString("COURSE_ID");
+        Log.d("SiteIDSakai(Assignment)", "Course id: " + courseid );
+
         View view = inflater.inflate(R.layout.fragment_assignments, container, false);
 
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            retrieveAssignments();
+            retrieveAssignments(courseid);
             swipeRefreshLayout.setRefreshing(false);
         });
 
@@ -53,14 +57,16 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
-        apiInterface = apiClient.getApiClient(this.getContext()).create(ApiInterface.class);
-        retrieveAssignments();
+        assignmentInterface = apiClient.getApiClient(this.getContext()).create(AssignmentInterface.class);
+        retrieveAssignments(courseid);
 
         return view;
     }
 
-    private void retrieveAssignments() {
-        Call<Assignment> call = apiInterface.getSiteAssignment();
+
+
+    private void retrieveAssignments(String site_id) {
+        Call<Assignment> call = assignmentInterface.getSiteAssignment(site_id);
 
         call.enqueue(new Callback<Assignment>() {
             @Override

@@ -51,6 +51,18 @@ public class CourseSiteActivity extends AppCompatActivity {
         toolbar.setTitle("Course Site");
         setSupportActionBar(toolbar);
 
+        final String siteid = getIntent().getStringExtra("SITE_ID");
+
+        Bundle bundle1 = new Bundle();
+        bundle1.putString("COURSE_ID", siteid);
+        siteOverviewFragment.setArguments(bundle1);
+        profileFragment.setArguments(bundle1);
+        announcementFragment.setArguments(bundle1);
+        syllabusFragment.setArguments(bundle1);
+        resourcesFragment.setArguments(bundle1);
+        assignmentsFragment.setArguments(bundle1);
+        gradebookFragment.setArguments(bundle1);
+
         fm.beginTransaction().add(R.id.container, siteOverviewFragment).commit();
         fm.beginTransaction().add(R.id.container, profileFragment).hide(profileFragment).commit();
         fm.beginTransaction().add(R.id.container, announcementFragment).hide(announcementFragment).commit();
