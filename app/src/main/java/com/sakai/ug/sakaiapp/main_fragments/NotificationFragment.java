@@ -22,9 +22,13 @@ public class NotificationFragment extends Fragment {
     private List<Notification> notificationList;
     RecyclerView recyclerView;
 
-    public NotificationFragment() {
-        // Required empty public constructor
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,7 +49,7 @@ public class NotificationFragment extends Fragment {
                         "Hi Class, I have uploaded the lecture material for the sixth week.",
                         "5:12pm",
                         "New resource for CSCD 400",
-                        R.drawable.notification
+                        R.drawable.ic_notifications
                 )
         );
         notificationList.add(
@@ -54,7 +58,7 @@ public class NotificationFragment extends Fragment {
                         "Hi Class, I have uploaded the lecture material for the sixth week.",
                         "5:12pm",
                         "New resource for CSCD 400",
-                        R.drawable.notification
+                        R.drawable.ic_notifications
                 )
         );
         notificationList.add(
@@ -63,7 +67,7 @@ public class NotificationFragment extends Fragment {
                         "Hi Class, I have uploaded the lecture material for the sixth week.",
                         "5:12pm",
                         "New resource for CSCD 400",
-                        R.drawable.notification
+                        R.drawable.ic_notifications
                 )
         );
         notificationList.add(
@@ -72,7 +76,8 @@ public class NotificationFragment extends Fragment {
                         "Hi Class, I have uploaded the lecture material for the sixth week.",
                         "5:12pm",
                         "New resource for CSCD 400",
-                        R.drawable.notification
+                        R.drawable.ic_notifications
+
                 )
         );
         notificationList.add(
@@ -81,7 +86,8 @@ public class NotificationFragment extends Fragment {
                         "Hi Class, I have uploaded the lecture material for the sixth week.",
                         "5:12pm",
                         "New resource for CSCD 400",
-                        R.drawable.notification
+                        R.drawable.ic_notifications
+
                 )
         );
         notificationList.add(
@@ -90,7 +96,8 @@ public class NotificationFragment extends Fragment {
                         "Hi Class, I have uploaded the lecture material for the sixth week.",
                         "5:12pm",
                         "New resource for CSCD 400",
-                        R.drawable.notification
+                        R.drawable.ic_notifications
+
                 )
         );
         notificationList.add(
@@ -99,7 +106,8 @@ public class NotificationFragment extends Fragment {
                         "Hi Class, I have uploaded the lecture material for the sixth week.",
                         "5:12pm",
                         "New resource for CSCD 400",
-                        R.drawable.notification
+                        R.drawable.ic_notifications
+
                 )
         );
         notificationList.add(
@@ -108,7 +116,8 @@ public class NotificationFragment extends Fragment {
                         "Hi Class, I have uploaded the lecture material for the sixth week.",
                         "5:12pm",
                         "New resource for CSCD 400",
-                        R.drawable.notification
+                        R.drawable.ic_notifications
+
                 )
         );
         notificationList.add(
@@ -117,7 +126,8 @@ public class NotificationFragment extends Fragment {
                         "Hi Class, I have uploaded the lecture material for the sixth week.",
                         "5:12pm",
                         "New resource for CSCD 400",
-                        R.drawable.notification
+                        R.drawable.ic_notifications
+
                 )
         );
         notificationList.add(
@@ -126,7 +136,8 @@ public class NotificationFragment extends Fragment {
                         "Hi Class, I have uploaded the lecture material for the sixth week.",
                         "5:12pm",
                         "New resource for CSCD 400",
-                        R.drawable.notification
+                        R.drawable.ic_notifications
+
                 )
         );
         notificationList.add(
@@ -135,7 +146,8 @@ public class NotificationFragment extends Fragment {
                         "Hi Class, I have uploaded the lecture material for the sixth week.",
                         "5:12pm",
                         "New resource for CSCD 400",
-                        R.drawable.notification
+                        R.drawable.ic_notifications
+
                 )
         );
         notificationList.add(
@@ -144,7 +156,8 @@ public class NotificationFragment extends Fragment {
                         "Hi Class, I have uploaded the lecture material for the sixth week.",
                         "5:12pm",
                         "New resource for CSCD 400",
-                        R.drawable.notification
+                        R.drawable.ic_notifications
+
                 )
         );
         notificationList.add(
@@ -153,7 +166,8 @@ public class NotificationFragment extends Fragment {
                         "Hi Class, I have uploaded the lecture material for the sixth week.",
                         "5:12pm",
                         "New resource for CSCD 400",
-                        R.drawable.notification
+                        R.drawable.ic_notifications
+
                 )
         );
 

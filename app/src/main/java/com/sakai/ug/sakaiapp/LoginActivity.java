@@ -24,23 +24,25 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    //login form views
     private EditText username;
     private EditText password;
     private Button btnLogin;
 
+    //Retrofit stuff
     private LoginSessionInterface loginSessionInterface;
     private ProfileInterface profileInterface;
     ApiClient apiClient = new ApiClient();
-
-
     private Session session = new Session();
     private Profile profile = new Profile();
-
     private String jsession_id;
+
+    //other necessary stuff
     private String userId;
     private String displayname;
     private String email;
     private String image_url;
+    private ProgressDialog progressDialog;
 
 
     @Override
@@ -48,14 +50,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //defining a progress dialog to show while signing up
+         progressDialog = new ProgressDialog(this);
+
+         //take the user straight to the main activity if already logged in
         if (SharedPreferencesManager.getInstance(this).isLoggedIn()) {
-            //finish();
+            finish();
+            overridePendingTransition(0, 0);
             startActivity(new Intent(this, MainActivity.class));
         }
 
+        //create instances of the interface to be used to make retrofit calls
         loginSessionInterface = apiClient.getApiClient(getApplicationContext()).create(LoginSessionInterface.class);
         profileInterface = apiClient.getApiClient(getApplicationContext()).create(ProfileInterface.class);
 
+        //initialize the UI views
         username = findViewById(R.id.etUsername);
         password = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
@@ -63,10 +72,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    //when access to internet is possible
     private void UserLogin() {
-        //defining a progress dialog to show while signing up
-        final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Logging In...");
         progressDialog.show();
 
@@ -74,13 +80,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final String _username = username.getText().toString().trim();
         final String _password = password.getText().toString().trim();
 
-        //loginSessionInterface = apiClient.getApiClient().create(LoginSessionInterface.class);
         Call<String> call = loginSessionInterface.login(_username, _password);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                //hiding progress dialog
-                progressDialog.dismiss();
                 jsession_id = response.body();
 
                 if (response.code() == 201) {
@@ -88,9 +91,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     SharedPreferencesManager.getInstance(getApplicationContext()).UserLogin(_username, _password, "no");
                     UserSessionDetails();
                     Toast.makeText(getApplicationContext(), response.body(), Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
 
                 } else {
                     Log.d("Status", Integer.toString(response.code()));
@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Log.d("error", "onFailure: failed");
+                Log.d("Login fail", "onFailure: failed");
                 progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -129,25 +129,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFailure(Call<Session> call, Throwable t) {
-                Log.d("Fail", "onFailure: " + t.getMessage());
+                Log.d("User session fail", "onFailure: " + t.getMessage());
             }
         });
     }
 
 
     private void getUserProfileDetails() {
+
         Call<Profile> call2 = profileInterface.getUserProfileDetails(SharedPreferencesManager.getInstance(getApplicationContext()).getUSERID());
         call2.enqueue(new Callback<Profile>() {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Log.d("Session status", "onResponse: Retrieving user profile details");
+                    progressDialog.dismiss();
+
+                    Log.d("Profile status", "onResponse: Retrieving user profile details");
                     profile = response.body();
                     displayname = profile.getDisplayName();
                     email = profile.getEmail();
                     Log.d("Name", "onResponse:" + displayname + " " + email);
                     image_url = profile.getImageUrl();
                     SharedPreferencesManager.getInstance(getApplicationContext()).UserProfileDetails(displayname, email, image_url);
+
+                    //start the main activity
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+
                 } else {
                     Log.d("Response", "onResponse: Error");
                 }
@@ -155,7 +164,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFailure(Call<Profile> call, Throwable t) {
-                Log.d("Fail", "onFailure: " + t.getMessage());
+                Log.d("User profile fail", "onFailure: " + t.getMessage());
             }
         });
     }
@@ -189,36 +198,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-
-    //TODO get back to this when user session timeout is fully understood
-/*
-    public void backgroundUserLogin() {
-        //getting the user details from shared preferences
-        final String _username = SharedPreferencesManager.getInstance(getApplicationContext()).getUsername();
-        final String _password = SharedPreferencesManager.getInstance(getApplicationContext()).getPassword();
-        loginSessionInterface = apiClient.getApiClient(getApplicationContext()).create(LoginSessionInterface.class);
-        Call<String> call = loginSessionInterface.login(_username, _password);
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.code() == 201) {
-                    Log.d("Status", "onResponse: background login");
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Log.d("Status", Integer.toString(response.code()));
-                    //Toast.makeText(getApplicationContext(), "Please check your credentials and try again", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.d("error", "onFailure: failed");
-                //Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-*/
 
 }

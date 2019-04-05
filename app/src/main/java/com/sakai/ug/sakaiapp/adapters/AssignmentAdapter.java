@@ -43,7 +43,7 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         assignmentViewHolder.textViewTime.setText(assignment.getAssignmentCollection().get(i).getTimeCreated().getDisplay());
         assignmentViewHolder.textViewTitle.setText(assignment.getAssignmentCollection().get(i).getTitle());
         assignmentViewHolder.imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.assignment));
-        assignmentViewHolder.imageView2.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_attach_file_black_24dp));
+        //assignmentViewHolder.imageView2.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_attach_file_black_24dp));
 
         assignmentViewHolder.asssignmentclick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +78,7 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
             textViewTime = itemView.findViewById(R.id.textViewTime);
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
             imageView = itemView.findViewById(R.id.imageView);
-            imageView2 = itemView.findViewById(R.id.imageView2);
+            //imageView2 = itemView.findViewById(R.id.imageView2);
             this.onAssignmentItemClickListener = listener;
             asssignmentclick = itemView.findViewById(R.id.asignmentcardview);
 

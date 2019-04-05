@@ -14,13 +14,13 @@ public class Item {
     private String data;
     @SerializedName("endDate")
     @Expose
-    private int endDate;
+    private String endDate;
     @SerializedName("order")
     @Expose
-    private int order;
+    private String order;
     @SerializedName("startDate")
     @Expose
-    private int startDate;
+    private String startDate;
     @SerializedName("title")
     @Expose
     private String title;
@@ -41,27 +41,27 @@ public class Item {
         this.data = data;
     }
 
-    public int getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(int endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    public int getOrder() {
+    public String getOrder() {
         return order;
     }
 
-    public void setOrder(int order) {
+    public void setOrder(String order) {
         this.order = order;
     }
 
-    public int getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(int startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 

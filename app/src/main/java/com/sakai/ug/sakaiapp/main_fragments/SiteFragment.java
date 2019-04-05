@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.sakai.ug.sakaiapp.APIservices.AnnouncementInterface;
 import com.sakai.ug.sakaiapp.APIservices.ApiClient;
@@ -36,6 +38,14 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
     ApiClient apiClient = new ApiClient();
     SitesInterface sitesInterface;
     Site site = new Site();
+    SwipeRefreshLayout swipeRefreshLayout;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Nullable
     @Override
@@ -44,31 +54,48 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_site, container, false);
 
+
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setRefreshing(true);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            retrieveCourseSites();
+        });
+
         recyclerView = view.findViewById(R.id.course_site_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
-
         sitesInterface = apiClient.getApiClient(this.getContext()).create(SitesInterface.class);
+        retrieveCourseSites();
 
+        return view;
+
+    }
+
+    private void retrieveCourseSites() {
         Call<Site> siteCall = sitesInterface.getSites();
         siteCall.enqueue(new Callback<Site>() {
             @Override
             public void onResponse(Call<Site> call, Response<Site> response) {
-                Log.d("SiteResponse", "onResponse: " + response.body());
-                site = response.body();
-                adapter = new CourseSiteAdapter(site, getContext(), SiteFragment.this::onItemClick);
-                recyclerView.setAdapter(adapter);
+                swipeRefreshLayout.setRefreshing(false);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("Course site response", "onResponse: " + response.body());
+                    site = response.body();
+                    adapter = new CourseSiteAdapter(site, getContext(), SiteFragment.this::onItemClick);
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    Toast.makeText(getContext(), "No course sites found. Please try again", Toast.LENGTH_LONG).show();
+                }
+
             }
 
             @Override
             public void onFailure(Call<Site> call, Throwable t) {
-                Log.d("Failure", "onFailure: " + t.getMessage());
+                Log.d("Course site failure", "onFailure: " + t.getMessage());
+                Toast.makeText(getContext(), "Please check your connection and try again", Toast.LENGTH_LONG).show();
             }
         });
-
-        return view;
-
     }
 
 

@@ -2,19 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingTop="2dp"
-    >
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="4dp" />
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp">
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="1dp">
 
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="8dp">
 
             <TextView
                 android:id="@+id/textViewResource"
@@ -23,9 +28,8 @@
                 android:layout_margin="10dp"
                 android:padding="10dp"
                 android:text="Management principles.pdf"
-                android:textSize="16sp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                />
+                android:textSize="16sp" />
 
 
             <android.support.v7.widget.AppCompatImageView
@@ -35,7 +39,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="24dp"/>
+                android:layout_marginEnd="24dp" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

@@ -13,6 +13,6 @@
     <string name="bio_data">Bio</string>
     <string name="student_info">Student Info</string>
     <string name="social_net">Social Networking</string>
-    <string name="welcome">Welcome, </string>
+    <string name="welcome">Welcome,\u0020</string>
     <string name="student_id">10568557</string>
 </resources>

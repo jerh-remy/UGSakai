@@ -30,7 +30,7 @@ import com.sakai.ug.sakaiapp.main_fragments.SiteFragment;
 
 public class CourseSiteActivity extends AppCompatActivity {
 
-
+    //declaring all course site fragments
     final SiteOverviewFragment siteOverviewFragment = new SiteOverviewFragment();
     final AnnouncementFragment announcementFragment = new AnnouncementFragment();
     final AssignmentsFragment assignmentsFragment = new AssignmentsFragment();
@@ -51,10 +51,17 @@ public class CourseSiteActivity extends AppCompatActivity {
         toolbar.setTitle("Course Site");
         setSupportActionBar(toolbar);
 
+        //getting extras from course site adapter
         final String siteid = getIntent().getStringExtra("SITE_ID");
+        final String sitedescription = getIntent().getStringExtra("SITE_DESCRIPTION");
+        final String sitetitle = getIntent().getStringExtra("SITE_TITLE");
 
+        //passing extras into bundle to be shared among all course sites
         Bundle bundle1 = new Bundle();
         bundle1.putString("COURSE_ID", siteid);
+        bundle1.putString("COURSE_DESCRIPTION", sitedescription);
+        bundle1.putString("COURSE_TITLE", sitetitle);
+
         siteOverviewFragment.setArguments(bundle1);
         profileFragment.setArguments(bundle1);
         announcementFragment.setArguments(bundle1);
@@ -63,6 +70,7 @@ public class CourseSiteActivity extends AppCompatActivity {
         assignmentsFragment.setArguments(bundle1);
         gradebookFragment.setArguments(bundle1);
 
+        //committing all the fragments and making the site overview fragment the only initially visible one
         fm.beginTransaction().add(R.id.container, siteOverviewFragment).commit();
         fm.beginTransaction().add(R.id.container, profileFragment).hide(profileFragment).commit();
         fm.beginTransaction().add(R.id.container, announcementFragment).hide(announcementFragment).commit();
@@ -72,6 +80,7 @@ public class CourseSiteActivity extends AppCompatActivity {
         fm.beginTransaction().add(R.id.container, gradebookFragment).hide(gradebookFragment).commit();
 
 
+        //material drawer stuff
         AccountHeader accHeader = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.cobalt)

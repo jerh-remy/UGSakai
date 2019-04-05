@@ -11,6 +11,14 @@ import android.view.ViewGroup;
 import com.sakai.ug.sakaiapp.R;
 
 public class ProfileFragment extends Fragment {
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,

@@ -36,6 +36,7 @@
         </activity>
         <activity android:name=".course_site_details.AssignmentDetailActivity"/>
         <activity android:name=".course_site_details.AnnouncementDetailActivity" />
+        <activity android:name=".ProfileActivity" />
 
 
     </application>

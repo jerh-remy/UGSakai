@@ -34,6 +34,13 @@ public class AnnouncementFragment extends Fragment implements AnnouncementAdapte
     AnnouncementInterface announcementInterface;
     SwipeRefreshLayout swipeRefreshLayout;
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,

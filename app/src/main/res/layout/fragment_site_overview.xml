@@ -21,15 +21,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
+                android:layout_margin="25dp"
                 android:text="CSCD 421"
-                android:textSize="30sp"
+                android:textSize="26sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textStyle="bold"
 
                 />
 
-            <TextView
+           <!-- <TextView
                 android:id="@+id/course_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
                 android:text="MANAGEMENT IN COMPUTING"
                 android:textSize="22sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                />
+                />-->
 
 
             <FrameLayout
@@ -51,10 +51,9 @@
                 android:id="@+id/course_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="16sp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:textSize="18sp"
                 android:text="DESCRIPTION"
                 android:textStyle="bold"
                 />
@@ -66,6 +65,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -73,7 +73,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="#EEEEEE"
-                        android:padding="20dp"
+                        android:padding="15dp"
                         android:textSize="16sp"
                         android:text="Also, many thanks to the hundreds of students who have taken 537 over the
         years. In particular, the Fall ’08 class who encouraged the first written form of
@@ -113,6 +113,7 @@
                 android:padding="5dp"
                 android:drawableTop="@drawable/ic_person_dp"
                 android:gravity="center"
+                android:textSize="16sp"
                 android:text="Mr Michael Soli"
                 android:textStyle="normal"
                 />
@@ -125,6 +126,7 @@
                 android:drawableTop="@drawable/ic_students_dp"
                 android:gravity="center"
                 android:text="66 students"
+                android:textSize="16sp"
                 android:textStyle="normal"/>
 
 

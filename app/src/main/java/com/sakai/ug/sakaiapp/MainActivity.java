@@ -17,6 +17,7 @@ import com.sakai.ug.sakaiapp.main_fragments.SiteFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    //declaring main fragments
     final HomeFragment homeFragment = new HomeFragment();
     final SiteFragment siteFragment = new SiteFragment();
     final NotificationFragment notificationFragment = new NotificationFragment();

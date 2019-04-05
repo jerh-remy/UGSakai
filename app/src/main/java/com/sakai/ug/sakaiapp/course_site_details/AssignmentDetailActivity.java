@@ -43,7 +43,7 @@ public class AssignmentDetailActivity extends AppCompatActivity {
         as_duedate.setText(assignmentduedate);
         TextView as_status = findViewById(R.id.textView5);
         as_status.setText(status);
-        TextView as_instructions = findViewById(R.id.textView);
+        TextView as_instructions = findViewById(R.id.instructionContent);
         as_instructions.setText(Html.fromHtml(instructions));
 
     }

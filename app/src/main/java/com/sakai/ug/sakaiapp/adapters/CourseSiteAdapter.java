@@ -73,6 +73,8 @@ public class CourseSiteAdapter extends RecyclerView.Adapter<CourseSiteAdapter.Co
             onCourseSiteItemClickListener.onItemClick(getAdapterPosition());
             Intent goToOneSite = new Intent(context, CourseSiteActivity.class);
             goToOneSite.putExtra("SITE_ID", coursesiteList.getSiteCollection().get(getAdapterPosition()).getEntityId());
+            goToOneSite.putExtra("SITE_DESCRIPTION", coursesiteList.getSiteCollection().get(getAdapterPosition()).getDescription());
+            goToOneSite.putExtra("SITE_TITLE", coursesiteList.getSiteCollection().get(getAdapterPosition()).getEntityTitle());
             context.startActivity(goToOneSite);
         }
     }

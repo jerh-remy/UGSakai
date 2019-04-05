@@ -30,7 +30,15 @@ public class SyllabusFragment extends Fragment {
     Syllabus syllabus = new Syllabus();
     SyllabusInterface syllabusInterface;
     ApiClient apiClient = new ApiClient();
+    TextView tv_title, tv_body;
 
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Nullable
     @Override
@@ -42,6 +50,9 @@ public class SyllabusFragment extends Fragment {
         Bundle bundle2 = this.getArguments();
         String courseid = bundle2.getString("COURSE_ID");
         Log.d("SiteIDSakai(Syllabus)", "Course id: " + courseid);
+
+        tv_title = view.findViewById(R.id.title);
+        tv_body = view.findViewById(R.id.body);
 
         syllabusInterface = apiClient.getApiClient(this.getContext()).create(SyllabusInterface.class);
         retrieveSyllabus(courseid);
@@ -56,20 +67,31 @@ public class SyllabusFragment extends Fragment {
             @Override
             public void onResponse(Call<Syllabus> call, Response<Syllabus> response) {
                 Log.d("Success", "onResponse: Successful");
-                syllabus = response.body();
-                String title = syllabus.getItems().get(0).getTitle();
-                String body = syllabus.getItems().get(0).getData();
-                TextView tv_title = getView().findViewById(R.id.title);
-                tv_title.setText(title);
-                TextView tv_body = getView().findViewById(R.id.body);
-                tv_body.setText(Html.fromHtml(body));
+                if (response.isSuccessful() && response.body() != null) {
+                    syllabus = response.body();
 
+                    if (syllabus.getItems().size() != 0) {
+                        String title = syllabus.getItems().get(0).getTitle();
+                        String body = syllabus.getItems().get(0).getData();
+                        tv_title.setText(title);
+                        tv_body.setText(Html.fromHtml(body));
+                    } else {
+                        String title = "";
+                        String body = "No syllabus currently exists";
+                        tv_title.setText(title);
+                        tv_body.setText(body);
+                    }
+
+                } else {
+                    Log.d("Response", "onResponse: Error");
+                }
             }
 
             @Override
             public void onFailure(Call<Syllabus> call, Throwable t) {
                 Log.d("Fail", "onFailure: Request failed");
                 Log.d("Status", t.getMessage());
+                Toast.makeText(getContext(), "Please check your connection and try again", Toast.LENGTH_LONG).show();
             }
         });
     }

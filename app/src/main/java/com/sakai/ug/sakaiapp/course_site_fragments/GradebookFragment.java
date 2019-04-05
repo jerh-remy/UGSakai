@@ -23,6 +23,13 @@ public class GradebookFragment extends Fragment {
     private List<GradebookModel> gradebookList;
     RecyclerView recyclerView;
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,

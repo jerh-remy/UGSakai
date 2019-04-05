@@ -35,6 +35,13 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
     AssignmentInterface assignmentInterface;
     SwipeRefreshLayout swipeRefreshLayout;
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -48,9 +55,9 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
 
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setRefreshing(true);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             retrieveAssignments(courseid);
-            swipeRefreshLayout.setRefreshing(false);
         });
 
         recyclerView = view.findViewById(R.id.assignments_list);
@@ -71,6 +78,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
         call.enqueue(new Callback<Assignment>() {
             @Override
             public void onResponse(Call<Assignment> call, Response<Assignment> response) {
+                swipeRefreshLayout.setRefreshing(false);
                 Log.d("Success", "onResponse: Successful");
                 assignment = response.body();
                 assignmentAdapter = new AssignmentAdapter(assignment, getContext(), AssignmentsFragment.this::onItemClick);
@@ -81,7 +89,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
             public void onFailure(Call<Assignment> call, Throwable t) {
                 Log.d("Fail", "onFailure: Request failed");
                 Log.d("Status", t.getMessage());
-                Toast.makeText(getContext(), "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
             }
         });
     }
