@@ -17,6 +17,7 @@
             android:paddingTop="16dp"
             android:paddingRight="16dp"
             android:text="Welcome, Peterson"
+            android:textAllCaps="false"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
 
@@ -25,6 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
+            android:paddingTop="5dp"
+            android:textSize="16sp"
             android:text="5th February, 2019"/>
 
         <TextView
@@ -34,7 +37,7 @@
             android:text="LOGOUT"
             android:layout_gravity="end"
             android:layout_marginRight="30dp"
-            android:textSize="17sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:layout_width="match_parent"

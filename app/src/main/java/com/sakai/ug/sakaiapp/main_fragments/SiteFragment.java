@@ -56,8 +56,9 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
 
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
-        swipeRefreshLayout.setRefreshing(true);
+        //swipeRefreshLayout.setRefreshing(true);
         swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(true);
             retrieveCourseSites();
         });
 
@@ -92,6 +93,7 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
 
             @Override
             public void onFailure(Call<Site> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
                 Log.d("Course site failure", "onFailure: " + t.getMessage());
                 Toast.makeText(getContext(), "Please check your connection and try again", Toast.LENGTH_LONG).show();
             }
@@ -105,4 +107,6 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
         /*Intent intent = new Intent(getActivity(), CourseSiteActivity.class);
         startActivity(intent);*/
     }
+
+
 }

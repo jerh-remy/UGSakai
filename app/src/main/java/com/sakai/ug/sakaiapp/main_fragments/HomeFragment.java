@@ -40,8 +40,9 @@ public class HomeFragment extends Fragment {
         welcome = view.findViewById(R.id.welcome_username);
         date = view.findViewById(R.id.current_date);
 
+
         Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("EEE, d MMMM yyyy");
         String formattedDate = df.format(c);
         date.setText(formattedDate);
 

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <FrameLayout
@@ -21,6 +22,12 @@
             android:layout_height="match_parent"
             android:padding="8dp">
 
+            <LinearLayout
+                android:id="@+id/layhold"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/textViewResource"
                 android:layout_width="wrap_content"
@@ -30,6 +37,23 @@
                 android:text="Management principles.pdf"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                 android:textSize="16sp" />
+                <TextView
+                android:id="@+id/textViewUrl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:text="Management principles.pdf"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/dloadnote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Download Note"/>
+
+            </LinearLayout>
 
 
             <android.support.v7.widget.AppCompatImageView

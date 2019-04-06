@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.sakai.ug.sakaiapp.ProfileActivity">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        app:theme="@style/MyActionBar"
-        android:id="@+id/toolbar">
-    </android.support.v7.widget.Toolbar>
+        app:theme="@style/MyActionBar"></android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -28,8 +27,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#7fd2fa">
-
+                android:background="@color/colorPrimaryLight">
 
                 <RelativeLayout
                     android:id="@+id/subnavitems"
@@ -51,7 +49,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
                             android:layout_marginTop="10dp"
-                            android:layout_marginRight="0dp"
+                            android:layout_marginRight="10dp"
                             android:contentDescription="profile settings"
                             android:src="@drawable/settingschristie" />
 
@@ -60,15 +58,15 @@
                             android:layout_height="120dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="-20dp"
-                            android:src="@drawable/profile_two" />
+                            android:src="@drawable/profile" />
 
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="70dp"
-                            android:layout_marginTop="-10dp"
+                            android:layout_marginLeft="60dp"
+                            android:layout_marginBottom="15dp"
                             android:src="@drawable/photocamera" />
 
                         <TextView
@@ -76,16 +74,17 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="20dp"
-                            android:text=""
-                            android:textSize="18sp" />
+                            android:text="@string/student_fullname"
+                            android:textAllCaps="true"
+                            android:textSize="22sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="10dp"
-                            android:text="@string/student_id"
-                            android:textSize="18sp" />
+                            android:text="10578889"
+                            android:textSize="20sp" />
 
                     </LinearLayout>
 
@@ -96,11 +95,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/subnavitems"
-                    android:layout_marginBottom="0dp"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorPrimary"
                     android:orientation="vertical"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:paddingBottom="20dp">
+                    android:padding="15dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -110,48 +108,68 @@
                         <LinearLayout
                             android:id="@+id/bio_data"
                             android:layout_width="match_parent"
-                            android:layout_height="81dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:background="@drawable/backgroundaboutprofile"
+                            android:background="#fff"
                             android:orientation="vertical"
-                            android:padding="20dp">
+                            android:padding="10dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/bio_data" />
+                                android:text="I am a hardworking student who loves to engage with my peers as well as lecturers. I am very teachable and open to learning new things."
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/student_info"
                             android:layout_width="match_parent"
-                            android:layout_height="81dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:background="@drawable/backgroundaboutprofile"
+                            android:background="#fff"
                             android:orientation="vertical"
                             android:padding="20dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/student_info" />
+                                android:text="@string/student_info"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/student_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:background="#fff"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="jeremy.offori@gmail.com"
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/social_networks"
                             android:layout_width="match_parent"
-                            android:layout_height="81dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:background="@drawable/backgroundaboutprofile"
+                            android:background="#fff"
                             android:orientation="vertical"
                             android:padding="20dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/social_net" />
+                                android:text="https://twitter.com/Jerh_Remy"
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 

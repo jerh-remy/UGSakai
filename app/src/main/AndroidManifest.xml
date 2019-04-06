@@ -4,6 +4,7 @@
 
     <!--Internet Permission-->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -38,6 +39,7 @@
         <activity android:name=".course_site_details.AnnouncementDetailActivity" />
         <activity android:name=".ProfileActivity" />
 
+        <service android:name=".DownloadService"/>
 
     </application>
 
