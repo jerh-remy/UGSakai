@@ -56,7 +56,7 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
 
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
-        //swipeRefreshLayout.setRefreshing(true);
+        swipeRefreshLayout.setRefreshing(true);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
             retrieveCourseSites();

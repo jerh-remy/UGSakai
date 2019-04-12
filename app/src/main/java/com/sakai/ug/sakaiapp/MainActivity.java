@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     final NotificationFragment notificationFragment = new NotificationFragment();
     final ChatFragment chatFragment = new ChatFragment();
     final FragmentManager fm = getSupportFragmentManager();
-    Fragment active = homeFragment;
+    //Fragment active = homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         fm.beginTransaction().add(R.id.fragment_container, homeFragment, "1").commit();
-        fm.beginTransaction().add(R.id.fragment_container, siteFragment, "2").hide(siteFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, notificationFragment, "3").hide(notificationFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, chatFragment, "4").hide(chatFragment).commit();
+        //fm.beginTransaction().add(R.id.fragment_container, siteFragment, "2").hide(siteFragment).commit();
+        //fm.beginTransaction().add(R.id.fragment_container, notificationFragment, "3").hide(notificationFragment).commit();
+        //fm.beginTransaction().add(R.id.fragment_container, chatFragment, "4").hide(chatFragment).commit();
 
     }
 
@@ -48,20 +48,24 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_home:
-                    fm.beginTransaction().hide(active).show(homeFragment).commit();
-                    active = homeFragment;
+                    //fm.beginTransaction().hide(active).show(homeFragment).commit();
+                    fm.beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+                    //active = homeFragment;
                     return true;
                 case R.id.action_sites:
-                    fm.beginTransaction().hide(active).show(siteFragment).commit();
-                    active = siteFragment;
+                    //fm.beginTransaction().hide(active).show(siteFragment).commit();
+                    fm.beginTransaction().replace(R.id.fragment_container, siteFragment).commit();
+                    //active = siteFragment;
                     return true;
                 case R.id.action_notifications:
-                    fm.beginTransaction().hide(active).show(notificationFragment).commit();
-                    active = notificationFragment;
+                    //fm.beginTransaction().hide(active).show(notificationFragment).commit();
+                    fm.beginTransaction().replace(R.id.fragment_container, notificationFragment).commit();
+                    //active = notificationFragment;
                     return true;
                 case R.id.action_chat:
-                    fm.beginTransaction().hide(active).show(chatFragment).commit();
-                    active = chatFragment;
+                    //fm.beginTransaction().hide(active).show(chatFragment).commit();
+                    fm.beginTransaction().replace(R.id.fragment_container, chatFragment).commit();
+                    //active = chatFragment;
                     return true;
 
             }

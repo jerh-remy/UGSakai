@@ -15,6 +15,7 @@ public class ApiClient {
     public Retrofit retrofit = null;
     public OkHttpClient okHttpClient = null;
     private Context context = null;
+    private static String sessionId = null;
 
 
     public OkHttpClient getOkHttpClient(Context context)
@@ -46,5 +47,9 @@ public class ApiClient {
                     .build();
         }
         return retrofit;
+    }
+
+    public void updateSessionId(String sessionId){
+            this.sessionId = sessionId;
     }
 }

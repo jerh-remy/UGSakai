@@ -1,6 +1,11 @@
 package com.sakai.ug.sakaiapp.course_site_fragments;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,6 +26,8 @@ import com.sakai.ug.sakaiapp.models.syllabus.Syllabus;
 
 import org.w3c.dom.Text;
 
+import java.util.HashSet;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,8 +37,7 @@ public class SyllabusFragment extends Fragment {
     Syllabus syllabus = new Syllabus();
     SyllabusInterface syllabusInterface;
     ApiClient apiClient = new ApiClient();
-    TextView tv_title, tv_body;
-
+    TextView tv_title, tv_body, attachment;
 
 
     @Override
@@ -53,6 +59,8 @@ public class SyllabusFragment extends Fragment {
 
         tv_title = view.findViewById(R.id.title);
         tv_body = view.findViewById(R.id.body);
+        attachment = view.findViewById(R.id.attachment);
+        attachment.setText("");
 
         syllabusInterface = apiClient.getApiClient(this.getContext()).create(SyllabusInterface.class);
         retrieveSyllabus(courseid);
@@ -71,10 +79,47 @@ public class SyllabusFragment extends Fragment {
                     syllabus = response.body();
 
                     if (syllabus.getItems().size() != 0) {
+                        Log.d("Syllabus response:", "onResponse: Syllabus found");
                         String title = syllabus.getItems().get(0).getTitle();
                         String body = syllabus.getItems().get(0).getData();
                         tv_title.setText(title);
                         tv_body.setText(Html.fromHtml(body));
+                        if (syllabus.getItems().get(0).getAttachments() != null) {
+                            attachment.setText(syllabus.getItems().get(0).getAttachments().get(0).getTitle());
+                            attachment.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    String linktodownload = "http://sakaiapp.ngrok.io" + syllabus.getItems().get(0).getAttachments().get(0).getUrl();
+
+                                    //download manager stuff
+                                    String servicestring = Context.DOWNLOAD_SERVICE;
+                                    DownloadManager downloadmanager;
+                                    downloadmanager = (DownloadManager) getContext().getSystemService(servicestring);
+                                    Uri uri = Uri.parse(linktodownload);
+                                    DownloadManager.Request request = new DownloadManager.Request(uri);
+                                    HashSet<String> preferences = (HashSet) PreferenceManager
+                                            .getDefaultSharedPreferences(getContext())
+                                            .getStringSet("appCookies", new HashSet<>());
+
+                                    for (String cookie : preferences) {
+                                        request.addRequestHeader("Cookie", cookie);
+                                        Log.d("CookieLogged", cookie);
+                                    }
+                                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                                    request.setTitle(title);
+                                    request.setDescription("Downloading file");
+                                    request.allowScanningByMediaScanner();
+                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,  "UGSakai");
+
+                                    downloadmanager.enqueue(request);
+                                    Toast.makeText(getContext().getApplicationContext(),
+                                            "Your file is now downloading...", Toast.LENGTH_LONG).show();
+
+                                }
+                            });
+                        }
                     } else {
                         String title = "";
                         String body = "No syllabus currently exists";

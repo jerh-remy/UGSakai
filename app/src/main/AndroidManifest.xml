@@ -39,7 +39,6 @@
         <activity android:name=".course_site_details.AnnouncementDetailActivity" />
         <activity android:name=".ProfileActivity" />
 
-        <service android:name=".DownloadService"/>
 
     </application>
 
