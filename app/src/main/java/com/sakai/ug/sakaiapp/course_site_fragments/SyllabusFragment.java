@@ -84,7 +84,7 @@ public class SyllabusFragment extends Fragment {
                         String body = syllabus.getItems().get(0).getData();
                         tv_title.setText(title);
                         tv_body.setText(Html.fromHtml(body));
-                        if (syllabus.getItems().get(0).getAttachments() != null) {
+                        if (syllabus.getItems().get(0).getAttachments().size() != 0) {
                             attachment.setText(syllabus.getItems().get(0).getAttachments().get(0).getTitle());
                             attachment.setOnClickListener(new View.OnClickListener() {
                                 @Override

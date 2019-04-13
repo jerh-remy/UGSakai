@@ -85,8 +85,8 @@ public class CourseSiteActivity extends AppCompatActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.cobalt)
                 .addProfiles(new ProfileDrawerItem()
-                        .withName("Jeremy Offori")
-                        .withEmail("jeremy.offori@gmail.com")
+                        .withName(SharedPreferencesManager.getInstance(getApplicationContext()).getFullname())
+                        .withEmail(SharedPreferencesManager.getInstance(getApplicationContext()).getEmail())
                         .withIcon(R.drawable.profile)
                         .withIdentifier(100)
                 ).withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {

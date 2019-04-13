@@ -8,6 +8,7 @@ public class SharedPreferencesManager {
     private static SharedPreferencesManager mInstance;
     private static Context mCtx;
 
+
     private static final String SHARED_PREF_NAME = "sakaisharedpref";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
@@ -113,6 +114,12 @@ public class SharedPreferencesManager {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
 
         return sharedPreferences.getString(USERID, null);
+    }
+
+    public String getEmail() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+
+        return sharedPreferences.getString(EMAIL, null);
     }
 
 

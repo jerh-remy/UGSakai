@@ -28,4 +28,7 @@ public class TimeCreated {
         this.time = time;
     }
 
+    public TimeCreated(String display) {
+        this.display = display;
+    }
 }

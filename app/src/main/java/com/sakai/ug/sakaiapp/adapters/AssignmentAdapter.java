@@ -15,19 +15,22 @@ import com.sakai.ug.sakaiapp.R;
 import com.sakai.ug.sakaiapp.course_site_details.AssignmentDetailActivity;
 import com.sakai.ug.sakaiapp.course_site_fragments.AnnouncementFragment;
 import com.sakai.ug.sakaiapp.models.assignment.Assignment;
+import com.sakai.ug.sakaiapp.models.assignment.AssignmentCollection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder> {
 
-    private Assignment assignment = new Assignment();
+    //private AssignmentCollection assignmentCollection = new AssignmentCollection();
+    private List<AssignmentCollection> assignmentCollectionList;
     private Context context;
     private final onAssignmentItemClickListener listener;
 
-    public AssignmentAdapter(Assignment assignment, Context context, onAssignmentItemClickListener listener) {
-        this.assignment = assignment;
+    public AssignmentAdapter(Context context, onAssignmentItemClickListener listener) {
         this.context = context;
         this.listener = listener;
+        assignmentCollectionList = new ArrayList<>();
     }
 
     public AssignmentAdapter.AssignmentViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -40,8 +43,8 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
     public void onBindViewHolder(@NonNull AssignmentAdapter.AssignmentViewHolder assignmentViewHolder, int i) {
 
 
-        assignmentViewHolder.textViewTime.setText(assignment.getAssignmentCollection().get(i).getTimeCreated().getDisplay());
-        assignmentViewHolder.textViewTitle.setText(assignment.getAssignmentCollection().get(i).getTitle());
+        assignmentViewHolder.textViewTime.setText(assignmentCollectionList.get(i).getTimeCreated().getDisplay());
+        assignmentViewHolder.textViewTitle.setText(assignmentCollectionList.get(i).getTitle());
         assignmentViewHolder.imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.assignment));
         //assignmentViewHolder.imageView2.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_attach_file_black_24dp));
 
@@ -49,19 +52,30 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
             @Override
             public void onClick(View v) {
                 Intent gotooneasignment = new Intent(context, AssignmentDetailActivity.class);
-                gotooneasignment.putExtra("AS_TITLE", assignment.getAssignmentCollection().get(i).getTitle());
-                gotooneasignment.putExtra("AS_DUEDATE", assignment.getAssignmentCollection().get(i).getDueTimeString());
-                gotooneasignment.putExtra("AS_STATUS", assignment.getAssignmentCollection().get(i).getStatus());
-                gotooneasignment.putExtra("AS_INSTRUCTION", assignment.getAssignmentCollection().get(i).getInstructions());
+                gotooneasignment.putExtra("AS_TITLE", assignmentCollectionList.get(i).getTitle());
+                gotooneasignment.putExtra("AS_DUEDATE", assignmentCollectionList.get(i).getDueTimeString());
+                gotooneasignment.putExtra("AS_STATUS", assignmentCollectionList.get(i).getStatus());
+                gotooneasignment.putExtra("AS_INSTRUCTION", assignmentCollectionList.get(i).getInstructions());
                 context.startActivity(gotooneasignment);
             }
         });
 
     }
 
+    public void addAssignment(AssignmentCollection assignmentCollection) {
+        assignmentCollectionList.add(assignmentCollection);
+        notifyDataSetChanged();
+
+    }
+
+    public void reset() {
+        assignmentCollectionList.clear();
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
-        return assignment.getAssignmentCollection().size();
+        return assignmentCollectionList.size();
     }
 
 
