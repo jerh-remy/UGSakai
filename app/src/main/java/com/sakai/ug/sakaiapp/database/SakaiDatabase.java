@@ -22,10 +22,13 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.sakai.ug.sakaiapp.callback.AssignmentFetchListener;
+import com.sakai.ug.sakaiapp.callback.CourseSiteFetchListener;
 import com.sakai.ug.sakaiapp.helper.Constants;
 import com.sakai.ug.sakaiapp.models.assignment.Assignment;
 import com.sakai.ug.sakaiapp.models.assignment.AssignmentCollection;
 import com.sakai.ug.sakaiapp.models.assignment.TimeCreated;
+import com.sakai.ug.sakaiapp.models.site.Props;
+import com.sakai.ug.sakaiapp.models.site.Site;
 import com.sakai.ug.sakaiapp.models.site.SiteCollection;
 
 import java.util.ArrayList;
@@ -61,6 +64,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         this.onCreate(db);
     }
 
+
     //COURSE SITES
     public void addCourseSite(SiteCollection siteCollection) {
 
@@ -78,6 +82,92 @@ public class SakaiDatabase extends SQLiteOpenHelper {
 
         try {
             db.insert(Constants.DATABASE.COURSE_SITE_TABLE_NAME, null, values);
+        } catch (Exception e) {
+
+        }
+        db.close();
+    }
+
+    public void fetchCourseSites(CourseSiteFetchListener listener) {
+        CourseSiteFetcher fetcher = new CourseSiteFetcher(listener, this.getWritableDatabase());
+        fetcher.start();
+    }
+
+    public class CourseSiteFetcher extends Thread {
+
+        private final CourseSiteFetchListener courseSiteFetchListener;
+        private final SQLiteDatabase mDb;
+
+        public CourseSiteFetcher(CourseSiteFetchListener listener, SQLiteDatabase db) {
+            courseSiteFetchListener = listener;
+            mDb = db;
+        }
+
+        @Override
+        public void run() {
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_COURSE_SITE_QUERY, null);
+
+            final Site site = new Site();
+            List<SiteCollection> siteCollectionList = site.getSiteCollection();
+
+            if (cursor.getCount() > 0) {
+
+                if (cursor.moveToFirst()) {
+                    do {
+
+                        SiteCollection siteCollection = new SiteCollection();
+                        siteCollection.setEntityId(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.SITE_ID)));
+                        siteCollection.setDescription(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.DESCRIPTION)));
+                        siteCollection.setEntityTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ENTITY_TITLE)));
+                        siteCollection.setProps(new Props(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.PROPS_CONTACT_NAME))));
+
+                        siteCollectionList.add(siteCollection);
+                        publishCourseSite(siteCollection);
+
+                    } while (cursor.moveToNext());
+                }
+            }
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    courseSiteFetchListener.onDeliverAllCourseSites(siteCollectionList);
+                    courseSiteFetchListener.onHideDialog();
+                }
+            });
+        }
+
+        public void publishCourseSite(final SiteCollection siteCollection) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    courseSiteFetchListener.onDeliverCourseSite(siteCollection);
+                }
+            });
+        }
+    }
+
+
+    //ASSIGNMENTS
+    public void addAssignment(AssignmentCollection assignmentCollection) {
+
+
+        Log.d(TAG, "Values Got " + assignmentCollection.getEntityId());
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.DATABASE.ASSIGNMENT_ID, assignmentCollection.getEntityId());
+        values.put(Constants.DATABASE.INSTRUCTIONS, assignmentCollection.getInstructions());
+        values.put(Constants.DATABASE.DUE_DATE, assignmentCollection.getDueTimeString());
+        values.put(Constants.DATABASE.STATUS, assignmentCollection.getStatus());
+        values.put(Constants.DATABASE.TITLE, assignmentCollection.getTitle());
+        values.put(Constants.DATABASE.TIME_CREATED, assignmentCollection.getTimeCreated().getDisplay());
+        Log.d(TAG, "SakaiDB Assignment: " + values);
+
+        try {
+            db.insert(Constants.DATABASE.ASSIGNMENT_TABLE_NAME, null, values);
         } catch (Exception e) {
 
         }
@@ -111,7 +201,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                 if (cursor.moveToFirst()) {
                     do {
 
-                        AssignmentCollection assignmentCollection= new AssignmentCollection();
+                        AssignmentCollection assignmentCollection = new AssignmentCollection();
                         assignmentCollection.setEntityId(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ASSIGNMENT_ID)));
                         assignmentCollection.setInstructions(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.INSTRUCTIONS)));
                         assignmentCollection.setDueTimeString(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.DUE_DATE)));
@@ -119,113 +209,6 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                         assignmentCollection.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.TITLE)));
                         assignmentCollection.setTimeCreated(new TimeCreated(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.TIME_CREATED))));
 
-                       /*
-                        flower.setName(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.NAME)));
-                        flower.setPrice(Double.parseDouble(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.PRICE))));
-                        flower.setInstructions(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.INSTRUCTIONS)));
-                        flower.setCategory(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CATEGORY)));
-                        flower.setPicture(Utils.getBitmapFromByte(cursor.getBlob(cursor.getColumnIndex(Constants.DATABASE.PHOTO))));
-                        flower.setProductId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.PRODUCT_ID))));
-                        flower.setPhoto(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.PHOTO_URL)));
-*/
-                        assignmentCollectionList.add(assignmentCollection);
-                        publishAssignment(assignmentCollection);
-
-                    } while (cursor.moveToNext());
-                }
-            }
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mListener.onDeliverAllAssignments(assignmentCollectionList);
-                    mListener.onHideDialog();
-                }
-            });
-        }
-
-        public void publishAssignment(final AssignmentCollection assignmentCollection) {
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mListener.onDeliverAssignment(assignmentCollection);
-                }
-            });
-        }
-    }
-
-
-
-    //ASSIGNMENTS
-    public void addAssignment(AssignmentCollection assignmentCollection) {
-
-
-            Log.d(TAG, "Values Got " + assignmentCollection.getEntityId());
-
-
-            SQLiteDatabase db = this.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            values.put(Constants.DATABASE.ASSIGNMENT_ID, assignmentCollection.getEntityId());
-            values.put(Constants.DATABASE.INSTRUCTIONS, assignmentCollection.getInstructions());
-            values.put(Constants.DATABASE.DUE_DATE, assignmentCollection.getDueTimeString());
-            values.put(Constants.DATABASE.STATUS, assignmentCollection.getStatus());
-            values.put(Constants.DATABASE.TITLE, assignmentCollection.getTitle());
-            values.put(Constants.DATABASE.TIME_CREATED, assignmentCollection.getTimeCreated().getDisplay());
-            Log.d(TAG, "SakaiDB Assignment: " + values);
-
-            try {
-                db.insert(Constants.DATABASE.ASSIGNMENT_TABLE_NAME, null, values);
-            } catch (Exception e) {
-
-            }
-            db.close();
-        }
-
-    public void fetchAssignments(AssignmentFetchListener listener) {
-        AssignmentFetcher fetcher = new AssignmentFetcher(listener, this.getWritableDatabase());
-        fetcher.start();
-    }
-
-    public class AssignmentFetcher extends Thread {
-
-        private final AssignmentFetchListener mListener;
-        private final SQLiteDatabase mDb;
-
-        public AssignmentFetcher(AssignmentFetchListener listener, SQLiteDatabase db) {
-            mListener = listener;
-            mDb = db;
-        }
-
-        @Override
-        public void run() {
-            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_ASSIGNMENTS_QUERY, null);
-
-            final Assignment assignment = new Assignment();
-            List<AssignmentCollection> assignmentCollectionList = assignment.getAssignmentCollection();
-
-            if (cursor.getCount() > 0) {
-
-                if (cursor.moveToFirst()) {
-                    do {
-
-                        AssignmentCollection assignmentCollection= new AssignmentCollection();
-                        assignmentCollection.setEntityId(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ASSIGNMENT_ID)));
-                        assignmentCollection.setInstructions(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.INSTRUCTIONS)));
-                        assignmentCollection.setDueTimeString(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.DUE_DATE)));
-                        assignmentCollection.setStatus(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.STATUS)));
-                        assignmentCollection.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.TITLE)));
-                        assignmentCollection.setTimeCreated(new TimeCreated(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.TIME_CREATED))));
-
-                       /*
-                        flower.setName(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.NAME)));
-                        flower.setPrice(Double.parseDouble(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.PRICE))));
-                        flower.setInstructions(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.INSTRUCTIONS)));
-                        flower.setCategory(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CATEGORY)));
-                        flower.setPicture(Utils.getBitmapFromByte(cursor.getBlob(cursor.getColumnIndex(Constants.DATABASE.PHOTO))));
-                        flower.setProductId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.PRODUCT_ID))));
-                        flower.setPhoto(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.PHOTO_URL)));
-*/
                         assignmentCollectionList.add(assignmentCollection);
                         publishAssignment(assignmentCollection);
 

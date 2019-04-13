@@ -27,6 +27,10 @@ public class Props {
     @Expose
     private String termEid;
 
+    public Props(String contactName) {
+        this.contactName = contactName;
+    }
+
     public String getSectionsExternallyMaintained() {
         return sectionsExternallyMaintained;
     }

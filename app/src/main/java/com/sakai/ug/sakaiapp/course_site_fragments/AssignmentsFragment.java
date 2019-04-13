@@ -71,7 +71,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
         sakaiDatabase = new SakaiDatabase(getContext());
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
-        swipeRefreshLayout.setRefreshing(true);
+        //swipeRefreshLayout.setRefreshing(true);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             retrieveAssignments(courseid);
         });
@@ -129,7 +129,6 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
                     assignmentAdapter.addAssignment(assignmentCollection);
 
                 }
-
                // assignmentAdapter = new AssignmentAdapter(assignment, getContext(), AssignmentsFragment.this::onItemClick);
                // recyclerView.setAdapter(assignmentAdapter);
             }
@@ -162,7 +161,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
 
     @Override
     public void onDeliverAssignment(AssignmentCollection assignmentCollection) {
-        //assignmentAdapter.addAssignment(assignmentCollection);
+        assignmentAdapter.addAssignment(assignmentCollection);
 
     }
 
