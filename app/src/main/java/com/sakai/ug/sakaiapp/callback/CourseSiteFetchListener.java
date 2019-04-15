@@ -22,9 +22,9 @@ import java.util.List;
  */
 public interface CourseSiteFetchListener {
 
-    void onDeliverAllCourseSites(List<SiteCollection> assignmentCollectionList);
+    void onDeliverAllCourseSites(List<SiteCollection> siteCollectionList);
 
-    void onDeliverCourseSite(SiteCollection assignmentCollection);
+    void onDeliverCourseSite(SiteCollection siteCollection);
 
     void onHideDialog();
 }

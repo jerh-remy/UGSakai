@@ -102,7 +102,8 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
 
         @Override
         public void onClick(View v) {
-            onAssignmentItemClickListener.onItemClick(getAdapterPosition());
+            assignmentCollectionList.get(getAdapterPosition());
+            //onAssignmentItemClickListener.onItemClick(getAdapterPosition());
         }
     }
 

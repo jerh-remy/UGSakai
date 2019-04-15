@@ -73,7 +73,8 @@ public class CourseSiteAdapter extends RecyclerView.Adapter<CourseSiteAdapter.Co
 
         @Override
         public void onClick(View v) {
-            onCourseSiteItemClickListener.onItemClick(getAdapterPosition());
+            siteCollectionList.get(getAdapterPosition());
+            //onCourseSiteItemClickListener.onItemClick(getAdapterPosition());
             Intent goToOneSite = new Intent(context, CourseSiteActivity.class);
             goToOneSite.putExtra("SITE_ID", siteCollectionList.get(getAdapterPosition()).getEntityId());
             goToOneSite.putExtra("SITE_DESCRIPTION", siteCollectionList.get(getAdapterPosition()).getDescription());

@@ -15,19 +15,24 @@ import android.widget.TextView;
 import com.sakai.ug.sakaiapp.R;
 import com.sakai.ug.sakaiapp.course_site_details.AnnouncementDetailActivity;
 import com.sakai.ug.sakaiapp.models.announcement.Announcement;
+import com.sakai.ug.sakaiapp.models.announcement.AnnouncementCollection;
+import com.sakai.ug.sakaiapp.models.site.SiteCollection;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementAdapter.AnnouncementViewHolder> {
 
 
-    private Announcement announcement = new Announcement();
+    private List<AnnouncementCollection> announcementList;
     private Context context;
     private final onAnnouncementItemClickListener listener;
 
-    public AnnouncementAdapter(Announcement announcement, Context context, onAnnouncementItemClickListener listener) {
-        this.announcement = announcement;
+    public AnnouncementAdapter(Context context, onAnnouncementItemClickListener listener) {
         this.context = context;
         this.listener = listener;
+        announcementList = new ArrayList<>();
     }
 
     @NonNull
@@ -42,15 +47,15 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementAdapte
     @Override
     public void onBindViewHolder(@NonNull AnnouncementViewHolder announcementViewHolder, int i) {
 
-        announcementViewHolder.textViewTitle.setText(announcement.getAnnouncementCollection().get(i).getTitle());
-        announcementViewHolder.textViewShortDesc.setText(Html.fromHtml(announcement.getAnnouncementCollection().get(i).getBody()));
+        announcementViewHolder.textViewTitle.setText(announcementList.get(i).getTitle());
+        announcementViewHolder.textViewShortDesc.setText(Html.fromHtml(announcementList.get(i).getBody()));
         announcementViewHolder.imageView.setImageDrawable(announcementViewHolder.imageView.getResources().getDrawable(R.drawable.ic_announcement));
 
     }
 
     @Override
     public int getItemCount() {
-        return announcement.getAnnouncementCollection().size();
+        return announcementList.size();
     }
 
     class AnnouncementViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -72,12 +77,13 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementAdapte
 
         @Override
         public void onClick(View v) {
-            onAnnouncementItemClickListener.onItemClick(getAdapterPosition());
+            announcementList.get(getAdapterPosition());
+            //onAnnouncementItemClickListener.onItemClick(getAdapterPosition());
             Intent goToOneAnnouncement = new Intent(context, AnnouncementDetailActivity.class);
-            goToOneAnnouncement.putExtra("AN_TITLE", announcement.getAnnouncementCollection().get(getAdapterPosition()).getTitle());
-            goToOneAnnouncement.putExtra("AN_SAVED_BY", announcement.getAnnouncementCollection().get(getAdapterPosition()).getCreatedByDisplayName());
+            goToOneAnnouncement.putExtra("AN_TITLE", announcementList.get(getAdapterPosition()).getTitle());
+            goToOneAnnouncement.putExtra("AN_SAVED_BY", announcementList.get(getAdapterPosition()).getCreatedByDisplayName());
             //goToOneAnnouncement.putExtra("AN_MODIFIED_DATE", announcement.getAnnouncementCollection().get(getAdapterPosition()).getTitle());
-            goToOneAnnouncement.putExtra("AN_BODY", announcement.getAnnouncementCollection().get(getAdapterPosition()).getBody());
+            goToOneAnnouncement.putExtra("AN_BODY", announcementList.get(getAdapterPosition()).getBody());
             context.startActivity(goToOneAnnouncement);
         }
     }
@@ -86,5 +92,17 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementAdapte
     public interface onAnnouncementItemClickListener {
         void onItemClick(int position);
     }
+
+    public void addAnnouncement(AnnouncementCollection announcementCollection) {
+        announcementList.add(announcementCollection);
+        notifyDataSetChanged();
+
+    }
+
+    public void reset() {
+        announcementList.clear();
+        notifyDataSetChanged();
+    }
+
 }
 

@@ -25,44 +25,65 @@ public class Constants {
     public static final class DATABASE {
 
         public static final String DB_NAME = "sakaidatabase";
-        public static final int DB_VERSION = 3;
+        public static final int DB_VERSION = 7;
 
         //tables
         public static final String COURSE_SITE_TABLE_NAME = "courseSite";
         public static final String ASSIGNMENT_TABLE_NAME = "assignment";
+        public static final String ANNOUNCEMENT_TABLE_NAME = "announcement";
 
         //drop queries
         public static final String ASSIGNMENT_DROP_QUERY = "DROP TABLE IF EXISTS " + ASSIGNMENT_TABLE_NAME;
         public static final String COURSE_SITE_DROP_QUERY = "DROP TABLE IF EXISTS " + COURSE_SITE_TABLE_NAME;
+        public static final String ANNOUNCEMENT_DROP_QUERY = "DROP TABLE IF EXISTS " + ANNOUNCEMENT_TABLE_NAME;
 
         //get queries
         public static final String GET_ASSIGNMENTS_QUERY = "SELECT * FROM " + ASSIGNMENT_TABLE_NAME;
+        public static final String GET_ANNOUNCEMENTS_QUERY = "SELECT * FROM " + ANNOUNCEMENT_TABLE_NAME;
         public static final String GET_COURSE_SITE_QUERY = "SELECT * FROM " + COURSE_SITE_TABLE_NAME;
 
-        //course site table fields
+        //course site table columns
         public static final String SITE_ID = "siteId";
         public static final String DESCRIPTION = "description";
         public static final String ENTITY_TITLE = "entityTitle";
         public static final String PROPS_CONTACT_NAME = "propsContactName";
 
-
-        //assignment table fields
+        //assignment table columns
         public static final String ASSIGNMENT_ID = "assignmentId";
-        public static final String TITLE = "title";
+        public static final String ASS_TITLE = "title";
         public static final String DUE_DATE = "due_date";
         public static final String STATUS = "status";
         public static final String INSTRUCTIONS = "instructions";
         public static final String TIME_CREATED = "time_created";
+        public static final String ASS_SITE_ID = "site_id";
+
+        //announcement table columns
+        public static final String ANNOUNCEMENT_ID = "announcement";
+        public static final String ANN_TITLE = "title";
+        public static final String BODY = "body";
+        public static final String CREATED_BY = "created_by";
+        public static final String CREATED_ON = "created_on";
+        public static final String ANN_SITE_ID = "site_id";
 
 
         //create table queries
         public static final String CREATE_ASSIGNMENT_TABLE_QUERY = "CREATE TABLE " + ASSIGNMENT_TABLE_NAME + "" +
                 "(" + ASSIGNMENT_ID + " TEXT PRIMARY KEY not null," +
-                TITLE + " TEXT not null," +
+                ASS_TITLE + " TEXT not null," +
                 DUE_DATE + " TEXT not null," +
                 STATUS + " TEXT not null," +
+                ASS_SITE_ID + " TEXT not null," +
                 INSTRUCTIONS + " TEXT not null," +
                 TIME_CREATED + " TEXT not null)";
+
+
+        public static final String CREATE_ANNOUNCEMENT_TABLE_QUERY = "CREATE TABLE " + ANNOUNCEMENT_TABLE_NAME + "" +
+                "(" + ANNOUNCEMENT_ID + " TEXT PRIMARY KEY not null," +
+                ANN_TITLE + " TEXT not null," +
+                BODY + " TEXT not null," +
+                CREATED_BY + " TEXT not null," +
+                CREATED_ON + " TEXT not null," +
+                ANN_SITE_ID + " TEXT not null)";
 
 
         public static final String CREATE_SITES_TABLE_QUERY = "CREATE TABLE " + COURSE_SITE_TABLE_NAME + "" +

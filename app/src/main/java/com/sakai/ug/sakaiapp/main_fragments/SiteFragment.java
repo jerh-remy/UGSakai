@@ -54,7 +54,6 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Nullable
@@ -65,9 +64,7 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
         View view = inflater.inflate(R.layout.fragment_site, container, false);
 
         sakaiDatabase = new SakaiDatabase(getContext());
-
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
-        //swipeRefreshLayout.setRefreshing(true);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
             retrieveCourseSites();
@@ -93,10 +90,11 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
 
         adapter.reset();
 
-
         if (getNetworkAvailability()) {
+            Log.d("Network status", "loadCourseSites: Network available");
             retrieveCourseSites();
         } else {
+            Log.d("Network status", "loadCourseSites: Network unavailable, retrieving from database");
             getCourseSitesFromDatabase();
         }
     }
@@ -108,15 +106,16 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
 
     private void retrieveCourseSites() {
         Call<Site> siteCall = sitesInterface.getSites();
+        swipeRefreshLayout.setRefreshing(true);
+
         siteCall.enqueue(new Callback<Site>() {
             @Override
             public void onResponse(Call<Site> call, Response<Site> response) {
                 swipeRefreshLayout.setRefreshing(false);
 
                 if (response.isSuccessful() && response.body() != null) {
-                    Log.d("Course site response", "onResponse: " + response.body());
+                    Log.d("Course site response", "onResponse: " + response.body().getSiteCollection().size());
                     site = response.body();
-                    //Log.d("Response body", "onResponse: " + site.getSiteCollection().get(0).getEntityId());
 
                     for (int i = 0; i < site.getSiteCollection().size(); i++) {
                         siteCollection = site.getSiteCollection().get(i);
@@ -145,7 +144,7 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
 
     @Override
     public void onItemClick(int position) {
-        site.getSiteCollection().get(position);
+        //siteCollectionList.get(position);
         /*Intent intent = new Intent(getActivity(), CourseSiteActivity.class);
         startActivity(intent);*/
     }
@@ -156,7 +155,7 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
 
 
     @Override
-    public void onDeliverAllCourseSites(List<SiteCollection> assignmentCollectionList) {
+    public void onDeliverAllCourseSites(List<SiteCollection> siteCollectionList) {
 
     }
 
@@ -173,7 +172,7 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
     public class SaveIntoDatabase extends AsyncTask<SiteCollection, Void, Void> {
 
 
-        private final String TAG = AssignmentsFragment.SaveIntoDatabase.class.getSimpleName();
+        private final String TAG = SiteFragment.SaveIntoDatabase.class.getSimpleName();
 
         @Override
         protected void onPreExecute() {

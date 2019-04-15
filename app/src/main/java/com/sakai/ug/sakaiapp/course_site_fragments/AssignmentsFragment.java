@@ -81,25 +81,25 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
         assignmentAdapter = new AssignmentAdapter(getContext(), AssignmentsFragment.this::onItemClick);
-
         recyclerView.setAdapter(assignmentAdapter);
 
         assignmentInterface = apiClient.getApiClient(this.getContext()).create(AssignmentInterface.class);
 
-        loadAssignmentFeed();
+        loadAssignments();
 
         return view;
     }
 
 
-    private void loadAssignmentFeed() {
+    private void loadAssignments() {
 
         assignmentAdapter.reset();
 
-
         if (getNetworkAvailability()) {
+            Log.d("Network status", "Network available");
             retrieveAssignments(courseid);
         } else {
+            Log.d("Network status", "loadAssignments: Network unavailable, retrieving from database");
             getAssignmentsFromDatabase();
         }
     }

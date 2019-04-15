@@ -13,6 +13,7 @@ package com.sakai.ug.sakaiapp.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,9 +22,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.sakai.ug.sakaiapp.callback.AnnouncementFetchListener;
 import com.sakai.ug.sakaiapp.callback.AssignmentFetchListener;
 import com.sakai.ug.sakaiapp.callback.CourseSiteFetchListener;
 import com.sakai.ug.sakaiapp.helper.Constants;
+import com.sakai.ug.sakaiapp.models.announcement.Announcement;
+import com.sakai.ug.sakaiapp.models.announcement.AnnouncementCollection;
 import com.sakai.ug.sakaiapp.models.assignment.Assignment;
 import com.sakai.ug.sakaiapp.models.assignment.AssignmentCollection;
 import com.sakai.ug.sakaiapp.models.assignment.TimeCreated;
@@ -51,6 +55,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         try {
             db.execSQL(Constants.DATABASE.CREATE_ASSIGNMENT_TABLE_QUERY);
+            db.execSQL(Constants.DATABASE.CREATE_ANNOUNCEMENT_TABLE_QUERY);
             db.execSQL(Constants.DATABASE.CREATE_SITES_TABLE_QUERY);
         } catch (SQLException ex) {
             Log.d(TAG, ex.getMessage());
@@ -60,6 +65,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(Constants.DATABASE.ASSIGNMENT_DROP_QUERY);
+        db.execSQL(Constants.DATABASE.ANNOUNCEMENT_DROP_QUERY);
         db.execSQL(Constants.DATABASE.COURSE_SITE_DROP_QUERY);
         this.onCreate(db);
     }
@@ -98,6 +104,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         private final CourseSiteFetchListener courseSiteFetchListener;
         private final SQLiteDatabase mDb;
 
+
         public CourseSiteFetcher(CourseSiteFetchListener listener, SQLiteDatabase db) {
             courseSiteFetchListener = listener;
             mDb = db;
@@ -106,20 +113,20 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         @Override
         public void run() {
             Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_COURSE_SITE_QUERY, null);
+            //Log.d(TAG, "number of columns in table: " + cursor.getColumnCount());
 
-            final Site site = new Site();
-            List<SiteCollection> siteCollectionList = site.getSiteCollection();
+            List<SiteCollection> siteCollectionList = new ArrayList<>();
 
             if (cursor.getCount() > 0) {
 
                 if (cursor.moveToFirst()) {
                     do {
-
                         SiteCollection siteCollection = new SiteCollection();
                         siteCollection.setEntityId(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.SITE_ID)));
                         siteCollection.setDescription(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.DESCRIPTION)));
                         siteCollection.setEntityTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ENTITY_TITLE)));
                         siteCollection.setProps(new Props(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.PROPS_CONTACT_NAME))));
+                        Log.d(TAG, "course site fetched: " + siteCollection);
 
                         siteCollectionList.add(siteCollection);
                         publishCourseSite(siteCollection);
@@ -132,6 +139,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                 @Override
                 public void run() {
                     courseSiteFetchListener.onDeliverAllCourseSites(siteCollectionList);
+                    Log.d(TAG, "course site list fetched: " + siteCollectionList);
                     courseSiteFetchListener.onHideDialog();
                 }
             });
@@ -162,7 +170,8 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         values.put(Constants.DATABASE.INSTRUCTIONS, assignmentCollection.getInstructions());
         values.put(Constants.DATABASE.DUE_DATE, assignmentCollection.getDueTimeString());
         values.put(Constants.DATABASE.STATUS, assignmentCollection.getStatus());
-        values.put(Constants.DATABASE.TITLE, assignmentCollection.getTitle());
+        values.put(Constants.DATABASE.ASS_TITLE, assignmentCollection.getTitle());
+        values.put(Constants.DATABASE.ASS_SITE_ID, assignmentCollection.getContext());
         values.put(Constants.DATABASE.TIME_CREATED, assignmentCollection.getTimeCreated().getDisplay());
         Log.d(TAG, "SakaiDB Assignment: " + values);
 
@@ -193,21 +202,21 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         public void run() {
             Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_ASSIGNMENTS_QUERY, null);
 
-            final Assignment assignment = new Assignment();
-            List<AssignmentCollection> assignmentCollectionList = assignment.getAssignmentCollection();
+            List<AssignmentCollection> assignmentCollectionList = new ArrayList<>();
 
             if (cursor.getCount() > 0) {
 
                 if (cursor.moveToFirst()) {
                     do {
-
                         AssignmentCollection assignmentCollection = new AssignmentCollection();
                         assignmentCollection.setEntityId(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ASSIGNMENT_ID)));
+                        assignmentCollection.setContext(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ASS_SITE_ID)));
                         assignmentCollection.setInstructions(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.INSTRUCTIONS)));
                         assignmentCollection.setDueTimeString(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.DUE_DATE)));
                         assignmentCollection.setStatus(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.STATUS)));
-                        assignmentCollection.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.TITLE)));
+                        assignmentCollection.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ASS_TITLE)));
                         assignmentCollection.setTimeCreated(new TimeCreated(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.TIME_CREATED))));
+                        Log.d(TAG, "assignment fetched: " + assignmentCollection);
 
                         assignmentCollectionList.add(assignmentCollection);
                         publishAssignment(assignmentCollection);
@@ -235,4 +244,94 @@ public class SakaiDatabase extends SQLiteOpenHelper {
             });
         }
     }
+
+
+    //ANNOUNCEMENTS
+    public void addAnnouncement(AnnouncementCollection announcementCollection) {
+
+
+        Log.d(TAG, "Values Got " + announcementCollection.getEntityId());
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.DATABASE.ANNOUNCEMENT_ID, announcementCollection.getAnnouncementId());
+        values.put(Constants.DATABASE.ANN_TITLE, announcementCollection.getTitle());
+        values.put(Constants.DATABASE.BODY, announcementCollection.getBody());
+        values.put(Constants.DATABASE.CREATED_BY, announcementCollection.getCreatedByDisplayName());
+        values.put(Constants.DATABASE.CREATED_ON, announcementCollection.getCreatedOn());
+        values.put(Constants.DATABASE.ANN_SITE_ID, announcementCollection.getSiteId());
+        Log.d(TAG, "SakaiDB Announcement: " + values);
+
+        try {
+            db.insert(Constants.DATABASE.ANNOUNCEMENT_TABLE_NAME, null, values);
+        } catch (Exception e) {
+
+        }
+        db.close();
+    }
+
+    public void fetchAnnouncements(AnnouncementFetchListener listener) {
+        AnnouncementFetcher fetcher = new AnnouncementFetcher(listener, this.getWritableDatabase());
+        fetcher.start();
+    }
+
+    public class AnnouncementFetcher extends Thread {
+
+        private final AnnouncementFetchListener mListener;
+        private final SQLiteDatabase mDb;
+
+        public AnnouncementFetcher(AnnouncementFetchListener listener, SQLiteDatabase db) {
+            mListener = listener;
+            mDb = db;
+        }
+
+        @Override
+        public void run() {
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_ANNOUNCEMENTS_QUERY, null);
+
+            List<AnnouncementCollection> announcementCollectionList = new ArrayList<>();
+
+            if (cursor.getCount() > 0) {
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        AnnouncementCollection announcementCollection = new AnnouncementCollection();
+                        announcementCollection.setAnnouncementId(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ANNOUNCEMENT_ID)));
+                        announcementCollection.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ANN_TITLE)));
+                        announcementCollection.setBody(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.BODY)));
+                        announcementCollection.setCreatedByDisplayName(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CREATED_BY)));
+                        announcementCollection.setCreatedOn(Double.parseDouble(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CREATED_ON))));
+                        announcementCollection.setSiteId(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ANN_SITE_ID)));
+                        Log.d(TAG, "announcement fetched: " + announcementCollection);
+
+
+                        announcementCollectionList.add(announcementCollection);
+                        publishAnnouncement(announcementCollection);
+
+                    } while (cursor.moveToNext());
+                }
+            }
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onDeliverAllAnnouncements(announcementCollectionList);
+                    mListener.onHideDialog();
+                }
+            });
+        }
+
+        public void publishAnnouncement(final AnnouncementCollection announcementCollection) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onDeliverAnnouncement(announcementCollection);
+                }
+            });
+        }
+    }
+
+
 }
