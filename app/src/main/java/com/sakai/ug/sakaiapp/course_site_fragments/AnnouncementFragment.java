@@ -102,7 +102,7 @@ public class AnnouncementFragment extends Fragment implements AnnouncementAdapte
     }
 
     private void getAnnouncementsFromDatabase() {
-        sakaiDatabase.fetchAnnouncements(this);
+        sakaiDatabase.fetchAnnouncements(this, courseid);
     }
 
     @Override

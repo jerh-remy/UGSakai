@@ -25,12 +25,14 @@ import android.util.Log;
 import com.sakai.ug.sakaiapp.callback.AnnouncementFetchListener;
 import com.sakai.ug.sakaiapp.callback.AssignmentFetchListener;
 import com.sakai.ug.sakaiapp.callback.CourseSiteFetchListener;
+import com.sakai.ug.sakaiapp.callback.ResourceFetchListener;
 import com.sakai.ug.sakaiapp.helper.Constants;
 import com.sakai.ug.sakaiapp.models.announcement.Announcement;
 import com.sakai.ug.sakaiapp.models.announcement.AnnouncementCollection;
 import com.sakai.ug.sakaiapp.models.assignment.Assignment;
 import com.sakai.ug.sakaiapp.models.assignment.AssignmentCollection;
 import com.sakai.ug.sakaiapp.models.assignment.TimeCreated;
+import com.sakai.ug.sakaiapp.models.resources.ContentCollection;
 import com.sakai.ug.sakaiapp.models.site.Props;
 import com.sakai.ug.sakaiapp.models.site.Site;
 import com.sakai.ug.sakaiapp.models.site.SiteCollection;
@@ -57,6 +59,8 @@ public class SakaiDatabase extends SQLiteOpenHelper {
             db.execSQL(Constants.DATABASE.CREATE_ASSIGNMENT_TABLE_QUERY);
             db.execSQL(Constants.DATABASE.CREATE_ANNOUNCEMENT_TABLE_QUERY);
             db.execSQL(Constants.DATABASE.CREATE_SITES_TABLE_QUERY);
+            db.execSQL(Constants.DATABASE.CREATE_RESOURCES_TABLE_QUERY);
+            db.execSQL(Constants.DATABASE.CREATE_SYLLABUS_TABLE_QUERY);
         } catch (SQLException ex) {
             Log.d(TAG, ex.getMessage());
         }
@@ -67,6 +71,8 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         db.execSQL(Constants.DATABASE.ASSIGNMENT_DROP_QUERY);
         db.execSQL(Constants.DATABASE.ANNOUNCEMENT_DROP_QUERY);
         db.execSQL(Constants.DATABASE.COURSE_SITE_DROP_QUERY);
+        db.execSQL(Constants.DATABASE.SYLLABUS_DROP_QUERY);
+        db.execSQL(Constants.DATABASE.RESOURCES_DROP_QUERY);
         this.onCreate(db);
     }
 
@@ -183,8 +189,8 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void fetchAssignments(AssignmentFetchListener listener) {
-        AssignmentFetcher fetcher = new AssignmentFetcher(listener, this.getWritableDatabase());
+    public void fetchAssignments(AssignmentFetchListener listener, String courseID) {
+        AssignmentFetcher fetcher = new AssignmentFetcher(listener, this.getWritableDatabase(), courseID);
         fetcher.start();
     }
 
@@ -192,15 +198,17 @@ public class SakaiDatabase extends SQLiteOpenHelper {
 
         private final AssignmentFetchListener mListener;
         private final SQLiteDatabase mDb;
+        private final String siteID;
 
-        public AssignmentFetcher(AssignmentFetchListener listener, SQLiteDatabase db) {
+        public AssignmentFetcher(AssignmentFetchListener listener, SQLiteDatabase db, String courseID) {
             mListener = listener;
             mDb = db;
+            siteID = courseID;
         }
 
         @Override
         public void run() {
-            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_ASSIGNMENTS_QUERY, null);
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_ASSIGNMENTS_QUERY, new String[] {siteID});
 
             List<AssignmentCollection> assignmentCollectionList = new ArrayList<>();
 
@@ -271,8 +279,8 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void fetchAnnouncements(AnnouncementFetchListener listener) {
-        AnnouncementFetcher fetcher = new AnnouncementFetcher(listener, this.getWritableDatabase());
+    public void fetchAnnouncements(AnnouncementFetchListener listener, String courseID) {
+        AnnouncementFetcher fetcher = new AnnouncementFetcher(listener, this.getWritableDatabase(), courseID);
         fetcher.start();
     }
 
@@ -280,15 +288,17 @@ public class SakaiDatabase extends SQLiteOpenHelper {
 
         private final AnnouncementFetchListener mListener;
         private final SQLiteDatabase mDb;
+        private final String siteID;
 
-        public AnnouncementFetcher(AnnouncementFetchListener listener, SQLiteDatabase db) {
+        public AnnouncementFetcher(AnnouncementFetchListener listener, SQLiteDatabase db, String courseID) {
             mListener = listener;
             mDb = db;
+            siteID = courseID;
         }
 
         @Override
         public void run() {
-            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_ANNOUNCEMENTS_QUERY, null);
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_ANNOUNCEMENTS_QUERY, new String[] {siteID});
 
             List<AnnouncementCollection> announcementCollectionList = new ArrayList<>();
 
@@ -328,6 +338,90 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                 @Override
                 public void run() {
                     mListener.onDeliverAnnouncement(announcementCollection);
+                }
+            });
+        }
+    }
+
+
+    //RESOURCES
+    public void addResources(ContentCollection contentCollection) {
+
+
+        Log.d(TAG, "Values Got " + contentCollection.getTitle());
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.DATABASE.RES_TITLE, contentCollection.getTitle());
+        values.put(Constants.DATABASE.TYPE, contentCollection.getType());
+        values.put(Constants.DATABASE.NO_OF_CHILDREN, contentCollection.getNumChildren());
+        values.put(Constants.DATABASE.RES_SITE_ID, contentCollection.getSiteID());
+        Log.d(TAG, "SakaiDB Resource: " + values);
+
+        try {
+            db.insert(Constants.DATABASE.RESOURCES_TABLE_NAME, null, values);
+        } catch (Exception e) {
+
+        }
+        db.close();
+    }
+
+    public void fetchResources(ResourceFetchListener listener, String courseID) {
+        ResourcesFetcher fetcher = new ResourcesFetcher(listener, this.getWritableDatabase(), courseID);
+        fetcher.start();
+    }
+
+    public class ResourcesFetcher extends Thread {
+
+        private final ResourceFetchListener mListener;
+        private final SQLiteDatabase mDb;
+        private final String siteID;
+
+        public ResourcesFetcher(ResourceFetchListener listener, SQLiteDatabase db, String courseID) {
+            mListener = listener;
+            mDb = db;
+            siteID = courseID;
+        }
+
+        @Override
+        public void run() {
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_RESOURCES_QUERY, new String[] {siteID});
+
+            List<ContentCollection> contentCollectionList = new ArrayList<>();
+
+            if (cursor.getCount() > 0) {
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        ContentCollection contentCollection = new ContentCollection();
+                        contentCollection.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.RES_TITLE)));
+                        contentCollection.setType(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.TYPE)));
+                        contentCollection.setNumChildren(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.NO_OF_CHILDREN))));
+                        Log.d(TAG, "resource fetched: " + contentCollection);
+
+                        contentCollectionList.add(contentCollection);
+                        publishResource(contentCollection);
+
+                    } while (cursor.moveToNext());
+                }
+            }
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onDeliverAllResources(contentCollectionList);
+                    mListener.onHideDialog();
+                }
+            });
+        }
+
+        public void publishResource(final ContentCollection contentCollection) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onDeliverResource(contentCollection);
                 }
             });
         }

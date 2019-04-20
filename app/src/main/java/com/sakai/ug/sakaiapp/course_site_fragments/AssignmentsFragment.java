@@ -105,7 +105,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
     }
 
     private void getAssignmentsFromDatabase() {
-        sakaiDatabase.fetchAssignments(this);
+        sakaiDatabase.fetchAssignments(this, courseid);
     }
 
 

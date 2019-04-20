@@ -15,7 +15,7 @@ public class AssignmentCollection {
     private Object allPurposeItemText;
     @SerializedName("attachments")
     @Expose
-    private List<Object> attachments = null;
+    private List<Attachment> attachments = null;
     @SerializedName("authorLastModified")
     @Expose
     private String authorLastModified;
@@ -141,11 +141,11 @@ public class AssignmentCollection {
         this.allPurposeItemText = allPurposeItemText;
     }
 
-    public List<Object> getAttachments() {
+    public List<Attachment> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<Object> attachments) {
+    public void setAttachments(List<Attachment> attachments) {
         this.attachments = attachments;
     }
 

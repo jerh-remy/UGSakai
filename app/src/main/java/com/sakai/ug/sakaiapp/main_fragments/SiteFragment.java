@@ -88,15 +88,15 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
 
     private void loadCourseSites() {
 
-        adapter.reset();
+            adapter.reset();
 
-        if (getNetworkAvailability()) {
-            Log.d("Network status", "loadCourseSites: Network available");
-            retrieveCourseSites();
-        } else {
-            Log.d("Network status", "loadCourseSites: Network unavailable, retrieving from database");
-            getCourseSitesFromDatabase();
-        }
+            if (getNetworkAvailability()) {
+                Log.d("Network status", "loadCourseSites: Network available");
+                retrieveCourseSites();
+            } else {
+                Log.d("Network status", "loadCourseSites: Network unavailable, retrieving from database");
+                getCourseSitesFromDatabase();
+            }
     }
 
     private void getCourseSitesFromDatabase() {

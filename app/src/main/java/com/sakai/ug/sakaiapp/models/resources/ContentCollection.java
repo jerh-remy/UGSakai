@@ -66,6 +66,16 @@ public class ContentCollection {
     @Expose
     private String entityTitle;
 
+    private String siteID;
+
+    public String getSiteID() {
+        return siteID;
+    }
+
+    public void setSiteID(String siteID) {
+        this.siteID = siteID;
+    }
+
     public String getAuthor() {
         return author;
     }

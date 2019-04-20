@@ -189,7 +189,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final String _username = username.getText().toString().trim();
         final String _password = password.getText().toString().trim();
 
-        if(_username.equals("admin")  && _password.equals("1234"))
+        if(_username.equals("1")  && _password.equals("1"))
         {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);

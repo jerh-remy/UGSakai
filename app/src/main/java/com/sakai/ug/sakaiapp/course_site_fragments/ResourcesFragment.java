@@ -1,6 +1,7 @@
 package com.sakai.ug.sakaiapp.course_site_fragments;
 
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,8 +21,14 @@ import com.sakai.ug.sakaiapp.APIservices.ResourcesInterface;
 import com.sakai.ug.sakaiapp.R;
 import com.sakai.ug.sakaiapp.adapters.AnnouncementAdapter;
 import com.sakai.ug.sakaiapp.adapters.ResourcesAdapter;
+import com.sakai.ug.sakaiapp.callback.ResourceFetchListener;
+import com.sakai.ug.sakaiapp.database.SakaiDatabase;
+import com.sakai.ug.sakaiapp.helper.Utils;
+import com.sakai.ug.sakaiapp.main_fragments.SiteFragment;
 import com.sakai.ug.sakaiapp.models.announcement.Announcement;
+import com.sakai.ug.sakaiapp.models.resources.ContentCollection;
 import com.sakai.ug.sakaiapp.models.resources.Resources;
+import com.sakai.ug.sakaiapp.models.site.SiteCollection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,16 +37,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ResourcesFragment extends Fragment {
+public class ResourcesFragment extends Fragment implements ResourceFetchListener {
     private static final int PERMISSION_STORAGE_CODE = 1000;
 
     Resources resources = new Resources();
     RecyclerView recyclerView;
-    private ResourcesAdapter adapter;
+    ResourcesAdapter adapter;
     ApiClient apiClient = new ApiClient();
     ResourcesInterface resourcesInterface;
+    SakaiDatabase sakaiDatabase;
+    ContentCollection contentCollection = new ContentCollection();
     SwipeRefreshLayout swipeRefreshLayout;
-    private Resources resourcesList;
+    private String courseid;
 
 
     @Override
@@ -54,11 +63,12 @@ public class ResourcesFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         Bundle bundle2 = this.getArguments();
-        String courseid = bundle2.getString("COURSE_ID");
+        courseid = bundle2.getString("COURSE_ID");
         Log.d("ResourcesSiteIDSakai", "Course id: " + courseid );
 
         View view = inflater.inflate(R.layout.fragment_resources, container, false);
 
+        sakaiDatabase = new SakaiDatabase(getContext());
         /*swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             retrieveResources(courseid);
@@ -69,12 +79,32 @@ public class ResourcesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
+        adapter = new ResourcesAdapter(getContext());
+        recyclerView.setAdapter(adapter);
 
         resourcesInterface = apiClient.getApiClient(this.getContext()).create(ResourcesInterface.class);
-        retrieveResources(courseid);
+
+        loadResources();
 
         return view;
     }
+
+    private void loadResources() {
+        adapter.reset();
+
+        if (getNetworkAvailability()) {
+            Log.d("Network status", "loadResources: Network available");
+            retrieveResources(courseid);
+        } else {
+            Log.d("Network status", "loadResources: Network unavailable, retrieving from database");
+            getResourcesFromDatabase();
+        }
+    }
+
+    private void getResourcesFromDatabase() {
+        sakaiDatabase.fetchResources(this, courseid);
+    }
+
 
 
     public void retrieveResources(String courseid) {
@@ -84,9 +114,19 @@ public class ResourcesFragment extends Fragment {
             @Override
             public void onResponse(Call<Resources> call, Response<Resources> response) {
                 Log.d("Success", "onResponse: Successful");
-                resourcesList = response.body();
-                adapter = new ResourcesAdapter(resourcesList, getContext());
-                recyclerView.setAdapter(adapter);
+                resources = response.body();
+
+                for (int i = 0; i < resources.getContentCollection().size(); i++) {
+                    contentCollection = resources.getContentCollection().get(i);
+                    contentCollection.setSiteID(courseid);
+
+                    SaveIntoDatabase task = new SaveIntoDatabase();
+                    task.execute(contentCollection);
+
+                    adapter.addResource(contentCollection);
+
+                }
+
             }
 
             @Override
@@ -97,6 +137,53 @@ public class ResourcesFragment extends Fragment {
             }
         });
     }
+
+    @Override
+    public void onDeliverAllResources(List<ContentCollection> contentCollectionList) {
+
+    }
+
+    @Override
+    public void onDeliverResource(ContentCollection contentCollection) {
+        adapter.addResource(contentCollection);
+    }
+
+    @Override
+    public void onHideDialog() {
+
+    }
+
+    public boolean getNetworkAvailability() {
+        return Utils.isNetworkAvailable(getContext());
+    }
+
+    public class SaveIntoDatabase extends AsyncTask<ContentCollection, Void, Void> {
+
+
+        private final String TAG = ResourcesFragment.SaveIntoDatabase.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(ContentCollection... params) {
+
+            ContentCollection contentCollection= params[0];
+
+            try {
+                sakaiDatabase.addResources(contentCollection);
+                Log.d(TAG, "doInBackground: Resource added:" + contentCollection.getTitle());
+
+            } catch (Exception e) {
+                Log.d(TAG, e.getMessage());
+            }
+
+            return null;
+        }
+    }
+
 
    /* @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

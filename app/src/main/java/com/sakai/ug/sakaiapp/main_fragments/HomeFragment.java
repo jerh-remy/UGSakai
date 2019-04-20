@@ -23,7 +23,7 @@ import java.util.Date;
 
 public class HomeFragment extends Fragment {
 
-    TextView logout, welcome, date;
+    TextView welcome, date;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,17 +47,6 @@ public class HomeFragment extends Fragment {
         date.setText(formattedDate);
 
         welcome.setText(getText(R.string.welcome) + SharedPreferencesManager.getInstance(getContext()).getFullname());
-
-        logout = view.findViewById(R.id.logout);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferencesManager.getInstance(getContext()).Logout();
-                PreferenceManager.getDefaultSharedPreferences(getContext()).edit().clear().apply();
-                startActivity(new Intent(getContext(), LoginActivity.class));
-                getActivity().finish();
-            }
-        });
 
         return view;
 

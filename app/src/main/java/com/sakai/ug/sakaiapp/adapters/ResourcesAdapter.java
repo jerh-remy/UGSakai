@@ -22,8 +22,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sakai.ug.sakaiapp.R;
+import com.sakai.ug.sakaiapp.models.resources.ContentCollection;
 import com.sakai.ug.sakaiapp.models.resources.Resources;
+import com.sakai.ug.sakaiapp.models.site.SiteCollection;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -31,13 +34,13 @@ import java.util.prefs.Preferences;
 public class ResourcesAdapter extends RecyclerView.Adapter<ResourcesAdapter.ResourcesViewHolder> {
 
     //private static final int PERMISSION_STORAGE_CODE = 1000;
-    private Resources resourcesList;
+    private List<ContentCollection> resourcesList;
     private Context context;
     private String urldownload;
 
-    public ResourcesAdapter(Resources resourcesList, Context context) {
-        this.resourcesList = resourcesList;
+    public ResourcesAdapter(Context context) {
         this.context = context;
+        resourcesList = new ArrayList<>();
     }
 
     @NonNull
@@ -52,9 +55,9 @@ public class ResourcesAdapter extends RecyclerView.Adapter<ResourcesAdapter.Reso
     @Override
     public void onBindViewHolder(@NonNull ResourcesAdapter.ResourcesViewHolder resourcesViewHolder, int i) {
 
-        resourcesViewHolder.textViewResource.setText(resourcesList.getContentCollection().get(i).getTitle());
+        resourcesViewHolder.textViewResource.setText(resourcesList.get(i).getTitle());
         resourcesViewHolder.image.setImageDrawable(context.getResources().getDrawable(R.drawable.pdf));
-        urldownload = resourcesList.getContentCollection().get(i).getUrl();
+        urldownload = resourcesList.get(i).getUrl();
         resourcesViewHolder.textViewURL.setText(urldownload);
 
 
@@ -84,8 +87,8 @@ public class ResourcesAdapter extends RecyclerView.Adapter<ResourcesAdapter.Reso
         resourcesViewHolder.dloadmynote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String linktodownload = resourcesList.getContentCollection().get(i).getUrl();
-                String title = resourcesList.getContentCollection().get(i).getTitle();
+                String linktodownload = resourcesList.get(i).getUrl();
+                String title = resourcesList.get(i).getTitle();
 
                 //download manager stuff
                 String servicestring = Context.DOWNLOAD_SERVICE;
@@ -138,7 +141,7 @@ public class ResourcesAdapter extends RecyclerView.Adapter<ResourcesAdapter.Reso
 
     @Override
     public int getItemCount() {
-        return resourcesList.getContentCollection().size();
+        return resourcesList.size();
     }
 
 class ResourcesViewHolder extends RecyclerView.ViewHolder {
@@ -156,6 +159,17 @@ class ResourcesViewHolder extends RecyclerView.ViewHolder {
         dloadmynote = itemView.findViewById(R.id.dloadnote);
     }
 }
+
+    public void addResource(ContentCollection contentCollection) {
+        resourcesList.add(contentCollection);
+        notifyDataSetChanged();
+
+    }
+
+    public void reset() {
+        resourcesList.clear();
+        notifyDataSetChanged();
+    }
 
 
 }
