@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -69,7 +71,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                PopupMenu popupMenu = new PopupMenu(getBaseContext(), circleImageView);
+                BottomSheetFragment fragment = BottomSheetFragment.getInstance();
+                fragment.show(getSupportFragmentManager(), "Custom Bottom Sheet");
+
+
+
+
+               /* PopupMenu popupMenu = new PopupMenu(getBaseContext(), circleImageView);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
@@ -92,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 popupMenu.inflate(R.menu.options_menu);
-                popupMenu.show();
+                popupMenu.show();*/
             }
         });
 

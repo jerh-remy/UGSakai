@@ -29,6 +29,7 @@ import com.sakai.ug.sakaiapp.course_site_fragments.AssignmentsFragment;
 import com.sakai.ug.sakaiapp.database.SakaiDatabase;
 import com.sakai.ug.sakaiapp.helper.Utils;
 import com.sakai.ug.sakaiapp.models.assignment.AssignmentCollection;
+import com.sakai.ug.sakaiapp.models.roster.Roster;
 import com.sakai.ug.sakaiapp.models.site.Site;
 import com.sakai.ug.sakaiapp.models.site.SiteCollection;
 
@@ -46,6 +47,7 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
     ApiClient apiClient = new ApiClient();
     SitesInterface sitesInterface;
     Site site = new Site();
+    Roster roster = new Roster();
     private SakaiDatabase sakaiDatabase;
     SiteCollection siteCollection = new SiteCollection();
     SwipeRefreshLayout swipeRefreshLayout;
@@ -65,6 +67,7 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
 
         sakaiDatabase = new SakaiDatabase(getContext());
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
             retrieveCourseSites();
@@ -119,6 +122,24 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
 
                     for (int i = 0; i < site.getSiteCollection().size(); i++) {
                         siteCollection = site.getSiteCollection().get(i);
+                        Log.d("Course site", "site collection: " +  siteCollection);
+
+                        /*Call<Roster> rosterCall = sitesInterface.getRosterSize(siteCollection.getEntityId());
+                        rosterCall.enqueue(new Callback<Roster>() {
+                            @Override
+                            public void onResponse(Call<Roster> call, Response<Roster> response) {
+                                roster = response.body();
+                                int roster_size = roster.getRosterCollection().size();
+                                siteCollection.setEntityRoster(String.valueOf(roster_size));
+                                Log.d("Course site class size", siteCollection.getEntityTitle() );
+                            }
+
+                            @Override
+                            public void onFailure(Call<Roster> call, Throwable t) {
+
+                            }
+                        });*/
+
 
                         SiteFragment.SaveIntoDatabase task = new SiteFragment.SaveIntoDatabase();
                         task.execute(siteCollection);

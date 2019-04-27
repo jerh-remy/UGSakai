@@ -18,26 +18,34 @@
 
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
             android:padding="8dp">
 
-            <LinearLayout
-                android:id="@+id/layhold"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/image"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="8dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp" />
+
 
             <TextView
                 android:id="@+id/textViewResource"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:padding="10dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="50dp"
                 android:text="Management principles.pdf"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                 android:textSize="16sp" />
-                <TextView
+
+                <!--<TextView
                 android:id="@+id/textViewUrl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,25 +53,20 @@
                 android:padding="10dp"
                 android:text="Management principles.pdf"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:textSize="16sp" />
+                android:textSize="16sp" />-->
 
-                <Button
-                    android:id="@+id/dloadnote"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Download Note"/>
-
-            </LinearLayout>
-
-
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/image"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentEnd="true"
+            <ImageButton
+                android:id="@+id/dloadnote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="24dp" />
+                android:layout_centerVertical="true"
+                android:layout_marginRight="17dp"
+                android:background="@color/md_white_1000"
+                android:src="@drawable/ic_download" />
+
+
+
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

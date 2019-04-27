@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        
+
         <item name="windowActionBar">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:actionBarStyle">@style/MyActionBar</item>
@@ -21,10 +21,7 @@
 
 
     <style name="MyActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="actionMenuTextColor">@color/md_white_1000</item>
-<!--
-        <item name="android:disabledAlpha">0.5</item>
--->
+        <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
 

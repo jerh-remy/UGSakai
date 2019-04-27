@@ -55,12 +55,16 @@ public class CourseSiteActivity extends AppCompatActivity {
         final String siteid = getIntent().getStringExtra("SITE_ID");
         final String sitedescription = getIntent().getStringExtra("SITE_DESCRIPTION");
         final String sitetitle = getIntent().getStringExtra("SITE_TITLE");
+        final String siteroster = getIntent().getStringExtra("SITE_ROSTER");
+        final String instructor = getIntent().getStringExtra("SITE_INSTRUCTOR");
 
         //passing extras into bundle to be shared among all course sites
         Bundle bundle1 = new Bundle();
         bundle1.putString("COURSE_ID", siteid);
         bundle1.putString("COURSE_DESCRIPTION", sitedescription);
         bundle1.putString("COURSE_TITLE", sitetitle);
+        bundle1.putString("COURSE_MEMBERS", siteroster);
+        bundle1.putString("COURSE_INSTRUCTOR", instructor);
 
         siteOverviewFragment.setArguments(bundle1);
         profileFragment.setArguments(bundle1);

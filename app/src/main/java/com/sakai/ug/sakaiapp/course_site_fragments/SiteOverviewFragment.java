@@ -45,7 +45,6 @@ public class SiteOverviewFragment extends Fragment {
             courseDescription.setText("No course description available");
         }
 
-
         Log.d("SiteIDSakai", "Course id: " + courseid);
         return view;
     }

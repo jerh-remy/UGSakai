@@ -51,9 +51,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         //defining a progress dialog to show while signing up
-         progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
 
-         //take the user straight to the main activity if already logged in
+        //take the user straight to the main activity if already logged in
         if (SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             finish();
             overridePendingTransition(0, 0);
@@ -169,7 +169,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-
     @Override
     public void onClick(View v) {
         if (username.getText().toString().equals("")) {
@@ -183,20 +182,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     //when access to internet isn't possible
-    private void UserLogin2()
-    {
-        //getting the user details
-        final String _username = username.getText().toString().trim();
-        final String _password = password.getText().toString().trim();
-
-        if(_username.equals("1")  && _password.equals("1"))
-        {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
+    private void UserLogin2() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
+
+    /*@Override
+    public void onClick(View v) {
+        UserLogin2();
+    }*/
 
 
 }
+
+
+

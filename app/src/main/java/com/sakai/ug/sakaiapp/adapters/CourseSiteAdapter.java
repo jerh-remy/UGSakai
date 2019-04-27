@@ -79,6 +79,7 @@ public class CourseSiteAdapter extends RecyclerView.Adapter<CourseSiteAdapter.Co
             goToOneSite.putExtra("SITE_ID", siteCollectionList.get(getAdapterPosition()).getEntityId());
             goToOneSite.putExtra("SITE_DESCRIPTION", siteCollectionList.get(getAdapterPosition()).getDescription());
             goToOneSite.putExtra("SITE_TITLE", siteCollectionList.get(getAdapterPosition()).getEntityTitle());
+            goToOneSite.putExtra("SITE_INSTRUCTOR", siteCollectionList.get(getAdapterPosition()).getMaintainRole());
             context.startActivity(goToOneSite);
         }
     }

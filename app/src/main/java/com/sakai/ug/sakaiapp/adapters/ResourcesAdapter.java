@@ -18,10 +18,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sakai.ug.sakaiapp.R;
+import com.sakai.ug.sakaiapp.helper.Utils;
 import com.sakai.ug.sakaiapp.models.resources.ContentCollection;
 import com.sakai.ug.sakaiapp.models.resources.Resources;
 import com.sakai.ug.sakaiapp.models.site.SiteCollection;
@@ -58,7 +60,7 @@ public class ResourcesAdapter extends RecyclerView.Adapter<ResourcesAdapter.Reso
         resourcesViewHolder.textViewResource.setText(resourcesList.get(i).getTitle());
         resourcesViewHolder.image.setImageDrawable(context.getResources().getDrawable(R.drawable.pdf));
         urldownload = resourcesList.get(i).getUrl();
-        resourcesViewHolder.textViewURL.setText(urldownload);
+        //resourcesViewHolder.textViewURL.setText(urldownload);
 
 
 
@@ -87,6 +89,8 @@ public class ResourcesAdapter extends RecyclerView.Adapter<ResourcesAdapter.Reso
         resourcesViewHolder.dloadmynote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(Utils.isNetworkAvailable(context))
+                {
                 String linktodownload = resourcesList.get(i).getUrl();
                 String title = resourcesList.get(i).getTitle();
 
@@ -114,6 +118,11 @@ public class ResourcesAdapter extends RecyclerView.Adapter<ResourcesAdapter.Reso
                 downloadmanager.enqueue(request);
                 Toast.makeText(context.getApplicationContext(),
                         "Your file is now downloading...", Toast.LENGTH_LONG).show();
+            }
+            else{
+                    Toast.makeText(context.getApplicationContext(),
+                            "Cannot download... check internet connection.", Toast.LENGTH_LONG).show();
+            }
             }
         });
 
@@ -148,13 +157,13 @@ class ResourcesViewHolder extends RecyclerView.ViewHolder {
 
     TextView textViewResource, textViewURL;
     ImageView image;
-    Button dloadmynote;
+    ImageButton dloadmynote;
 
     public ResourcesViewHolder(@NonNull View itemView) {
         super(itemView);
 
         textViewResource = itemView.findViewById(R.id.textViewResource);
-        textViewURL = itemView.findViewById(R.id.textViewUrl);
+        //textViewURL = itemView.findViewById(R.id.textViewUrl);
         image = itemView.findViewById(R.id.image);
         dloadmynote = itemView.findViewById(R.id.dloadnote);
     }

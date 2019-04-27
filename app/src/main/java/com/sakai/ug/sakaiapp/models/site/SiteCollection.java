@@ -130,6 +130,16 @@ public class SiteCollection {
     @Expose
     private String entityTitle;
 
+    private String entityRoster;
+
+    public String getEntityRoster() {
+        return entityRoster;
+    }
+
+    public void setEntityRoster(String entityRoster) {
+        this.entityRoster = entityRoster;
+    }
+
     public String getContactEmail() {
         return contactEmail;
     }
