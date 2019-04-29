@@ -25,7 +25,7 @@ public class Constants {
     public static final class DATABASE {
 
         public static final String DB_NAME = "sakaidatabase";
-        public static final int DB_VERSION = 10;
+        public static final int DB_VERSION = 11;
 
         //tables
         public static final String COURSE_SITE_TABLE_NAME = "courseSite";
@@ -84,7 +84,7 @@ public class Constants {
         public static final String GET_ASSIGNMENTS_QUERY = "SELECT * FROM " + ASSIGNMENT_TABLE_NAME + " WHERE " + ASS_SITE_ID + " = ?"  ;
         public static final String GET_ANNOUNCEMENTS_QUERY = "SELECT * FROM " + ANNOUNCEMENT_TABLE_NAME + " WHERE " + ANN_SITE_ID + " = ?";
         public static final String GET_COURSE_SITE_QUERY = "SELECT * FROM " + COURSE_SITE_TABLE_NAME;
-        public static final String GET_SYLLABUS_QUERY = "SELECT * FROM " + SYLLABUS_TABLE_NAME;
+        public static final String GET_SYLLABUS_QUERY = "SELECT * FROM " + SYLLABUS_TABLE_NAME + " WHERE " + SYL_SITE_ID + " = ?";
         public static final String GET_RESOURCES_QUERY = "SELECT * FROM " + RESOURCES_TABLE_NAME + " WHERE " + RES_SITE_ID + " = ?";
 
         //create table queries
@@ -132,18 +132,6 @@ public class Constants {
 
 
     }
-
-
-
-
-
-   /* public static final class REFERENCE {
-        public static final String FLOWER = Config.PACKAGE_NAME + "flower";
-    }
-
-    public static final class Config {
-        public static final String PACKAGE_NAME = "org.dalol.retrofit2_restapidemo.";
-    }*/
 
 
 }

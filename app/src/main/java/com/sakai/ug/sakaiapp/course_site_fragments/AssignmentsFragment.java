@@ -118,7 +118,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
                 swipeRefreshLayout.setRefreshing(false);
                 Log.d("Success response", "onResponse: Successful");
                 assignment = response.body();
-                Log.d("Response body", "onResponse: " + assignment.getAssignmentCollection().get(0).getEntityId());
+                //Log.d("Response body", "onResponse: " + assignment.getAssignmentCollection().get(0).getEntityId());
 
                 for (int i = 0; i < assignment.getAssignmentCollection().size(); i++) {
                     assignmentCollection = assignment.getAssignmentCollection().get(i);

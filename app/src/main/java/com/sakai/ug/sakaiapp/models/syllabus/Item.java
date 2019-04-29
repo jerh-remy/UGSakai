@@ -25,6 +25,16 @@ public class Item {
     @Expose
     private String title;
 
+    private String siteID;
+
+    public String getSiteID() {
+        return siteID;
+    }
+
+    public void setSiteID(String siteID) {
+        this.siteID = siteID;
+    }
+
     public List<Attachment> getAttachments() {
         return attachments;
     }

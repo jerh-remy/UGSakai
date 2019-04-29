@@ -26,6 +26,7 @@ import com.sakai.ug.sakaiapp.callback.AnnouncementFetchListener;
 import com.sakai.ug.sakaiapp.callback.AssignmentFetchListener;
 import com.sakai.ug.sakaiapp.callback.CourseSiteFetchListener;
 import com.sakai.ug.sakaiapp.callback.ResourceFetchListener;
+import com.sakai.ug.sakaiapp.callback.SyllabusFetchListener;
 import com.sakai.ug.sakaiapp.helper.Constants;
 import com.sakai.ug.sakaiapp.models.announcement.Announcement;
 import com.sakai.ug.sakaiapp.models.announcement.AnnouncementCollection;
@@ -36,6 +37,8 @@ import com.sakai.ug.sakaiapp.models.resources.ContentCollection;
 import com.sakai.ug.sakaiapp.models.site.Props;
 import com.sakai.ug.sakaiapp.models.site.Site;
 import com.sakai.ug.sakaiapp.models.site.SiteCollection;
+import com.sakai.ug.sakaiapp.models.syllabus.Attachment;
+import com.sakai.ug.sakaiapp.models.syllabus.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -208,7 +211,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
 
         @Override
         public void run() {
-            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_ASSIGNMENTS_QUERY, new String[] {siteID});
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_ASSIGNMENTS_QUERY, new String[]{siteID});
 
             List<AssignmentCollection> assignmentCollectionList = new ArrayList<>();
 
@@ -298,7 +301,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
 
         @Override
         public void run() {
-            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_ANNOUNCEMENTS_QUERY, new String[] {siteID});
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_ANNOUNCEMENTS_QUERY, new String[]{siteID});
 
             List<AnnouncementCollection> announcementCollectionList = new ArrayList<>();
 
@@ -386,7 +389,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
 
         @Override
         public void run() {
-            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_RESOURCES_QUERY, new String[] {siteID});
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_RESOURCES_QUERY, new String[]{siteID});
 
             List<ContentCollection> contentCollectionList = new ArrayList<>();
 
@@ -425,6 +428,101 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                 }
             });
         }
+    }
+
+    //SYLLABUS
+    public void addSyllabus(Item syllabusItem) {
+
+
+        Log.d(TAG, "Values Got " + syllabusItem.getTitle());
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.DATABASE.TITLE, syllabusItem.getTitle());
+        values.put(Constants.DATABASE.DATA, syllabusItem.getData());
+        if(syllabusItem.getAttachments().size() != 0) {
+            values.put(Constants.DATABASE.ATTACHMENT_TITLE, syllabusItem.getAttachments().get(0).getTitle());
+        }
+        else {
+            values.put(Constants.DATABASE.ATTACHMENT_TITLE, "");
+        }
+        values.put(Constants.DATABASE.SYL_SITE_ID, syllabusItem.getSiteID());
+        Log.d(TAG, "SakaiDB syllabus: " + values);
+
+        try {
+            db.insert(Constants.DATABASE.SYLLABUS_TABLE_NAME, null, values);
+        } catch (Exception e) {
+            //
+            // db.replace(Constants.DATABASE.SYLLABUS_TABLE_NAME, null, values);
+        }
+        db.close();
+    }
+
+    public void fetchSyllabus(SyllabusFetchListener listener, String courseID) {
+        SyllabusFetcher fetcher = new SyllabusFetcher(listener, this.getWritableDatabase(), courseID);
+        fetcher.start();
+    }
+
+    public class SyllabusFetcher extends Thread {
+
+        private final SyllabusFetchListener mListener;
+        private final SQLiteDatabase mDb;
+        private final String siteID;
+
+        public SyllabusFetcher(SyllabusFetchListener listener, SQLiteDatabase db, String courseID) {
+            mListener = listener;
+            mDb = db;
+            siteID = courseID;
+        }
+
+        @Override
+        public void run() {
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_SYLLABUS_QUERY, new String[]{siteID});
+
+            List<Item> syllabusItemList = new ArrayList<>();
+            List<Attachment> attachmentList = new ArrayList<>();
+
+            if (cursor.getCount() > 0) {
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        Item syllabusItem = new Item();
+                        syllabusItem.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.TITLE)));
+                        syllabusItem.setData(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.DATA)));
+                        Attachment attachment = new Attachment();
+                        attachment.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ATTACHMENT_TITLE)));
+                        attachmentList.add(attachment);
+                        syllabusItem.setAttachments(attachmentList);
+
+                        Log.d(TAG, "syllabus fetched: " + syllabusItem);
+
+                        syllabusItemList.add(syllabusItem);
+                        publishSyllabus(syllabusItem);
+
+                    } while (cursor.moveToNext());
+                }
+            }
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onDeliverAllSyllabus(syllabusItemList);
+                    mListener.onHideDialog();
+                }
+            });
+        }
+
+        private void publishSyllabus(final Item syllabusItem) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onDeliverSyllabus(syllabusItem);
+                }
+            });
+        }
+
     }
 
 

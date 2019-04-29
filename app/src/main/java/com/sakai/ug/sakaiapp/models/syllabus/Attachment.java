@@ -39,4 +39,10 @@ public class Attachment {
         this.url = url;
     }
 
+    public Attachment(String title) {
+        this.title = title;
+    }
+
+    public Attachment() {
+    }
 }
