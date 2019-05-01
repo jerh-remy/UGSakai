@@ -25,14 +25,15 @@ import android.util.Log;
 import com.sakai.ug.sakaiapp.callback.AnnouncementFetchListener;
 import com.sakai.ug.sakaiapp.callback.AssignmentFetchListener;
 import com.sakai.ug.sakaiapp.callback.CourseSiteFetchListener;
+import com.sakai.ug.sakaiapp.callback.GradebookFetchListener;
 import com.sakai.ug.sakaiapp.callback.ResourceFetchListener;
 import com.sakai.ug.sakaiapp.callback.SyllabusFetchListener;
 import com.sakai.ug.sakaiapp.helper.Constants;
 import com.sakai.ug.sakaiapp.models.announcement.Announcement;
 import com.sakai.ug.sakaiapp.models.announcement.AnnouncementCollection;
-import com.sakai.ug.sakaiapp.models.assignment.Assignment;
 import com.sakai.ug.sakaiapp.models.assignment.AssignmentCollection;
 import com.sakai.ug.sakaiapp.models.assignment.TimeCreated;
+import com.sakai.ug.sakaiapp.models.gradebook.Assignment;
 import com.sakai.ug.sakaiapp.models.resources.ContentCollection;
 import com.sakai.ug.sakaiapp.models.site.Props;
 import com.sakai.ug.sakaiapp.models.site.Site;
@@ -64,6 +65,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
             db.execSQL(Constants.DATABASE.CREATE_SITES_TABLE_QUERY);
             db.execSQL(Constants.DATABASE.CREATE_RESOURCES_TABLE_QUERY);
             db.execSQL(Constants.DATABASE.CREATE_SYLLABUS_TABLE_QUERY);
+            db.execSQL(Constants.DATABASE.CREATE_GRADEBOOK_TABLE_QUERY);
         } catch (SQLException ex) {
             Log.d(TAG, ex.getMessage());
         }
@@ -76,6 +78,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         db.execSQL(Constants.DATABASE.COURSE_SITE_DROP_QUERY);
         db.execSQL(Constants.DATABASE.SYLLABUS_DROP_QUERY);
         db.execSQL(Constants.DATABASE.RESOURCES_DROP_QUERY);
+        db.execSQL(Constants.DATABASE.GRADEBOOK_DROP_QUERY);
         this.onCreate(db);
     }
 
@@ -98,7 +101,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         try {
             db.insert(Constants.DATABASE.COURSE_SITE_TABLE_NAME, null, values);
         } catch (Exception e) {
-
+            db.replace(Constants.DATABASE.COURSE_SITE_TABLE_NAME, null, values);
         }
         db.close();
     }
@@ -187,7 +190,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         try {
             db.insert(Constants.DATABASE.ASSIGNMENT_TABLE_NAME, null, values);
         } catch (Exception e) {
-
+            db.replace(Constants.DATABASE.ASSIGNMENT_TABLE_NAME, null, values);
         }
         db.close();
     }
@@ -277,7 +280,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         try {
             db.insert(Constants.DATABASE.ANNOUNCEMENT_TABLE_NAME, null, values);
         } catch (Exception e) {
-
+            db.replace(Constants.DATABASE.ANNOUNCEMENT_TABLE_NAME, null, values);
         }
         db.close();
     }
@@ -365,7 +368,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         try {
             db.insert(Constants.DATABASE.RESOURCES_TABLE_NAME, null, values);
         } catch (Exception e) {
-
+            db.replace(Constants.DATABASE.RESOURCES_TABLE_NAME, null, values);
         }
         db.close();
     }
@@ -441,10 +444,9 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(Constants.DATABASE.TITLE, syllabusItem.getTitle());
         values.put(Constants.DATABASE.DATA, syllabusItem.getData());
-        if(syllabusItem.getAttachments().size() != 0) {
+        if (syllabusItem.getAttachments().size() != 0) {
             values.put(Constants.DATABASE.ATTACHMENT_TITLE, syllabusItem.getAttachments().get(0).getTitle());
-        }
-        else {
+        } else {
             values.put(Constants.DATABASE.ATTACHMENT_TITLE, "");
         }
         values.put(Constants.DATABASE.SYL_SITE_ID, syllabusItem.getSiteID());
@@ -454,7 +456,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
             db.insert(Constants.DATABASE.SYLLABUS_TABLE_NAME, null, values);
         } catch (Exception e) {
             //
-            // db.replace(Constants.DATABASE.SYLLABUS_TABLE_NAME, null, values);
+            db.replace(Constants.DATABASE.SYLLABUS_TABLE_NAME, null, values);
         }
         db.close();
     }
@@ -519,6 +521,93 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                 @Override
                 public void run() {
                     mListener.onDeliverSyllabus(syllabusItem);
+                }
+            });
+        }
+
+    }
+
+
+    //GRADEBOOK
+    public void addGrade(Assignment assignment) {
+
+
+        Log.d(TAG, "Values Got " + assignment.getItemName());
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.DATABASE.GRADEBOOK_ITEM_NAME, assignment.getItemName());
+        values.put(Constants.DATABASE.GRADEBOOK_POINTS, assignment.getPoints());
+        values.put(Constants.DATABASE.GRADEBOOK_GRADE, assignment.getGrade());
+        values.put(Constants.DATABASE.GRD_SITE_ID, assignment.getSiteID());
+        Log.d(TAG, "SakaiDB gradebook: " + values);
+
+        try {
+            db.insert(Constants.DATABASE.GRADEBOOK_TABLE_NAME, null, values);
+        } catch (Exception e) {
+            db.replace(Constants.DATABASE.GRADEBOOK_TABLE_NAME, null, values);
+        }
+        db.close();
+    }
+
+    public void fetchGrades(GradebookFetchListener listener, String courseID) {
+        GradebookFetcher fetcher = new GradebookFetcher(listener, this.getWritableDatabase(), courseID);
+        fetcher.start();
+    }
+
+    public class GradebookFetcher extends Thread {
+
+        private final GradebookFetchListener mListener;
+        private final SQLiteDatabase mDb;
+        private final String siteID;
+
+        public GradebookFetcher(GradebookFetchListener listener, SQLiteDatabase db, String courseID) {
+            mListener = listener;
+            mDb = db;
+            siteID = courseID;
+        }
+
+        @Override
+        public void run() {
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_GRADES_QUERY, new String[]{siteID});
+
+            List<Assignment> assignmentList = new ArrayList<>();
+
+            if (cursor.getCount() > 0) {
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        Assignment assignment = new Assignment();
+                        assignment.setItemName(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.GRADEBOOK_ITEM_NAME)));
+                        assignment.setGrade(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.GRADEBOOK_GRADE)));
+                        assignment.setPoints(cursor.getInt(cursor.getColumnIndex(Constants.DATABASE.GRADEBOOK_POINTS)));
+                        assignment.setSiteID(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.GRD_SITE_ID)));
+
+                        Log.d(TAG, "grade fetched: " + assignment);
+
+                        assignmentList.add(assignment);
+                        publishGrade(assignment);
+
+                    } while (cursor.moveToNext());
+                }
+            }
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onDeliverAllGrades(assignmentList);
+                    mListener.onHideDialog();
+                }
+            });
+        }
+
+        private void publishGrade(final Assignment assignment) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onDeliverGrade(assignment);
                 }
             });
         }

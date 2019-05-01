@@ -11,16 +11,20 @@ import android.widget.TextView;
 
 import com.sakai.ug.sakaiapp.R;
 import com.sakai.ug.sakaiapp.models.GradebookModel;
+import com.sakai.ug.sakaiapp.models.announcement.AnnouncementCollection;
+import com.sakai.ug.sakaiapp.models.gradebook.Assignment;
+import com.sakai.ug.sakaiapp.models.gradebook.Gradebook;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GradebookAdapter extends RecyclerView.Adapter<GradebookAdapter.gradebookViewHolder> {
 
-    private List<GradebookModel> gradebookList;
+    private List<Assignment> gradebookList;
     private Context context;
 
-    public GradebookAdapter(List<GradebookModel> gradebookList, Context context) {
-        this.gradebookList = gradebookList;
+    public GradebookAdapter(Context context) {
+        this.gradebookList = new ArrayList<>();
         this.context = context;
     }
 
@@ -35,10 +39,10 @@ public class GradebookAdapter extends RecyclerView.Adapter<GradebookAdapter.grad
     @Override
     public void onBindViewHolder(@NonNull GradebookAdapter.gradebookViewHolder gradebookViewHolder, int i) {
 
-        GradebookModel Gradebook = gradebookList.get(i);
-        gradebookViewHolder.textViewGradebookItem.setText(Gradebook.getItem());
-        gradebookViewHolder.textViewGrade.setText(Gradebook.getGrade());
-        gradebookViewHolder.imageView.setImageDrawable(context.getResources().getDrawable(Gradebook.getImage()));
+        gradebookViewHolder.textViewGradebookItem.setText(gradebookList.get(i).getItemName());
+        gradebookViewHolder.textViewPoint.setText(String.valueOf(gradebookList.get(i).getPoints()));
+        gradebookViewHolder.textViewGrade.setText(gradebookList.get(i).getGrade());
+        gradebookViewHolder.imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_grade));
 
 
     }
@@ -50,16 +54,28 @@ public class GradebookAdapter extends RecyclerView.Adapter<GradebookAdapter.grad
 
     class gradebookViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewGrade, textViewGradebookItem;
+        TextView textViewGrade, textViewGradebookItem, textViewPoint;
         ImageView imageView;
         public gradebookViewHolder(@NonNull View itemView) {
             super(itemView);
 
 
             textViewGrade = itemView.findViewById(R.id.textViewGrade);
+            textViewPoint = itemView.findViewById(R.id.textViewPoint);
             textViewGradebookItem = itemView.findViewById(R.id.textViewGradebookItem);
             imageView = itemView.findViewById(R.id.imageView);
 
         }
+    }
+
+    public void addGrade(Assignment assignment) {
+        gradebookList.add(assignment);
+        notifyDataSetChanged();
+
+    }
+
+    public void reset() {
+        gradebookList.clear();
+        notifyDataSetChanged();
     }
 }

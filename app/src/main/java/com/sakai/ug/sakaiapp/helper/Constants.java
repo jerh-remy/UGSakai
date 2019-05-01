@@ -18,14 +18,10 @@ package com.sakai.ug.sakaiapp.helper;
  */
 public class Constants {
 
-    /*public static final class HTTP {
-        public static final String BASE_URL = "http://services.hanselandpetal.com";
-    }*/
-
     public static final class DATABASE {
 
         public static final String DB_NAME = "sakaidatabase";
-        public static final int DB_VERSION = 11;
+        public static final int DB_VERSION = 12;
 
         //tables
         public static final String COURSE_SITE_TABLE_NAME = "courseSite";
@@ -33,6 +29,7 @@ public class Constants {
         public static final String ANNOUNCEMENT_TABLE_NAME = "announcement";
         public static final String SYLLABUS_TABLE_NAME = "syllabus";
         public static final String RESOURCES_TABLE_NAME = "resources";
+        public static final String GRADEBOOK_TABLE_NAME = "gradebook";
 
 
         //course site table columns
@@ -70,7 +67,11 @@ public class Constants {
         public static final String NO_OF_CHILDREN = "no_of_children";
         public static final String RES_SITE_ID = "siteId";
 
-
+        //gradebook table columns
+        public static final String GRADEBOOK_ITEM_NAME = "itemName";
+        public static final String GRADEBOOK_POINTS = "points";
+        public static final String GRADEBOOK_GRADE = "grade";
+        public static final String GRD_SITE_ID = "siteId";
 
 
         //drop queries
@@ -79,13 +80,16 @@ public class Constants {
         public static final String ANNOUNCEMENT_DROP_QUERY = "DROP TABLE IF EXISTS " + ANNOUNCEMENT_TABLE_NAME;
         public static final String SYLLABUS_DROP_QUERY = "DROP TABLE IF EXISTS " + SYLLABUS_TABLE_NAME;
         public static final String RESOURCES_DROP_QUERY = "DROP TABLE IF EXISTS " + RESOURCES_TABLE_NAME;
+        public static final String GRADEBOOK_DROP_QUERY = "DROP TABLE IF EXISTS " + GRADEBOOK_TABLE_NAME;
 
         //get queries
-        public static final String GET_ASSIGNMENTS_QUERY = "SELECT * FROM " + ASSIGNMENT_TABLE_NAME + " WHERE " + ASS_SITE_ID + " = ?"  ;
+        public static final String GET_ASSIGNMENTS_QUERY = "SELECT * FROM " + ASSIGNMENT_TABLE_NAME + " WHERE " + ASS_SITE_ID + " = ?";
         public static final String GET_ANNOUNCEMENTS_QUERY = "SELECT * FROM " + ANNOUNCEMENT_TABLE_NAME + " WHERE " + ANN_SITE_ID + " = ?";
         public static final String GET_COURSE_SITE_QUERY = "SELECT * FROM " + COURSE_SITE_TABLE_NAME;
         public static final String GET_SYLLABUS_QUERY = "SELECT * FROM " + SYLLABUS_TABLE_NAME + " WHERE " + SYL_SITE_ID + " = ?";
         public static final String GET_RESOURCES_QUERY = "SELECT * FROM " + RESOURCES_TABLE_NAME + " WHERE " + RES_SITE_ID + " = ?";
+        public static final String GET_GRADES_QUERY = "SELECT * FROM " + GRADEBOOK_TABLE_NAME + " WHERE " + GRD_SITE_ID + " = ?";
+
 
         //create table queries
         public static final String CREATE_ASSIGNMENT_TABLE_QUERY = "CREATE TABLE " + ASSIGNMENT_TABLE_NAME + "" +
@@ -115,20 +119,27 @@ public class Constants {
                 ENTITY_TITLE + " TEXT not null," +
                 PROPS_CONTACT_NAME + " TEXT not null)";
 
-         public static final String CREATE_SYLLABUS_TABLE_QUERY = "CREATE TABLE " + SYLLABUS_TABLE_NAME + "" +
+        public static final String CREATE_SYLLABUS_TABLE_QUERY = "CREATE TABLE " + SYLLABUS_TABLE_NAME + "" +
                 "(" + TITLE + " TEXT PRIMARY KEY not null," +
-                 DATA + " TEXT null," +
-                 ATTACHMENT_TITLE + " TEXT null," +
-                 SYL_SITE_ID + " TEXT not null," +
-                 "FOREIGN KEY (" + SYL_SITE_ID + ") REFERENCES " + COURSE_SITE_TABLE_NAME + "(" + SITE_ID + "))";
+                DATA + " TEXT null," +
+                ATTACHMENT_TITLE + " TEXT null," +
+                SYL_SITE_ID + " TEXT not null," +
+                "FOREIGN KEY (" + SYL_SITE_ID + ") REFERENCES " + COURSE_SITE_TABLE_NAME + "(" + SITE_ID + "))";
 
-         public static final String CREATE_RESOURCES_TABLE_QUERY = "CREATE TABLE " + RESOURCES_TABLE_NAME + "" +
+        public static final String CREATE_RESOURCES_TABLE_QUERY = "CREATE TABLE " + RESOURCES_TABLE_NAME + "" +
                 "(" + RES_TITLE + " TEXT PRIMARY KEY not null," +
-                 TYPE + " TEXT not null," +
-                 NO_OF_CHILDREN + " TEXT not null," +
-                 RES_SITE_ID + " TEXT not null," +
-                 "FOREIGN KEY (" + RES_SITE_ID + ") REFERENCES " + COURSE_SITE_TABLE_NAME + "(" + SITE_ID + "))";
+                TYPE + " TEXT not null," +
+                NO_OF_CHILDREN + " TEXT not null," +
+                RES_SITE_ID + " TEXT not null," +
+                "FOREIGN KEY (" + RES_SITE_ID + ") REFERENCES " + COURSE_SITE_TABLE_NAME + "(" + SITE_ID + "))";
 
+        public static final String CREATE_GRADEBOOK_TABLE_QUERY = "CREATE TABLE " + GRADEBOOK_TABLE_NAME + "" +
+                "(" + GRADEBOOK_ITEM_NAME + " TEXT not null," +
+                GRADEBOOK_POINTS + " TEXT not null," +
+                GRADEBOOK_GRADE + " TEXT not null," +
+                GRD_SITE_ID + " TEXT not null," +
+                "PRIMARY KEY (" + GRADEBOOK_ITEM_NAME + "," + GRD_SITE_ID + "), " +
+                "FOREIGN KEY (" + GRD_SITE_ID + ") REFERENCES " + COURSE_SITE_TABLE_NAME + "(" + SITE_ID + "))";
 
 
     }

@@ -8,8 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="3dp"
+        android:layout_marginRight="8dp"
         android:elevation="@dimen/material_drawer_sticky_footer_elevation">
 
         <RelativeLayout
@@ -29,22 +29,48 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/imageView"
-                android:text="Interim Assessment 1"
                 android:padding="10dp"
-                android:textSize="18sp"
-                android:textColor="@color/md_grey_600" />
+                android:text="Interim Assessment 1"
+                android:textColor="@color/md_grey_600"
+                android:textSize="18sp" />
 
-
-            <TextView
-                android:id="@+id/textViewGrade"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:text="B+"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textColor="@color/primary_dark"
-                android:layout_alignParentRight="true" />
+                android:layout_alignBaseline="@+id/textViewGradebookItem"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/textViewGrade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:text="5"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:textColor="@color/md_red_900" />
+
+                <TextView
+                    android:id="@+id/gradeover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+                    android:padding="2dp"
+                    android:textColor="@color/md_grey_600"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+
+                <TextView
+                    android:id="@+id/textViewPoint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:textColor="@color/md_grey_600" />
+
+            </LinearLayout>
+
 
         </RelativeLayout>
 
