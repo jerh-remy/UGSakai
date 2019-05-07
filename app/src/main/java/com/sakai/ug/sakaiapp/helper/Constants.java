@@ -21,7 +21,7 @@ public class Constants {
     public static final class DATABASE {
 
         public static final String DB_NAME = "sakaidatabase";
-        public static final int DB_VERSION = 12;
+        public static final int DB_VERSION = 13;
 
         //tables
         public static final String COURSE_SITE_TABLE_NAME = "courseSite";
@@ -89,6 +89,11 @@ public class Constants {
         public static final String GET_SYLLABUS_QUERY = "SELECT * FROM " + SYLLABUS_TABLE_NAME + " WHERE " + SYL_SITE_ID + " = ?";
         public static final String GET_RESOURCES_QUERY = "SELECT * FROM " + RESOURCES_TABLE_NAME + " WHERE " + RES_SITE_ID + " = ?";
         public static final String GET_GRADES_QUERY = "SELECT * FROM " + GRADEBOOK_TABLE_NAME + " WHERE " + GRD_SITE_ID + " = ?";
+
+
+        //get recent announcements query
+        public static final String GET_RECENT_ANNOUNCEMENTS_QUERY = "SELECT * FROM announcement ORDER BY created_on DESC LIMIT 5";
+
 
 
         //create table queries

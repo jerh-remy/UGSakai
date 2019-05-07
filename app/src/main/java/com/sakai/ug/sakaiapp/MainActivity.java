@@ -17,10 +17,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.sakai.ug.sakaiapp.main_fragments.ChatFragment;
 import com.sakai.ug.sakaiapp.main_fragments.HomeFragment;
 import com.sakai.ug.sakaiapp.main_fragments.NotificationFragment;
 import com.sakai.ug.sakaiapp.main_fragments.SiteFragment;
+
+import java.util.HashSet;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -33,12 +38,24 @@ public class MainActivity extends AppCompatActivity {
     final NotificationFragment notificationFragment = new NotificationFragment();
     final ChatFragment chatFragment = new ChatFragment();
     final FragmentManager fm = getSupportFragmentManager();
+    private LoginActivity loginActivity = new LoginActivity();
+    private String cookieHeader;
+
     //Fragment active = homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        HashSet<String> preferences = (HashSet) PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getStringSet("appCookies", new HashSet<>());
+
+        for (String cookie : preferences) {
+            cookieHeader = cookie;
+            Log.d("CookieLogged",  cookie);
+        }
 
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
@@ -67,15 +84,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         CircleImageView circleImageView = findViewById(R.id.profile_click);
+        /*String imageURL = SharedPreferencesManager.getInstance(this).getImageurl();
+        GlideUrl glideUrl = new GlideUrl(imageURL, new LazyHeaders.Builder()
+                .addHeader("Cookie", cookieHeader)
+                .build());
+
+        Glide.with(this).load(imageURL).into(circleImageView);*/
+
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 BottomSheetFragment fragment = BottomSheetFragment.getInstance();
                 fragment.show(getSupportFragmentManager(), "Custom Bottom Sheet");
-
-
-
 
                /* PopupMenu popupMenu = new PopupMenu(getBaseContext(), circleImageView);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -156,11 +177,11 @@ public class MainActivity extends AppCompatActivity {
                     fm.beginTransaction().replace(R.id.fragment_container, notificationFragment).commit();
                     //active = notificationFragment;
                     return true;
-                case R.id.action_chat:
+               /* case R.id.action_chat:
                     //fm.beginTransaction().hide(active).show(chatFragment).commit();
                     fm.beginTransaction().replace(R.id.fragment_container, chatFragment).commit();
                     //active = chatFragment;
-                    return true;
+                    return true;*/
 
             }
 

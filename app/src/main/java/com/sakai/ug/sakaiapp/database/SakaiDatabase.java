@@ -22,13 +22,16 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.sakai.ug.sakaiapp.adapters.RecentAnnouncementAdapter;
 import com.sakai.ug.sakaiapp.callback.AnnouncementFetchListener;
 import com.sakai.ug.sakaiapp.callback.AssignmentFetchListener;
 import com.sakai.ug.sakaiapp.callback.CourseSiteFetchListener;
 import com.sakai.ug.sakaiapp.callback.GradebookFetchListener;
+import com.sakai.ug.sakaiapp.callback.RecentAnnouncementFetchListener;
 import com.sakai.ug.sakaiapp.callback.ResourceFetchListener;
 import com.sakai.ug.sakaiapp.callback.SyllabusFetchListener;
 import com.sakai.ug.sakaiapp.helper.Constants;
+import com.sakai.ug.sakaiapp.main_fragments.HomeFragment;
 import com.sakai.ug.sakaiapp.models.announcement.Announcement;
 import com.sakai.ug.sakaiapp.models.announcement.AnnouncementCollection;
 import com.sakai.ug.sakaiapp.models.assignment.AssignmentCollection;
@@ -273,14 +276,15 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         values.put(Constants.DATABASE.ANN_TITLE, announcementCollection.getTitle());
         values.put(Constants.DATABASE.BODY, announcementCollection.getBody());
         values.put(Constants.DATABASE.CREATED_BY, announcementCollection.getCreatedByDisplayName());
-        values.put(Constants.DATABASE.CREATED_ON, announcementCollection.getCreatedOn());
+        values.put(Constants.DATABASE.CREATED_ON, announcementCollection.getCreatedOnString());
         values.put(Constants.DATABASE.ANN_SITE_ID, announcementCollection.getSiteId());
         Log.d(TAG, "SakaiDB Announcement: " + values);
+        Log.d(TAG, "Date value: " + announcementCollection.getCreatedOnString());
 
         try {
             db.insert(Constants.DATABASE.ANNOUNCEMENT_TABLE_NAME, null, values);
         } catch (Exception e) {
-            db.replace(Constants.DATABASE.ANNOUNCEMENT_TABLE_NAME, null, values);
+            //db.replace(Constants.DATABASE.ANNOUNCEMENT_TABLE_NAME, null, values);
         }
         db.close();
     }
@@ -317,7 +321,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                         announcementCollection.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ANN_TITLE)));
                         announcementCollection.setBody(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.BODY)));
                         announcementCollection.setCreatedByDisplayName(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CREATED_BY)));
-                        announcementCollection.setCreatedOn(Double.parseDouble(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CREATED_ON))));
+                        announcementCollection.setCreatedOnString(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CREATED_ON)));
                         announcementCollection.setSiteId(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ANN_SITE_ID)));
                         Log.d(TAG, "announcement fetched: " + announcementCollection);
 
@@ -613,6 +617,63 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         }
 
     }
+
+
+    //RECENT ANNOUNCEMENTS
+    public void fetchRecentAnnouncements(RecentAnnouncementFetchListener listener) {
+        RecentAnnouncementFetcher fetcher = new RecentAnnouncementFetcher(listener, this.getWritableDatabase());
+        fetcher.start();
+    }
+
+    public class RecentAnnouncementFetcher extends Thread {
+
+        private final RecentAnnouncementFetchListener mListener;
+        private final SQLiteDatabase mDb;
+
+        public RecentAnnouncementFetcher(RecentAnnouncementFetchListener listener, SQLiteDatabase db) {
+            mListener = listener;
+            mDb = db;
+        }
+
+        @Override
+        public void run() {
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_RECENT_ANNOUNCEMENTS_QUERY, null);
+
+            List<AnnouncementCollection> announcementCollectionList = new ArrayList<>();
+
+            if (cursor.getCount() > 0) {
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        AnnouncementCollection announcementCollection = new AnnouncementCollection();
+                        announcementCollection.setAnnouncementId(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ANNOUNCEMENT_ID)));
+                        announcementCollection.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ANN_TITLE)));
+                        announcementCollection.setBody(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.BODY)));
+                        announcementCollection.setCreatedByDisplayName(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CREATED_BY)));
+                        announcementCollection.setCreatedOnString(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CREATED_ON)));
+                        announcementCollection.setSiteId(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ANN_SITE_ID)));
+                        Log.d(TAG, "recent announcement fetched: " + announcementCollection);
+
+
+                        announcementCollectionList.add(announcementCollection);
+                        publishAnnouncement(announcementCollection);
+
+                    } while (cursor.moveToNext());
+                }
+            }
+        }
+
+        public void publishAnnouncement(final AnnouncementCollection announcementCollection) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onDeliverRecentAnnouncement(announcementCollection);
+                }
+            });
+        }
+    }
+
 
 
 }

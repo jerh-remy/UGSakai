@@ -133,7 +133,6 @@ public class AnnouncementFragment extends Fragment implements AnnouncementAdapte
 
                 }
 
-
             }
 
             @Override

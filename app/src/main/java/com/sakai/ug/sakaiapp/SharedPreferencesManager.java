@@ -121,6 +121,13 @@ public class SharedPreferencesManager {
 
         return sharedPreferences.getString(EMAIL, null);
     }
+    public String getImageurl(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+
+        return sharedPreferences.getString(IMAGEURL, null);
+    }
+
+
 
 
 }

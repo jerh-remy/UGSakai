@@ -3,6 +3,7 @@ package com.sakai.ug.sakaiapp;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,11 +12,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaderFactory;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.sakai.ug.sakaiapp.APIservices.ApiClient;
 import com.sakai.ug.sakaiapp.APIservices.LoginSessionInterface;
 import com.sakai.ug.sakaiapp.APIservices.ProfileInterface;
 import com.sakai.ug.sakaiapp.models.profile.Profile;
 import com.sakai.ug.sakaiapp.models.session.Session;
+
+import java.util.HashSet;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -152,6 +159,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     image_url = profile.getImageUrl();
                     SharedPreferencesManager.getInstance(getApplicationContext()).UserProfileDetails(displayname, email, image_url);
 
+
                     //start the main activity
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -168,6 +176,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
+
+
 
     @Override
     public void onClick(View v) {

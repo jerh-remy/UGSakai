@@ -1,5 +1,9 @@
 package com.sakai.ug.sakaiapp.models.announcement;
 
+import android.util.Log;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -49,6 +53,24 @@ public class AnnouncementCollection {
     @SerializedName("entityTitle")
     @Expose
     private String entityTitle;
+
+    private String createdOnString;
+
+    public String getCreatedOnString()
+    {
+        long batch_date = (long) this.createdOn;
+        Log.d("Long value", "CreatedOn: " + Long.toString(batch_date));
+        Date dt = new Date (batch_date);
+
+        SimpleDateFormat sfd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.createdOnString = sfd.format(dt);
+
+        return createdOnString;
+    }
+
+    public void setCreatedOnString(String createdOnString) {
+        this.createdOnString = createdOnString;
+    }
 
     public String getAnnouncementId() {
         return announcementId;
