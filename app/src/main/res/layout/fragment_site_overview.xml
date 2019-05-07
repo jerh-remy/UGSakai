@@ -23,7 +23,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="25dp"
                 android:text="CSCD 421"
-                android:textSize="26sp"
+                android:textSize="30sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textStyle="bold"
 

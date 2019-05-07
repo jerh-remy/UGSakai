@@ -33,7 +33,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:text="Profile"
             android:textAllCaps="false"
-            android:textSize="18dp"
+            android:textSize="20sp"
             android:textColor="@color/md_grey_600" />
 
         <ImageView
@@ -57,7 +57,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:text="Logout"
             android:textAllCaps="false"
-            android:textSize="18dp"
+            android:textSize="20sp"
             android:textColor="@color/md_grey_600" />
 
     </RelativeLayout>

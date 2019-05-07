@@ -27,12 +27,23 @@ public class Item {
 
     private String siteID;
 
+
     public String getSiteID() {
         return siteID;
     }
 
     public void setSiteID(String siteID) {
         this.siteID = siteID;
+    }
+
+    private String siteTitle;
+
+    public String getSiteTitle() {
+        return siteTitle;
+    }
+
+    public void setSiteTitle(String siteTitle) {
+        this.siteTitle = siteTitle;
     }
 
     public List<Attachment> getAttachments() {

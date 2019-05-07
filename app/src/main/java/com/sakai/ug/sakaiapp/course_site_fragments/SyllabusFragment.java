@@ -1,5 +1,6 @@
 package com.sakai.ug.sakaiapp.course_site_fragments;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -52,13 +54,19 @@ public class SyllabusFragment extends Fragment implements SyllabusFetchListener 
     RecyclerView recyclerView;
     SyllabusAdapter syllabusAdapter;
     private SakaiDatabase sakaiDatabase;
-    String courseid;
+    String courseid, siteTitle;
     ApiClient apiClient = new ApiClient();
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        int REQUEST_CODE = 1;
+
+        ActivityCompat.requestPermissions(this.getActivity(), new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        }, REQUEST_CODE);
 
     }
 
@@ -71,6 +79,7 @@ public class SyllabusFragment extends Fragment implements SyllabusFetchListener 
 
         Bundle bundle2 = this.getArguments();
         courseid = bundle2.getString("COURSE_ID");
+        siteTitle = bundle2.getString("COURSE_TITLE");
         Log.d("SiteIDSakai(Syllabus)", "Course id: " + courseid);
 
         sakaiDatabase = new SakaiDatabase(getContext());
@@ -127,6 +136,7 @@ public class SyllabusFragment extends Fragment implements SyllabusFetchListener 
                         for (int i = 0; i < syllabus.getItems().size(); i++) {
                             syllabusItem = syllabus.getItems().get(i);
                             syllabusItem.setSiteID(courseid);
+                            syllabusItem.setSiteTitle(siteTitle);
 
                             SaveIntoDatabase task = new SaveIntoDatabase();
                             task.execute(syllabusItem);

@@ -1,10 +1,12 @@
 package com.sakai.ug.sakaiapp.course_site_fragments;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -48,12 +50,18 @@ public class ResourcesFragment extends Fragment implements ResourceFetchListener
     SakaiDatabase sakaiDatabase;
     ContentCollection contentCollection = new ContentCollection();
     SwipeRefreshLayout swipeRefreshLayout;
-    private String courseid;
+    private String courseid, siteTitle;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        int REQUEST_CODE = 1;
+
+        ActivityCompat.requestPermissions(this.getActivity(), new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        }, REQUEST_CODE);
 
     }
 
@@ -64,7 +72,9 @@ public class ResourcesFragment extends Fragment implements ResourceFetchListener
                              @Nullable Bundle savedInstanceState) {
         Bundle bundle2 = this.getArguments();
         courseid = bundle2.getString("COURSE_ID");
+        siteTitle = bundle2.getString("COURSE_TITLE");
         Log.d("ResourcesSiteIDSakai", "Course id: " + courseid );
+        Log.d("ResourcesSiteIDSakai", "Course site title: " + siteTitle );
 
         View view = inflater.inflate(R.layout.fragment_resources, container, false);
 
@@ -119,6 +129,7 @@ public class ResourcesFragment extends Fragment implements ResourceFetchListener
                 for (int i = 0; i < resources.getContentCollection().size(); i++) {
                     contentCollection = resources.getContentCollection().get(i);
                     contentCollection.setSiteID(courseid);
+                    contentCollection.setSiteTitle(siteTitle);
 
                     SaveIntoDatabase task = new SaveIntoDatabase();
                     task.execute(contentCollection);

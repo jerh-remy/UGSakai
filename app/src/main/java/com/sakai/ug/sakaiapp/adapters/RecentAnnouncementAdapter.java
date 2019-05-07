@@ -42,6 +42,7 @@ public class RecentAnnouncementAdapter extends RecyclerView.Adapter<RecentAnnoun
 
     @Override
     public void onBindViewHolder(@NonNull RecentAnnouncementViewHolder recentAnnouncementViewHolder, int i) {
+        recentAnnouncementViewHolder.course_site.setText(announcementList.get(i).getCourseSiteName());
         recentAnnouncementViewHolder.title.setText(announcementList.get(i).getTitle());
         recentAnnouncementViewHolder.body.setText(Html.fromHtml(announcementList.get(i).getBody()));
         recentAnnouncementViewHolder.image.setImageDrawable(recentAnnouncementViewHolder.image.getResources().getDrawable(R.drawable.ic_announcement));
@@ -65,7 +66,7 @@ public class RecentAnnouncementAdapter extends RecyclerView.Adapter<RecentAnnoun
 
     public class RecentAnnouncementViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        TextView title, body;
+        TextView course_site, title, body;
         ImageView image;
         onRecentAnnouncementItemClickListener onRecentAnnouncementItemClickListener;
 
@@ -73,6 +74,7 @@ public class RecentAnnouncementAdapter extends RecyclerView.Adapter<RecentAnnoun
         public RecentAnnouncementViewHolder(@NonNull View itemView, onRecentAnnouncementItemClickListener onAnnouncementItemClickListener) {
             super(itemView);
 
+            course_site = itemView.findViewById(R.id.course_site);
             title = itemView.findViewById(R.id.title);
             body =  itemView.findViewById(R.id.body);
             image = itemView.findViewById(R.id.image);

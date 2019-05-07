@@ -647,6 +647,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                     do {
                         AnnouncementCollection announcementCollection = new AnnouncementCollection();
                         announcementCollection.setAnnouncementId(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ANNOUNCEMENT_ID)));
+                        announcementCollection.setCourseSiteName(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ENTITY_TITLE)));
                         announcementCollection.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.ANN_TITLE)));
                         announcementCollection.setBody(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.BODY)));
                         announcementCollection.setCreatedByDisplayName(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CREATED_BY)));

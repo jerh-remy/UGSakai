@@ -55,6 +55,7 @@ public class AnnouncementCollection {
     private String entityTitle;
 
     private String createdOnString;
+    private String courseSiteName;
 
     public String getCreatedOnString()
     {
@@ -184,4 +185,11 @@ public class AnnouncementCollection {
         this.entityTitle = entityTitle;
     }
 
+    public String getCourseSiteName() {
+        return courseSiteName;
+    }
+
+    public void setCourseSiteName(String courseSiteName) {
+        this.courseSiteName = courseSiteName;
+    }
 }

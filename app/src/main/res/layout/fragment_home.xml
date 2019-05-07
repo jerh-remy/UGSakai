@@ -1,96 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_refresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="?actionBarSize">
+    android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="?actionBarSize"
-        android:orientation="vertical">
+        android:layout_marginBottom="?actionBarSize">
 
 
-        <TextView
-            android:id="@+id/welcome_username"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingTop="16dp"
-            android:text="Welcome, Peterson"
-            android:textAllCaps="false"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/current_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:text="5th February, 2019"
-            android:textSize="16sp" />
-
-        <FrameLayout
-            android:layout_marginTop="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#eee" />
+            android:layout_marginBottom="?actionBarSize"
+            android:orientation="vertical">
 
 
-        <TextView
-            android:id="@+id/Motd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingLeft="16dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:text="Message of the day"
-            android:textAllCaps="true"
-            android:textColor="@color/colorPrimary"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp">
-
-            <RelativeLayout
+            <TextView
+                android:id="@+id/welcome_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp">
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                android:text="Welcome, Peterson"
+                android:textAllCaps="false"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/message"
+            <TextView
+                android:id="@+id/current_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:text="5th February, 2019"
+                android:textSize="16sp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="16dp"
+                android:background="#eee" />
+
+
+            <TextView
+                android:id="@+id/Motd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:text="Message of the day"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Failure to plan is planning to fail. Make the best use of your time"
-                    android:textSize="16dp" />
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="italic" />
 
 
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="RECENT ANNOUNCEMENTS"
-            android:textColor="@color/colorPrimary"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="RECENT ANNOUNCEMENTS"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recent_announcements_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recent_announcements_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

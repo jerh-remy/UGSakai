@@ -17,6 +17,7 @@ public class SharedPreferencesManager {
     private static final String IMAGEURL = "image";
     private static final String NOT_FIRST = "no";
     private static final String USERID = "user_id";
+    private static final String MOTD = "motd";
 
 
 
@@ -49,6 +50,16 @@ public class SharedPreferencesManager {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(USERID, userID);
+        editor.apply();
+
+        return true;
+    }
+
+    public boolean MOTD(String motd)
+    {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(MOTD, motd);
         editor.apply();
 
         return true;
@@ -121,10 +132,17 @@ public class SharedPreferencesManager {
 
         return sharedPreferences.getString(EMAIL, null);
     }
+
     public String getImageurl(){
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
 
         return sharedPreferences.getString(IMAGEURL, null);
+    }
+
+    public String getMOTD(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+
+        return sharedPreferences.getString(MOTD, null);
     }
 
 

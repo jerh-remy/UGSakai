@@ -2,13 +2,18 @@ package com.sakai.ug.sakaiapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -28,6 +33,8 @@ import com.sakai.ug.sakaiapp.course_site_fragments.SiteOverviewFragment;
 import com.sakai.ug.sakaiapp.course_site_fragments.SyllabusFragment;
 import com.sakai.ug.sakaiapp.main_fragments.SiteFragment;
 
+import java.util.HashSet;
+
 public class CourseSiteActivity extends AppCompatActivity {
 
     //declaring all course site fragments
@@ -41,6 +48,7 @@ public class CourseSiteActivity extends AppCompatActivity {
     final FragmentManager fm = getSupportFragmentManager();
     Fragment active = siteOverviewFragment;
 
+    private String cookieHeader;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +58,16 @@ public class CourseSiteActivity extends AppCompatActivity {
         toolbar.setBackground(getResources().getDrawable(R.color.colorPrimary));
         toolbar.setTitle("Course Site");
         setSupportActionBar(toolbar);
+
+        //getting the cookie from shared preferences
+        HashSet<String> preferences = (HashSet) PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getStringSet("appCookies", new HashSet<>());
+
+        for (String cookie : preferences) {
+            cookieHeader = cookie;
+            Log.d("CookieLogged", cookie);
+        }
 
         //getting extras from course site adapter
         final String siteid = getIntent().getStringExtra("SITE_ID");
@@ -84,6 +102,13 @@ public class CourseSiteActivity extends AppCompatActivity {
         fm.beginTransaction().add(R.id.container, gradebookFragment).hide(gradebookFragment).commit();
 
 
+        String imageURL = SharedPreferencesManager.getInstance(this).getImageurl();
+        GlideUrl glideUrl = new GlideUrl(imageURL, new LazyHeaders.Builder()
+                .addHeader("Cookie", cookieHeader)
+                .build());
+
+        /*Glide.with(this).load(glideUrl).into(circleImageView);
+*/
         //material drawer stuff
         AccountHeader accHeader = new AccountHeaderBuilder()
                 .withActivity(this)

@@ -68,12 +68,22 @@ public class ContentCollection {
 
     private String siteID;
 
+    private String siteTitle;
+
     public String getSiteID() {
         return siteID;
     }
 
     public void setSiteID(String siteID) {
         this.siteID = siteID;
+    }
+
+    public String getSiteTitle() {
+        return siteTitle;
+    }
+
+    public void setSiteTitle(String siteTitle) {
+        this.siteTitle = siteTitle;
     }
 
     public String getAuthor() {

@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     final HomeFragment homeFragment = new HomeFragment();
     final SiteFragment siteFragment = new SiteFragment();
     final NotificationFragment notificationFragment = new NotificationFragment();
-    final ChatFragment chatFragment = new ChatFragment();
+    //final ChatFragment chatFragment = new ChatFragment();
     final FragmentManager fm = getSupportFragmentManager();
     private LoginActivity loginActivity = new LoginActivity();
     private String cookieHeader;
@@ -84,12 +84,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         CircleImageView circleImageView = findViewById(R.id.profile_click);
-        /*String imageURL = SharedPreferencesManager.getInstance(this).getImageurl();
+        String imageURL = SharedPreferencesManager.getInstance(this).getImageurl();
         GlideUrl glideUrl = new GlideUrl(imageURL, new LazyHeaders.Builder()
                 .addHeader("Cookie", cookieHeader)
                 .build());
 
-        Glide.with(this).load(imageURL).into(circleImageView);*/
+        Glide.with(this).load(glideUrl).into(circleImageView);
 
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override

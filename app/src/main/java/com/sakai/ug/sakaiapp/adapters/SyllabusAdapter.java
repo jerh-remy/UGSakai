@@ -66,6 +66,7 @@ public class SyllabusAdapter extends RecyclerView.Adapter<SyllabusAdapter.Syllab
                 if (Utils.isNetworkAvailable(context)) {
                     String linktodownload = "http://sakaiapp.ngrok.io" + syllabusList.get(i).getAttachments().get(i).getUrl();
                     String title = syllabusList.get(i).getAttachments().get(i).getTitle();
+                    String site_title = syllabusList.get(i).getSiteTitle();
 
                     //folder to download to
                     File direct = new File(Environment.getExternalStorageDirectory()
@@ -94,7 +95,7 @@ public class SyllabusAdapter extends RecyclerView.Adapter<SyllabusAdapter.Syllab
                     request.setDescription("Downloading file");
                     request.allowScanningByMediaScanner();
                     request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                    request.setDestinationInExternalPublicDir("/UG Sakai", "/Syllabus/" + title);
+                    request.setDestinationInExternalPublicDir("/UG Sakai", "/Syllabus/" + site_title + "/" + title);
 
                     downloadmanager.enqueue(request);
                     Toast.makeText(context.getApplicationContext(),

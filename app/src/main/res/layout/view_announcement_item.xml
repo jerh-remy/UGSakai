@@ -22,14 +22,23 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/course_site"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
             android:text="CSCD421"
+            android:textStyle="bold"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CSCD421"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/body"
@@ -37,14 +46,8 @@
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:text="Please note that the First Interim Assessment comes off next week Monday at 8:00am."
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 
     </LinearLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#eee" />
-
 
 </LinearLayout>

@@ -22,12 +22,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.sakai.ug.sakaiapp.R;
 import com.sakai.ug.sakaiapp.helper.Utils;
 import com.sakai.ug.sakaiapp.models.resources.ContentCollection;
 import com.sakai.ug.sakaiapp.models.resources.Resources;
 import com.sakai.ug.sakaiapp.models.site.SiteCollection;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -89,40 +91,47 @@ public class ResourcesAdapter extends RecyclerView.Adapter<ResourcesAdapter.Reso
         resourcesViewHolder.dloadmynote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Utils.isNetworkAvailable(context))
-                {
-                String linktodownload = resourcesList.get(i).getUrl();
-                String title = resourcesList.get(i).getTitle();
+                if (Utils.isNetworkAvailable(context)) {
+                    String linktodownload = resourcesList.get(i).getUrl();
+                    String title = resourcesList.get(i).getTitle();
+                    String siteTitle = resourcesList.get(i).getSiteTitle();
 
-                //download manager stuff
-                String servicestring = Context.DOWNLOAD_SERVICE;
-                DownloadManager downloadmanager;
-                downloadmanager = (DownloadManager) context.getSystemService(servicestring);
-                Uri uri = Uri.parse(linktodownload);
-                DownloadManager.Request request = new DownloadManager.Request(uri);
-                HashSet<String> preferences = (HashSet) PreferenceManager
-                        .getDefaultSharedPreferences(context)
-                        .getStringSet("appCookies", new HashSet<>());
+                    //folder to download to
+                    File direct = new File(Environment.getExternalStorageDirectory()
+                            + "/UG Sakai");
 
-                for (String cookie : preferences) {
-                    request.addRequestHeader("Cookie", cookie);
-                    Log.d("CookieLogged",  cookie);
-                }
-                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-                request.setTitle(title);
-                request.setDescription("Downloading file");
-                request.allowScanningByMediaScanner();
-                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "" + System.currentTimeMillis());
+                    if (!direct.exists()) {
+                        direct.mkdirs();
+                    }
 
-                downloadmanager.enqueue(request);
-                Toast.makeText(context.getApplicationContext(),
-                        "Your file is now downloading...", Toast.LENGTH_LONG).show();
-            }
-            else{
+                    //download manager stuff
+                    String servicestring = Context.DOWNLOAD_SERVICE;
+                    DownloadManager downloadmanager;
+                    downloadmanager = (DownloadManager) context.getSystemService(servicestring);
+                    Uri uri = Uri.parse(linktodownload);
+                    DownloadManager.Request request = new DownloadManager.Request(uri);
+                    HashSet<String> preferences = (HashSet) PreferenceManager
+                            .getDefaultSharedPreferences(context)
+                            .getStringSet("appCookies", new HashSet<>());
+
+                    for (String cookie : preferences) {
+                        request.addRequestHeader("Cookie", cookie);
+                        Log.d("CookieLogged", cookie);
+                    }
+                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                    request.setTitle(title);
+                    request.setDescription("Downloading file");
+                    request.allowScanningByMediaScanner();
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    request.setDestinationInExternalPublicDir("/UG Sakai", "/Resources/" + siteTitle + "/" + title);
+
+                    downloadmanager.enqueue(request);
+                    Toast.makeText(context.getApplicationContext(),
+                            "Your file is now downloading...", Toast.LENGTH_LONG).show();
+                } else {
                     Toast.makeText(context.getApplicationContext(),
                             "Cannot download... check internet connection.", Toast.LENGTH_LONG).show();
-            }
+                }
             }
         });
 
@@ -147,27 +156,26 @@ public class ResourcesAdapter extends RecyclerView.Adapter<ResourcesAdapter.Reso
 */
 
 
-
     @Override
     public int getItemCount() {
         return resourcesList.size();
     }
 
-class ResourcesViewHolder extends RecyclerView.ViewHolder {
+    class ResourcesViewHolder extends RecyclerView.ViewHolder {
 
-    TextView textViewResource, textViewURL;
-    ImageView image;
-    ImageButton dloadmynote;
+        TextView textViewResource, textViewURL;
+        ImageView image;
+        ImageButton dloadmynote;
 
-    public ResourcesViewHolder(@NonNull View itemView) {
-        super(itemView);
+        public ResourcesViewHolder(@NonNull View itemView) {
+            super(itemView);
 
-        textViewResource = itemView.findViewById(R.id.textViewResource);
-        //textViewURL = itemView.findViewById(R.id.textViewUrl);
-        image = itemView.findViewById(R.id.image);
-        dloadmynote = itemView.findViewById(R.id.dloadnote);
+            textViewResource = itemView.findViewById(R.id.textViewResource);
+            //textViewURL = itemView.findViewById(R.id.textViewUrl);
+            image = itemView.findViewById(R.id.image);
+            dloadmynote = itemView.findViewById(R.id.dloadnote);
+        }
     }
-}
 
     public void addResource(ContentCollection contentCollection) {
         resourcesList.add(contentCollection);

@@ -92,7 +92,7 @@ public class Constants {
 
 
         //get recent announcements query
-        public static final String GET_RECENT_ANNOUNCEMENTS_QUERY = "SELECT * FROM announcement ORDER BY created_on DESC LIMIT 5";
+        public static final String GET_RECENT_ANNOUNCEMENTS_QUERY = "SELECT * FROM announcement LEFT JOIN courseSite ON announcement.site_id = courseSite.siteId ORDER BY created_on DESC LIMIT 5";
 
 
 
