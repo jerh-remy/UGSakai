@@ -21,7 +21,7 @@ public class Constants {
     public static final class DATABASE {
 
         public static final String DB_NAME = "sakaidatabase";
-        public static final int DB_VERSION = 13;
+        public static final int DB_VERSION = 15;
 
         //tables
         public static final String COURSE_SITE_TABLE_NAME = "courseSite";
@@ -64,6 +64,8 @@ public class Constants {
         //resources table columns
         public static final String RES_TITLE = "title";
         public static final String TYPE = "type";
+        public static final String URL = "url";
+        public static final String CONTAINER = "container";
         public static final String NO_OF_CHILDREN = "no_of_children";
         public static final String RES_SITE_ID = "siteId";
 
@@ -88,6 +90,7 @@ public class Constants {
         public static final String GET_COURSE_SITE_QUERY = "SELECT * FROM " + COURSE_SITE_TABLE_NAME;
         public static final String GET_SYLLABUS_QUERY = "SELECT * FROM " + SYLLABUS_TABLE_NAME + " WHERE " + SYL_SITE_ID + " = ?";
         public static final String GET_RESOURCES_QUERY = "SELECT * FROM " + RESOURCES_TABLE_NAME + " WHERE " + RES_SITE_ID + " = ?";
+        public static final String GET_FOLDER_QUERY = "SELECT * FROM " + RESOURCES_TABLE_NAME + " WHERE " + RES_TITLE + " = ?";
         public static final String GET_GRADES_QUERY = "SELECT * FROM " + GRADEBOOK_TABLE_NAME + " WHERE " + GRD_SITE_ID + " = ?";
 
 
@@ -134,6 +137,8 @@ public class Constants {
         public static final String CREATE_RESOURCES_TABLE_QUERY = "CREATE TABLE " + RESOURCES_TABLE_NAME + "" +
                 "(" + RES_TITLE + " TEXT PRIMARY KEY not null," +
                 TYPE + " TEXT not null," +
+                CONTAINER + " TEXT not null," +
+                URL + " TEXT not null," +
                 NO_OF_CHILDREN + " TEXT not null," +
                 RES_SITE_ID + " TEXT not null," +
                 "FOREIGN KEY (" + RES_SITE_ID + ") REFERENCES " + COURSE_SITE_TABLE_NAME + "(" + SITE_ID + "))";

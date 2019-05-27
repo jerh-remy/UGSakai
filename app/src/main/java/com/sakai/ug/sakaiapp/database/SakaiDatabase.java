@@ -13,7 +13,6 @@ package com.sakai.ug.sakaiapp.database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,24 +21,21 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.sakai.ug.sakaiapp.adapters.RecentAnnouncementAdapter;
 import com.sakai.ug.sakaiapp.callback.AnnouncementFetchListener;
 import com.sakai.ug.sakaiapp.callback.AssignmentFetchListener;
 import com.sakai.ug.sakaiapp.callback.CourseSiteFetchListener;
 import com.sakai.ug.sakaiapp.callback.GradebookFetchListener;
+import com.sakai.ug.sakaiapp.callback.QueryCallback;
 import com.sakai.ug.sakaiapp.callback.RecentAnnouncementFetchListener;
 import com.sakai.ug.sakaiapp.callback.ResourceFetchListener;
 import com.sakai.ug.sakaiapp.callback.SyllabusFetchListener;
 import com.sakai.ug.sakaiapp.helper.Constants;
-import com.sakai.ug.sakaiapp.main_fragments.HomeFragment;
-import com.sakai.ug.sakaiapp.models.announcement.Announcement;
 import com.sakai.ug.sakaiapp.models.announcement.AnnouncementCollection;
 import com.sakai.ug.sakaiapp.models.assignment.AssignmentCollection;
 import com.sakai.ug.sakaiapp.models.assignment.TimeCreated;
 import com.sakai.ug.sakaiapp.models.gradebook.Assignment;
 import com.sakai.ug.sakaiapp.models.resources.ContentCollection;
 import com.sakai.ug.sakaiapp.models.site.Props;
-import com.sakai.ug.sakaiapp.models.site.Site;
 import com.sakai.ug.sakaiapp.models.site.SiteCollection;
 import com.sakai.ug.sakaiapp.models.syllabus.Attachment;
 import com.sakai.ug.sakaiapp.models.syllabus.Item;
@@ -195,6 +191,125 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                 }
             });
         }
+    }
+
+
+    // FOLDERS
+    public void fetchFolder(String title, QueryCallback<ContentCollection> listener) {
+        listener.onInit();
+        FolderFetcher fetcher = new FolderFetcher(title, listener, this.getWritableDatabase());
+        fetcher.start();
+    }
+
+    public class FolderFetcher extends Thread {
+
+        private final QueryCallback<ContentCollection> callback;
+        private final SQLiteDatabase mDb;
+        private final String folderName;
+
+
+        public FolderFetcher(String folderName, QueryCallback<ContentCollection> callback, SQLiteDatabase db) {
+            this.callback = callback;
+            this.mDb = db;
+            this.folderName = folderName;
+        }
+
+        @Override
+        public void run() {
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_FOLDER_QUERY, new String[]{folderName});
+            //Log.d(TAG, "number of columns in table: " + cursor.getColumnCount());
+
+            List<ContentCollection> folders = new ArrayList<>(0);
+
+            Log.d(TAG, "folder count: " + cursor.getCount());
+
+            if (cursor.getCount() > 0) {
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        ContentCollection collection = new ContentCollection();
+                        collection.setContainer(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CONTAINER)));
+                        collection.setEntityTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.RES_TITLE)));
+                        Log.d(TAG, "folder fetched: " + collection);
+
+                        folders.add(collection);
+                        Log.d(TAG, "folders " + folders);
+
+                    } while (cursor.moveToNext());
+                }
+            } else {
+                callback.onError("Could not load folders");
+            }
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (folders.isEmpty()) {
+                        Log.d(TAG, "course site list fetched: " + folders);
+                        callback.onSuccess(null);
+                    } else {
+                        callback.onSuccess(folders.get(0));
+                    }
+                }
+            });
+        }
+    }
+
+
+    // FILES
+    public class FilesFetcher extends Thread {
+
+        private final QueryCallback<List<ContentCollection>> callback;
+        private final SQLiteDatabase mDb;
+        //private final String siteID;
+
+
+
+        public FilesFetcher(QueryCallback<List<ContentCollection>> callback, SQLiteDatabase db) { //, String site_id
+            this.callback = callback;
+            this.mDb = db;
+            //this.siteID = site_id;
+        }
+
+        @Override
+        public void run() {
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_RESOURCES_QUERY, null); //new String[]{siteID}
+            //Log.d(TAG, "number of columns in table: " + cursor.getColumnCount());
+
+            List<ContentCollection> files = new ArrayList<>(0);
+
+            if (cursor.getCount() > 0) {
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        ContentCollection collection = new ContentCollection();
+                        collection.setContainer(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CONTAINER)));
+                        collection.setUrl(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.URL)));
+                        // TODO: 5/27/2019 add url field to result for comparison
+                        collection.setEntityTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.RES_TITLE)));
+                        Log.d(TAG, "files fetched: " + collection);
+
+                        files.add(collection);
+
+                    } while (cursor.moveToNext());
+                }
+            } else {
+                callback.onError("Could not load files");
+            }
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    callback.onSuccess(files);
+                    Log.d(TAG, "files list fetched: " + files);
+                }
+            });
+        }
+    }
+
+    public void fetchFilesFromFolder(QueryCallback<List<ContentCollection>> callback) {
+        callback.onInit();
+        new FilesFetcher(callback, this.getWritableDatabase()).start();
     }
 
 
@@ -391,6 +506,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(Constants.DATABASE.RES_TITLE, contentCollection.getTitle());
         values.put(Constants.DATABASE.TYPE, contentCollection.getType());
+        values.put(Constants.DATABASE.CONTAINER, contentCollection.getContainer());
         values.put(Constants.DATABASE.NO_OF_CHILDREN, contentCollection.getNumChildren());
         values.put(Constants.DATABASE.RES_SITE_ID, contentCollection.getSiteID());
         Log.d(TAG, "SakaiDB Resource: " + values);

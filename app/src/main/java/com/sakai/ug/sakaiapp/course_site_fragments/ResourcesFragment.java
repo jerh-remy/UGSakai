@@ -131,9 +131,10 @@ public class ResourcesFragment extends Fragment implements ResourceFetchListener
                     contentCollection.setSiteID(courseid);
                     contentCollection.setSiteTitle(siteTitle);
 
-                    int indexOfSlash = contentCollection.getUrl().lastIndexOf('/');
-                    boolean isFolder = contentCollection.getUrl().length() - 1 == indexOfSlash;
+                    boolean isFolder = contentCollection.getUrl().endsWith("/");
                     Log.d(TAG, "onResponse: " + isFolder);
+
+
 
                     SaveIntoDatabase task = new SaveIntoDatabase();
                     task.execute(contentCollection);

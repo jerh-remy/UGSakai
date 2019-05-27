@@ -99,7 +99,9 @@ public class CourseSiteActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Roster> call, Response<Roster> response) {
                 roster = response.body();
-                class_size = roster.getRosterCollection().size();
+                if (roster != null) {
+                    class_size = roster.getRosterCollection().size();
+                }
                 Log.d("roster worked?", "onResponse: " + class_size);
             }
 
