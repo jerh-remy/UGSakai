@@ -41,7 +41,7 @@ import retrofit2.Response;
 
 public class ResourcesFragment extends Fragment implements ResourceFetchListener {
     private static final int PERMISSION_STORAGE_CODE = 1000;
-
+    private static final String TAG = "ResourcesFragment";
     Resources resources = new Resources();
     RecyclerView recyclerView;
     ResourcesAdapter adapter;
@@ -130,6 +130,10 @@ public class ResourcesFragment extends Fragment implements ResourceFetchListener
                     contentCollection = resources.getContentCollection().get(i);
                     contentCollection.setSiteID(courseid);
                     contentCollection.setSiteTitle(siteTitle);
+
+                    int indexOfSlash = contentCollection.getUrl().lastIndexOf('/');
+                    boolean isFolder = contentCollection.getUrl().length() - 1 == indexOfSlash;
+                    Log.d(TAG, "onResponse: " + isFolder);
 
                     SaveIntoDatabase task = new SaveIntoDatabase();
                     task.execute(contentCollection);

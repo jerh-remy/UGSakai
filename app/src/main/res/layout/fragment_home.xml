@@ -94,6 +94,16 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/no_recent_announcements"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No recent announcements"
+                android:textSize="16sp"
+                android:layout_marginLeft="20dp"
+                android:textAlignment="textStart" />
+
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recent_announcements_recycler_view"

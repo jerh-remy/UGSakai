@@ -1,6 +1,7 @@
 package com.sakai.ug.sakaiapp;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -12,8 +13,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.sakai.ug.sakaiapp.database.SakaiDatabase;
+
 @SuppressLint("ValidFragment")
 public class BottomSheetFragment extends BottomSheetDialogFragment {
+    private SakaiDatabase sakaiDatabase;
+
 
     public static BottomSheetFragment getInstance() {
         return new BottomSheetFragment();
@@ -35,6 +40,8 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         view.findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sakaiDatabase = new SakaiDatabase(getContext());
+                sakaiDatabase.removeAll();
                 SharedPreferencesManager.getInstance(getContext()).Logout();
                 PreferenceManager.getDefaultSharedPreferences(getContext()).edit().clear().apply();
                 startActivity(new Intent(getContext(), LoginActivity.class));

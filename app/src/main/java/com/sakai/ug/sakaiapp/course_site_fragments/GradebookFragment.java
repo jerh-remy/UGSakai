@@ -99,7 +99,7 @@ public class GradebookFragment extends Fragment implements GradebookFetchListene
             public void onResponse(Call<Gradebook> call, Response<Gradebook> response) {
                 Log.d("Success", "onResponse: Successful");
                 gradebook = response.body();
-                Log.d("Response body", "onResponse: " + gradebook.getAssignments().get(0).getItemName());
+                //Log.d("Response body", "onResponse: " + gradebook.getAssignments().get(0).getItemName());
 
                 for (int i = 0; i < gradebook.getAssignments().size(); i++) {
                     assignment = gradebook.getAssignments().get(i);

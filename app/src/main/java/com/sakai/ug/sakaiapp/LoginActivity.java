@@ -48,6 +48,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String userId;
     private String displayname;
     private String email;
+    private String personal_summary;
+    private String phone_number;
+    private String linkedin;
+    private String facebook;
+    private String twitter;
     private String image_url;
     private ProgressDialog progressDialog;
 
@@ -155,9 +160,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     profile = response.body();
                     displayname = profile.getDisplayName();
                     email = profile.getEmail();
-                    Log.d("Name", "onResponse:" + displayname + " " + email);
                     image_url = profile.getImageUrl();
-                    SharedPreferencesManager.getInstance(getApplicationContext()).UserProfileDetails(displayname, email, image_url);
+                    personal_summary = profile.getPersonalSummary();
+                    phone_number = profile.getMobilephone();
+                    linkedin = profile.getSocialInfo().getLinkedinUrl();
+                    facebook = profile.getSocialInfo().getFacebookUrl();
+                    twitter = profile.getSocialInfo().getTwitterUrl();
+
+                    Log.d("Name", "onResponse:" + displayname + " " + email + " " + image_url);
+
+
+                    SharedPreferencesManager.getInstance(getApplicationContext()).UserProfileDetails(displayname, email, image_url, personal_summary, phone_number, linkedin, facebook, twitter);
 
 
                     //start the main activity

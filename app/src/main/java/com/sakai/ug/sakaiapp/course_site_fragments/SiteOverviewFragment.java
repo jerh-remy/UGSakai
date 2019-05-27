@@ -34,10 +34,19 @@ public class SiteOverviewFragment extends Fragment {
         String courseid = bundle2.getString("COURSE_ID");
         String coursedescription = bundle2.getString("COURSE_DESCRIPTION");
         String coursetitle = bundle2.getString("COURSE_TITLE");
+        String lecturer = bundle2.getString("COURSE_INSTRUCTOR");
+        int class_size = bundle2.getInt("ROSTER_SIZE");
+        Log.d("class_size", ""+ class_size);
+
 
         TextView courseTitle = view.findViewById(R.id.course_code);
         TextView courseDescription = view.findViewById(R.id.course_desc_body);
+        TextView lecturer_name = view.findViewById(R.id.lecturer_name);
+        TextView roster_size = view.findViewById(R.id.class_size);
+
         courseTitle.setText(coursetitle);
+        lecturer_name.setText(lecturer);
+        roster_size.setText(class_size + " students");
 
         if (coursedescription != null) {
             courseDescription.setText(Html.fromHtml(coursedescription));

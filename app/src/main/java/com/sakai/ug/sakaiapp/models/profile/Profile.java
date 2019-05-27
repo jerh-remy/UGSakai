@@ -65,13 +65,13 @@ public class Profile {
     private String imageUrl;
     @SerializedName("mobilephone")
     @Expose
-    private Object mobilephone;
+    private String mobilephone;
     @SerializedName("nickname")
     @Expose
     private Object nickname;
     @SerializedName("personalSummary")
     @Expose
-    private Object personalSummary;
+    private String personalSummary;
     @SerializedName("position")
     @Expose
     private Object position;
@@ -273,11 +273,11 @@ public class Profile {
         this.imageUrl = imageUrl;
     }
 
-    public Object getMobilephone() {
+    public String getMobilephone() {
         return mobilephone;
     }
 
-    public void setMobilephone(Object mobilephone) {
+    public void setMobilephone(String mobilephone) {
         this.mobilephone = mobilephone;
     }
 
@@ -289,11 +289,11 @@ public class Profile {
         this.nickname = nickname;
     }
 
-    public Object getPersonalSummary() {
+    public String getPersonalSummary() {
         return personalSummary;
     }
 
-    public void setPersonalSummary(Object personalSummary) {
+    public void setPersonalSummary(String personalSummary) {
         this.personalSummary = personalSummary;
     }
 

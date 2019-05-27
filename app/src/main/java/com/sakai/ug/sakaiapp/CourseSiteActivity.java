@@ -24,6 +24,8 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.sakai.ug.sakaiapp.APIservices.ApiClient;
+import com.sakai.ug.sakaiapp.APIservices.RosterInterface;
 import com.sakai.ug.sakaiapp.course_site_fragments.AnnouncementFragment;
 import com.sakai.ug.sakaiapp.course_site_fragments.AssignmentsFragment;
 import com.sakai.ug.sakaiapp.course_site_fragments.GradebookFragment;
@@ -31,11 +33,23 @@ import com.sakai.ug.sakaiapp.course_site_fragments.ProfileFragment;
 import com.sakai.ug.sakaiapp.course_site_fragments.ResourcesFragment;
 import com.sakai.ug.sakaiapp.course_site_fragments.SiteOverviewFragment;
 import com.sakai.ug.sakaiapp.course_site_fragments.SyllabusFragment;
+import com.sakai.ug.sakaiapp.database.SakaiDatabase;
 import com.sakai.ug.sakaiapp.main_fragments.SiteFragment;
+import com.sakai.ug.sakaiapp.models.roster.Roster;
 
 import java.util.HashSet;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class CourseSiteActivity extends AppCompatActivity {
+
+    //roster stuff
+    ApiClient apiClient = new ApiClient();
+    RosterInterface rosterInterface;
+    Roster roster = new Roster();
+    int class_size;
 
     //declaring all course site fragments
     final SiteOverviewFragment siteOverviewFragment = new SiteOverviewFragment();
@@ -53,6 +67,7 @@ public class CourseSiteActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_site);
+
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setBackground(getResources().getDrawable(R.color.colorPrimary));
@@ -73,16 +88,38 @@ public class CourseSiteActivity extends AppCompatActivity {
         final String siteid = getIntent().getStringExtra("SITE_ID");
         final String sitedescription = getIntent().getStringExtra("SITE_DESCRIPTION");
         final String sitetitle = getIntent().getStringExtra("SITE_TITLE");
-        final String siteroster = getIntent().getStringExtra("SITE_ROSTER");
         final String instructor = getIntent().getStringExtra("SITE_INSTRUCTOR");
+
+
+
+        //finding roster size
+        rosterInterface = apiClient.getApiClient(getApplicationContext()).create(RosterInterface.class);
+        Call<Roster> rosterCall = rosterInterface.getRoster(siteid);
+        rosterCall.enqueue(new Callback<Roster>() {
+            @Override
+            public void onResponse(Call<Roster> call, Response<Roster> response) {
+                roster = response.body();
+                class_size = roster.getRosterCollection().size();
+                Log.d("roster worked?", "onResponse: " + class_size);
+            }
+
+            @Override
+            public void onFailure(Call<Roster> call, Throwable t) {
+                Log.d("Roster failure", " " + t.getMessage());
+            }
+        });
 
         //passing extras into bundle to be shared among all course sites
         Bundle bundle1 = new Bundle();
         bundle1.putString("COURSE_ID", siteid);
         bundle1.putString("COURSE_DESCRIPTION", sitedescription);
         bundle1.putString("COURSE_TITLE", sitetitle);
-        bundle1.putString("COURSE_MEMBERS", siteroster);
         bundle1.putString("COURSE_INSTRUCTOR", instructor);
+        bundle1.putInt("ROSTER_SIZE", 24);
+        Log.d("bundle1", "onCreate: " + bundle1);
+
+
+
 
         siteOverviewFragment.setArguments(bundle1);
         profileFragment.setArguments(bundle1);
@@ -91,6 +128,8 @@ public class CourseSiteActivity extends AppCompatActivity {
         resourcesFragment.setArguments(bundle1);
         assignmentsFragment.setArguments(bundle1);
         gradebookFragment.setArguments(bundle1);
+
+
 
         //committing all the fragments and making the site overview fragment the only initially visible one
         fm.beginTransaction().add(R.id.container, siteOverviewFragment).commit();

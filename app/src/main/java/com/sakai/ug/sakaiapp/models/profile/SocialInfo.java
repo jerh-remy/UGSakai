@@ -7,60 +7,60 @@ public class SocialInfo {
 
     @SerializedName("facebookUrl")
     @Expose
-    private Object facebookUrl;
+    private String facebookUrl;
     @SerializedName("linkedinUrl")
     @Expose
-    private Object linkedinUrl;
+    private String linkedinUrl;
     @SerializedName("myspaceUrl")
     @Expose
-    private Object myspaceUrl;
+    private String myspaceUrl;
     @SerializedName("skypeUsername")
     @Expose
-    private Object skypeUsername;
+    private String skypeUsername;
     @SerializedName("twitterUrl")
     @Expose
-    private Object twitterUrl;
+    private String twitterUrl;
     @SerializedName("userUuid")
     @Expose
     private String userUuid;
 
-    public Object getFacebookUrl() {
+    public String getFacebookUrl() {
         return facebookUrl;
     }
 
-    public void setFacebookUrl(Object facebookUrl) {
+    public void setFacebookUrl(String facebookUrl) {
         this.facebookUrl = facebookUrl;
     }
 
-    public Object getLinkedinUrl() {
+    public String getLinkedinUrl() {
         return linkedinUrl;
     }
 
-    public void setLinkedinUrl(Object linkedinUrl) {
+    public void setLinkedinUrl(String linkedinUrl) {
         this.linkedinUrl = linkedinUrl;
     }
 
-    public Object getMyspaceUrl() {
+    public String getMyspaceUrl() {
         return myspaceUrl;
     }
 
-    public void setMyspaceUrl(Object myspaceUrl) {
+    public void setMyspaceUrl(String myspaceUrl) {
         this.myspaceUrl = myspaceUrl;
     }
 
-    public Object getSkypeUsername() {
+    public String getSkypeUsername() {
         return skypeUsername;
     }
 
-    public void setSkypeUsername(Object skypeUsername) {
+    public void setSkypeUsername(String skypeUsername) {
         this.skypeUsername = skypeUsername;
     }
 
-    public Object getTwitterUrl() {
+    public String getTwitterUrl() {
         return twitterUrl;
     }
 
-    public void setTwitterUrl(Object twitterUrl) {
+    public void setTwitterUrl(String twitterUrl) {
         this.twitterUrl = twitterUrl;
     }
 

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "631725293738",
+    "firebase_url": "https://sakai-project.firebaseio.com",
+    "project_id": "sakai-project",
+    "storage_bucket": "sakai-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631725293738:android:85705ad82854f9ad",
+        "android_client_info": {
+          "package_name": "com.sakai.ug.sakaiapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "631725293738-241ld0g5uaiuof1lmkjg8tg11rfjhet8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sakai.ug.sakaiapp",
+            "certificate_hash": "c29ad85124fe11950925ff27af0fd99cb070e544"
+          }
+        },
+        {
+          "client_id": "631725293738-ekbsnfe2ckspd6oqqodso778dm0m82h1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGuNbBg4EHYjP0j81-H26t3LpnZ6FHF1k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "631725293738-ekbsnfe2ckspd6oqqodso778dm0m82h1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

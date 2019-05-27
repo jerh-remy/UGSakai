@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -24,7 +25,7 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 public class ProfileActivity extends AppCompatActivity {
     //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 
-    TextView fullname, username;
+    TextView fullname, username, personal_summary, email, phone_num, linkedin, facebook, twitter;
     private String cookieHeader;
 
 
@@ -45,9 +46,26 @@ public class ProfileActivity extends AppCompatActivity {
 
         fullname = findViewById(R.id.fullname);
         username = findViewById(R.id.userID);
+        email = findViewById(R.id.email);
+        personal_summary = findViewById(R.id.personal_summary);
+        phone_num = findViewById(R.id.phone_no);
+        linkedin = findViewById(R.id.linkedin);
+        facebook = findViewById(R.id.facebook);
+        twitter = findViewById(R.id.twitter);
 
-        fullname.setText(SharedPreferencesManager.getInstance(getApplicationContext()).getFullname());
-        username.setText(SharedPreferencesManager.getInstance(getApplicationContext()).getUsername());
+        try {
+            fullname.setText(SharedPreferencesManager.getInstance(getApplicationContext()).getFullname());
+            username.setText(SharedPreferencesManager.getInstance(getApplicationContext()).getUsername());
+            email.setText(SharedPreferencesManager.getInstance(getApplicationContext()).getEmail());
+            personal_summary.setText(Html.fromHtml(SharedPreferencesManager.getInstance(getApplicationContext()).getPersonalSummary()));
+            phone_num.setText(SharedPreferencesManager.getInstance(getApplicationContext()).getPhoneNo());
+            linkedin.setText(SharedPreferencesManager.getInstance(getApplicationContext()).getLinkedin());
+            facebook.setText(SharedPreferencesManager.getInstance(getApplicationContext()).getFacebook());
+            twitter.setText(SharedPreferencesManager.getInstance(getApplicationContext()).getTwitter());
+        }catch (Exception e)
+        {
+            Log.d("Profile details", "one or more profile fields haven't been filled.");
+        }
 
         CircleImageView circleImageView = findViewById(R.id.profile_pic_large);
         String imageURL = SharedPreferencesManager.getInstance(this).getImageurl();
@@ -55,8 +73,10 @@ public class ProfileActivity extends AppCompatActivity {
                 .addHeader("Cookie", cookieHeader)
                 .build());
 
-        Glide.with(this).load(glideUrl).transition(withCrossFade())
-                .thumbnail(0.5f).into(circleImageView);
+        Glide.with(this).load(glideUrl).into(circleImageView);
+
+        //transition(withCrossFade())
+        //.thumbnail(0.5f)
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setBackground(getResources().getDrawable(R.color.colorPrimary));

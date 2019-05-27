@@ -20,6 +20,11 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.sakai.ug.sakaiapp.course_site_fragments.AnnouncementFragment;
+import com.sakai.ug.sakaiapp.course_site_fragments.AssignmentsFragment;
+import com.sakai.ug.sakaiapp.course_site_fragments.GradebookFragment;
+import com.sakai.ug.sakaiapp.course_site_fragments.ResourcesFragment;
+import com.sakai.ug.sakaiapp.course_site_fragments.SyllabusFragment;
 import com.sakai.ug.sakaiapp.main_fragments.ChatFragment;
 import com.sakai.ug.sakaiapp.main_fragments.HomeFragment;
 import com.sakai.ug.sakaiapp.main_fragments.NotificationFragment;
@@ -35,7 +40,13 @@ public class MainActivity extends AppCompatActivity {
     //declaring main fragments
     final HomeFragment homeFragment = new HomeFragment();
     final SiteFragment siteFragment = new SiteFragment();
-    final NotificationFragment notificationFragment = new NotificationFragment();
+    final AnnouncementFragment announcementFragment = new AnnouncementFragment();
+    final AssignmentsFragment assignmentsFragment = new AssignmentsFragment();
+    final SyllabusFragment syllabusFragment = new SyllabusFragment();
+    final ResourcesFragment resourcesFragment  = new ResourcesFragment();
+    final GradebookFragment gradebookFragment = new GradebookFragment();
+
+    //final NotificationFragment notificationFragment = new NotificationFragment();
     //final ChatFragment chatFragment = new ChatFragment();
     final FragmentManager fm = getSupportFragmentManager();
     private LoginActivity loginActivity = new LoginActivity();
@@ -89,7 +100,12 @@ public class MainActivity extends AppCompatActivity {
                 .addHeader("Cookie", cookieHeader)
                 .build());
 
-        Glide.with(this).load(glideUrl).into(circleImageView);
+        try {
+            Glide.with(this).load(glideUrl).into(circleImageView);
+            Log.d("Main", "glide request " + glideUrl);
+        }catch (Exception e){
+            e.getMessage();
+        }
 
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,7 +156,11 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
         fm.beginTransaction().add(R.id.fragment_container, homeFragment, "1").commit();
-        //fm.beginTransaction().add(R.id.fragment_container, siteFragment, "2").hide(siteFragment).commit();
+        /*fm.beginTransaction().add(R.id.fragment_container, announcementFragment).hide(announcementFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, syllabusFragment).hide(syllabusFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, resourcesFragment).hide(resourcesFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, assignmentsFragment).hide(assignmentsFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, gradebookFragment).hide(gradebookFragment).commit();*/
         //fm.beginTransaction().add(R.id.fragment_container, notificationFragment, "3").hide(notificationFragment).commit();
         //fm.beginTransaction().add(R.id.fragment_container, chatFragment, "4").hide(chatFragment).commit();
 
@@ -172,11 +192,11 @@ public class MainActivity extends AppCompatActivity {
                     fm.beginTransaction().replace(R.id.fragment_container, siteFragment).commit();
                     //active = siteFragment;
                     return true;
-                case R.id.action_notifications:
+                /*case R.id.action_notifications:
                     //fm.beginTransaction().hide(active).show(notificationFragment).commit();
-                    fm.beginTransaction().replace(R.id.fragment_container, notificationFragment).commit();
+                    //fm.beginTransaction().replace(R.id.fragment_container, notificationFragment).commit();
                     //active = notificationFragment;
-                    return true;
+                    return true;*/
                /* case R.id.action_chat:
                     //fm.beginTransaction().hide(active).show(chatFragment).commit();
                     fm.beginTransaction().replace(R.id.fragment_container, chatFragment).commit();

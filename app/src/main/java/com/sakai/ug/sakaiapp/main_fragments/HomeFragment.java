@@ -48,7 +48,7 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment implements RecentAnnouncementAdapter.onRecentAnnouncementItemClickListener, RecentAnnouncementFetchListener {
 
-    TextView welcome, date, message;
+    TextView welcome, date, message, beforeRecentAnnouncements;
     RecyclerView recyclerView;
     private RecentAnnouncementAdapter adapter;
     SakaiDatabase sakaiDatabase;
@@ -74,6 +74,7 @@ public class HomeFragment extends Fragment implements RecentAnnouncementAdapter.
         welcome = view.findViewById(R.id.welcome_username);
         date = view.findViewById(R.id.current_date);
         message = view.findViewById(R.id.message);
+        beforeRecentAnnouncements = view.findViewById(R.id.no_recent_announcements);
 
         sakaiDatabase = new SakaiDatabase(getContext());
 
@@ -88,7 +89,8 @@ public class HomeFragment extends Fragment implements RecentAnnouncementAdapter.
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
-            getMOTD();
+            getMOTDfromSP();
+            showRecentAnnouncements();
         });
 
         recyclerView = view.findViewById(R.id.recent_announcements_recycler_view);
@@ -99,19 +101,26 @@ public class HomeFragment extends Fragment implements RecentAnnouncementAdapter.
         recyclerView.setAdapter(adapter);
 
         loadMOTD();
-        showRecentAnnouncements();
+        loadRecentAnnouncements();
 
         return view;
 
     }
 
+
+    private void loadRecentAnnouncements() {
+        if (sakaiDatabase.isAnnouncementTableEmpty() == false) {
+            beforeRecentAnnouncements.setVisibility(View.GONE);
+            showRecentAnnouncements();
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            beforeRecentAnnouncements.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void loadMOTD() {
         if (Utils.isNetworkAvailable(getContext())) {
-            if (message.getText() == "") {
-                getMOTD();
-            } else {
-                getMOTDfromSP();
-            }
+            getMOTD();
         } else {
             getMOTDfromSP();
         }
@@ -127,12 +136,19 @@ public class HomeFragment extends Fragment implements RecentAnnouncementAdapter.
             public void onResponse(Call<Announcement> call, Response<Announcement> response) {
                 swipeRefreshLayout.setRefreshing(false);
                 announcement = response.body();
-                for (int i = 0; i < announcement.getAnnouncementCollection().size(); i++) {
-                    announcementCollection = announcement.getAnnouncementCollection().get(i);
-                    String motd = announcementCollection.getBody();
-                    SharedPreferencesManager.getInstance(getContext()).MOTD(motd);
-                    message.setText(Html.fromHtml(motd));
+                if (announcement != null) {
+                    if (announcement.getAnnouncementCollection() != null) {
+                        for (int i = 0; i < announcement.getAnnouncementCollection().size(); i++) {
+                            announcementCollection = announcement.getAnnouncementCollection().get(i);
+                            String motd = announcementCollection.getBody();
+                            SharedPreferencesManager.getInstance(getContext()).MOTD(motd);
+                            message.setText(Html.fromHtml(motd));
 
+                        }
+                    } else {
+                        //message.setText("Nothing to display yet.");
+
+                    }
                 }
 
             }
@@ -147,8 +163,13 @@ public class HomeFragment extends Fragment implements RecentAnnouncementAdapter.
 
     private void getMOTDfromSP() {
         String MOTD = SharedPreferencesManager.getInstance(getContext()).getMOTD();
-        message.setText(Html.fromHtml(MOTD));
-
+        if (MOTD == null) {
+            message.setText("Nothing to display yet.");
+            swipeRefreshLayout.setRefreshing(false);
+        } else {
+            message.setText(Html.fromHtml(MOTD));
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     private void showRecentAnnouncements() {

@@ -129,10 +129,11 @@
                                 android:textSize="14sp" />
 
                             <TextView
+                                android:id="@+id/personal_summary"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="4dp"
-                                android:text="I am a hardworking student who loves to engage with my peers as well as lecturers. I am very teachable and open to learning new things."
+                                android:text=""
                                 android:textSize="16sp" />
 
                         </LinearLayout>
@@ -166,10 +167,11 @@
                                 android:textSize="14sp" />
 
                             <TextView
+                                android:id="@+id/email"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="4dp"
-                                android:text="jeremy.offori@gmail.com"
+                                android:text=""
                                 android:textSize="16sp" />
 
                         </LinearLayout>
@@ -203,10 +205,11 @@
                                 android:textSize="14sp" />
 
                             <TextView
+                                android:id="@+id/phone_no"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="4dp"
-                                android:text="0270046302"
+                                android:text=""
                                 android:textSize="16sp" />
 
                         </LinearLayout>
@@ -252,10 +255,11 @@
                                 android:textSize="14sp" />
 
                             <TextView
+                                android:id="@+id/linkedin"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="4dp"
-                                android:text="very teachable and open to learning new things."
+                                android:text=""
                                 android:textSize="16sp" />
 
                         </LinearLayout>
@@ -289,10 +293,11 @@
                                 android:textSize="14sp" />
 
                             <TextView
+                                android:id="@+id/facebook"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="4dp"
-                                android:text="facebook.com/profile"
+                                android:text=""
                                 android:textSize="16sp" />
 
                         </LinearLayout>
@@ -326,10 +331,11 @@
                                 android:textSize="14sp" />
 
                             <TextView
+                                android:id="@+id/twitter"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="4dp"
-                                android:text="twitter.com/profile"
+                                android:text=""
                                 android:textSize="16sp" />
 
                         </LinearLayout>

@@ -19,7 +19,7 @@
             android:id="@+id/profileicon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="9dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
             android:src="@drawable/ic_profile_24dp" />
@@ -28,7 +28,7 @@
             android:id="@+id/gotoprofile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="7dp"
             android:layout_toRightOf="@+id/profileicon"
             android:foreground="?attr/selectableItemBackground"
             android:text="Profile"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/profileicon"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="23dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
             android:src="@drawable/ic_logout_24dp" />

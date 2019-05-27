@@ -86,6 +86,32 @@ public class SakaiDatabase extends SQLiteOpenHelper {
     }
 
 
+    public boolean isAnnouncementTableEmpty() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String count = "SELECT count(*) FROM " + Constants.DATABASE.ANNOUNCEMENT_TABLE_NAME;
+        Cursor mcursor = db.rawQuery(count, null);
+        mcursor.moveToFirst();
+        int icount = mcursor.getInt(0);
+        if (icount > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    public void removeAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(Constants.DATABASE.ANNOUNCEMENT_TABLE_NAME, null, null);
+        db.delete(Constants.DATABASE.ASSIGNMENT_TABLE_NAME, null, null);
+        db.delete(Constants.DATABASE.RESOURCES_TABLE_NAME, null, null);
+        db.delete(Constants.DATABASE.GRADEBOOK_TABLE_NAME, null, null);
+        db.delete(Constants.DATABASE.COURSE_SITE_TABLE_NAME, null, null);
+        db.delete(Constants.DATABASE.SYLLABUS_TABLE_NAME, null, null);
+        db.close();
+    }
+
+
     //COURSE SITES
     public void addCourseSite(SiteCollection siteCollection) {
 
@@ -674,7 +700,6 @@ public class SakaiDatabase extends SQLiteOpenHelper {
             });
         }
     }
-
 
 
 }

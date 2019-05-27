@@ -18,7 +18,11 @@ public class SharedPreferencesManager {
     private static final String NOT_FIRST = "no";
     private static final String USERID = "user_id";
     private static final String MOTD = "motd";
-
+    private static final String PERSONAL_SUMMARY = "psummary";
+    private static final String PHONE_NO = "phone_no";
+    private static final String LINKEDIN = "linkedin";
+    private static final String FACEBOOK = "facebook";
+    private static final String TWITTER = "twitter";
 
 
     private SharedPreferencesManager(Context context) {
@@ -32,8 +36,7 @@ public class SharedPreferencesManager {
         return mInstance;
     }
 
-    public boolean UserLogin(String username,String password, String notfirst)
-    {
+    public boolean UserLogin(String username, String password, String notfirst) {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(USERNAME, username);
@@ -45,8 +48,7 @@ public class SharedPreferencesManager {
     }
 
 
-    public boolean UserSession(String userID)
-    {
+    public boolean UserSession(String userID) {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(USERID, userID);
@@ -55,8 +57,7 @@ public class SharedPreferencesManager {
         return true;
     }
 
-    public boolean MOTD(String motd)
-    {
+    public boolean MOTD(String motd) {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(MOTD, motd);
@@ -65,13 +66,17 @@ public class SharedPreferencesManager {
         return true;
     }
 
-    public boolean UserProfileDetails(String displayName, String email, String imageUrl)
-    {
+    public boolean UserProfileDetails(String displayName, String email, String imageUrl, String personalSummary, String phone_number, String linkedin, String facebook, String twitter) {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(DISPLAYNAME, displayName);
         editor.putString(EMAIL, email);
         editor.putString(IMAGEURL, imageUrl);
+        editor.putString(PERSONAL_SUMMARY, personalSummary);
+        editor.putString(PHONE_NO, phone_number);
+        editor.putString(LINKEDIN, linkedin);
+        editor.putString(FACEBOOK, facebook);
+        editor.putString(TWITTER, twitter);
         editor.apply();
 
         return true;
@@ -80,7 +85,7 @@ public class SharedPreferencesManager {
     public boolean isLoggedIn() {
 
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        if(sharedPreferences.getString(USERNAME,null)!=null){
+        if (sharedPreferences.getString(USERNAME, null) != null) {
             return true;
         }
         return false;
@@ -92,60 +97,91 @@ public class SharedPreferencesManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.clear();
-        editor.putString(NOT_FIRST,"yes");
+        editor.putString(NOT_FIRST, "yes");
         editor.apply();
         return true;
     }
 
-    public String getUsername(){
-        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+    public String getUsername() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
-        return sharedPreferences.getString(USERNAME,null);
+        return sharedPreferences.getString(USERNAME, null);
     }
 
-    public String getPassword(){
-        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+    public String getPassword() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
-        return sharedPreferences.getString(PASSWORD,null);
+        return sharedPreferences.getString(PASSWORD, null);
     }
 
-    public String getNotFirst(){
-        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+    public String getNotFirst() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
-        return sharedPreferences.getString(NOT_FIRST,null);
+        return sharedPreferences.getString(NOT_FIRST, null);
     }
 
     public String getFullname() {
-        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         return sharedPreferences.getString(DISPLAYNAME, null);
     }
 
     public String getUSERID() {
-        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         return sharedPreferences.getString(USERID, null);
     }
 
     public String getEmail() {
-        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         return sharedPreferences.getString(EMAIL, null);
     }
 
-    public String getImageurl(){
-        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+    public String getImageurl() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         return sharedPreferences.getString(IMAGEURL, null);
     }
 
-    public String getMOTD(){
-        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+    public String getMOTD() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         return sharedPreferences.getString(MOTD, null);
     }
 
+    public String getPersonalSummary() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
+        return sharedPreferences.getString(PERSONAL_SUMMARY, null);
+    }
+
+
+    public String getPhoneNo() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+        return sharedPreferences.getString(PHONE_NO, null);
+    }
+
+
+    public String getLinkedin() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+        return sharedPreferences.getString(LINKEDIN, null);
+    }
+
+
+    public String getFacebook() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+        return sharedPreferences.getString(FACEBOOK, null);
+    }
+
+    public String getTwitter() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+        return sharedPreferences.getString(TWITTER, null);
+    }
 
 
 }

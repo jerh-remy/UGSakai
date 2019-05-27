@@ -70,7 +70,7 @@ public class SiteFragment extends Fragment implements CourseSiteAdapter.onCourse
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
-            retrieveCourseSites();
+            loadCourseSites();
         });
 
         recyclerView = view.findViewById(R.id.course_site_list);

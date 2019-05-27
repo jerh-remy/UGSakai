@@ -11,6 +11,6 @@ public interface AnnouncementInterface {
     @GET("announcement/site/{id}.json?n=100&d=100")
     Call<Announcement> getSiteAnnouncement(@Path("id") String site_id);
 
-    @GET("announcement/motd.json")
+    @GET("announcement/motd.json?n=100&d=100")
     Call<Announcement> getMOTD();
 }

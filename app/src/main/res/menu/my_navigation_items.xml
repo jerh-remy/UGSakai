@@ -9,10 +9,10 @@
         android:id="@+id/action_sites"
         android:icon="@drawable/ic_sites"
         android:title="@string/nav_sites" />
-    <item
+   <!-- <item
         android:id="@+id/action_notifications"
         android:icon="@drawable/ic_notifications"
-        android:title="@string/nav_notifications" />
+        android:title="@string/nav_notifications" />-->
    <!-- <item
         android:id="@+id/action_chat"
         android:icon="@drawable/ic_chat"
