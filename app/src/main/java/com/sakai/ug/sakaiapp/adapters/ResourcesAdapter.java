@@ -102,7 +102,7 @@ public class ResourcesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private void bindFileHolder(FileViewHolder holder, ContentCollection collection) {
         holder.textViewResource.setText(collection.getTitle());
-        holder.image.setImageDrawable(context.getResources().getDrawable(R.drawable.pdf));
+        holder.image.setImageDrawable(context.getResources().getDrawable(R.drawable.twotone_insert_drive_file_24px));
         urldownload = collection.getUrl();
 
         //resourcesViewHolder.textViewURL.setText(urldownload);

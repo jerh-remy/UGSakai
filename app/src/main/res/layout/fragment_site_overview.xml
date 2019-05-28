@@ -127,7 +127,7 @@
                 android:padding="5dp"
                 android:drawableTop="@drawable/ic_students_dp"
                 android:gravity="center"
-                android:text="66 students"
+                android:text=""
                 android:textSize="16sp"
                 android:textStyle="normal"/>
 

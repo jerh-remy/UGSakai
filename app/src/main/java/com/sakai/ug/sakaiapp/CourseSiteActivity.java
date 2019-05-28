@@ -45,11 +45,8 @@ import retrofit2.Response;
 
 public class CourseSiteActivity extends AppCompatActivity {
 
-    //roster stuff
-    ApiClient apiClient = new ApiClient();
-    RosterInterface rosterInterface;
-    Roster roster = new Roster();
-    int class_size;
+
+    Bundle bundle1;
 
     //declaring all course site fragments
     final SiteOverviewFragment siteOverviewFragment = new SiteOverviewFragment();
@@ -91,33 +88,12 @@ public class CourseSiteActivity extends AppCompatActivity {
         final String instructor = getIntent().getStringExtra("SITE_INSTRUCTOR");
 
 
-
-        //finding roster size
-        rosterInterface = apiClient.getApiClient(getApplicationContext()).create(RosterInterface.class);
-        Call<Roster> rosterCall = rosterInterface.getRoster(siteid);
-        rosterCall.enqueue(new Callback<Roster>() {
-            @Override
-            public void onResponse(Call<Roster> call, Response<Roster> response) {
-                roster = response.body();
-                if (roster != null) {
-                    class_size = roster.getRosterCollection().size();
-                }
-                Log.d("roster worked?", "onResponse: " + class_size);
-            }
-
-            @Override
-            public void onFailure(Call<Roster> call, Throwable t) {
-                Log.d("Roster failure", " " + t.getMessage());
-            }
-        });
-
         //passing extras into bundle to be shared among all course sites
-        Bundle bundle1 = new Bundle();
+        bundle1 = new Bundle();
         bundle1.putString("COURSE_ID", siteid);
         bundle1.putString("COURSE_DESCRIPTION", sitedescription);
         bundle1.putString("COURSE_TITLE", sitetitle);
         bundle1.putString("COURSE_INSTRUCTOR", instructor);
-        bundle1.putInt("ROSTER_SIZE", 24);
         Log.d("bundle1", "onCreate: " + bundle1);
 
 

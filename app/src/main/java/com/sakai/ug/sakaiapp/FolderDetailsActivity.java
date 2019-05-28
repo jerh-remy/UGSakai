@@ -94,9 +94,13 @@ public class FolderDetailsActivity extends AppCompatActivity {
 
                         @Override
                         public void onSuccess(@Nullable List<ContentCollection> files) {
+                            String compareString = response.getContainer() /*+ "/" */+ response.getSiteID();
+                            Log.d(TAG, "Response: " + compareString);
+
                             if (files != null) {
                                 for (ContentCollection collection : files) {
-                                    if (collection.getUrl().contains(response.getContainer()))
+                                    Log.d(TAG, "Collection: " + collection.getUrl());
+                                    if (collection.getUrl().contains(compareString))
                                         adapter.addResourceItem(collection);
                                 }
                             } else {
@@ -121,7 +125,6 @@ public class FolderDetailsActivity extends AppCompatActivity {
         } else Log.d(TAG, "setupGrid: No extras found ");
 //        adapter.addResources(response);
     }
-
 
     class FilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private Context context;
@@ -163,7 +166,7 @@ public class FolderDetailsActivity extends AppCompatActivity {
                 ContentCollection collection = dataset.get(i);
 
                 holder.textViewResource.setText(collection.getTitle());
-                holder.image.setImageDrawable(context.getResources().getDrawable(R.drawable.pdf));
+                holder.image.setImageDrawable(context.getResources().getDrawable(R.drawable.twotone_insert_drive_file_24px));
                 urldownload = collection.getUrl();
                 //resourcesViewHolder.textViewURL.setText(urldownload);
 

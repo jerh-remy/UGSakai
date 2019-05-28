@@ -230,6 +230,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                         ContentCollection collection = new ContentCollection();
                         collection.setContainer(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CONTAINER)));
                         collection.setEntityTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.RES_TITLE)));
+                        collection.setSiteID(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.RES_SITE_ID)));
                         Log.d(TAG, "folder fetched: " + collection);
 
                         folders.add(collection);
@@ -273,7 +274,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
 
         @Override
         public void run() {
-            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_RESOURCES_QUERY, null); //new String[]{siteID}
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_RESOURCES_QUERY, new String[]{"eba67216-dd9c-4535-9a96-7c703ba0499f"}); //new String[]{siteID}
             //Log.d(TAG, "number of columns in table: " + cursor.getColumnCount());
 
             List<ContentCollection> files = new ArrayList<>(0);
@@ -507,6 +508,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         values.put(Constants.DATABASE.RES_TITLE, contentCollection.getTitle());
         values.put(Constants.DATABASE.TYPE, contentCollection.getType());
         values.put(Constants.DATABASE.CONTAINER, contentCollection.getContainer());
+        values.put(Constants.DATABASE.URL, contentCollection.getUrl());
         values.put(Constants.DATABASE.NO_OF_CHILDREN, contentCollection.getNumChildren());
         values.put(Constants.DATABASE.RES_SITE_ID, contentCollection.getSiteID());
         Log.d(TAG, "SakaiDB Resource: " + values);
@@ -549,6 +551,8 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                         ContentCollection contentCollection = new ContentCollection();
                         contentCollection.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.RES_TITLE)));
                         contentCollection.setType(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.TYPE)));
+                        contentCollection.setContainer(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CONTAINER)));
+                        contentCollection.setUrl(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.URL)));
                         contentCollection.setNumChildren(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.NO_OF_CHILDREN))));
                         Log.d(TAG, "resource fetched: " + contentCollection);
 
