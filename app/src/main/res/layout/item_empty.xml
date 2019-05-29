@@ -2,14 +2,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <ProgressBar
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="24dp"
-        android:progressTint="@color/colorPrimary"
-        android:progressTintMode="src_in"
-        android:indeterminate="true"
-        android:indeterminateBehavior="cycle"/>
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nothing to display"
+            android:textSize="24sp"
+            android:gravity="center"/>
+    </RelativeLayout>
 
 </FrameLayout>

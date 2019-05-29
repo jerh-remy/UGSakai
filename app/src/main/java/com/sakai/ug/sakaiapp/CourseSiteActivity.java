@@ -97,8 +97,6 @@ public class CourseSiteActivity extends AppCompatActivity {
         Log.d("bundle1", "onCreate: " + bundle1);
 
 
-
-
         siteOverviewFragment.setArguments(bundle1);
         profileFragment.setArguments(bundle1);
         announcementFragment.setArguments(bundle1);
@@ -133,7 +131,9 @@ public class CourseSiteActivity extends AppCompatActivity {
                 .addProfiles(new ProfileDrawerItem()
                         .withName(SharedPreferencesManager.getInstance(getApplicationContext()).getFullname())
                         .withEmail(SharedPreferencesManager.getInstance(getApplicationContext()).getEmail())
-                        .withIcon(R.drawable.profile)
+/*
+                        .withIcon(R.drawable.ic_outline_tag_faces_24px)
+*/
                         .withIdentifier(100)
                 ).withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -153,9 +153,10 @@ public class CourseSiteActivity extends AppCompatActivity {
 
         SecondaryDrawerItem s1 = new SecondaryDrawerItem().withIdentifier(2).withName("Announcements").withIcon(R.drawable.ic_announcement);
         SecondaryDrawerItem s2 = new SecondaryDrawerItem().withIdentifier(3).withName("Syllabus").withIcon(R.drawable.syllabus);
-        SecondaryDrawerItem s3 = new SecondaryDrawerItem().withIdentifier(4).withName("Resources").withIcon(R.drawable.folder);
+        SecondaryDrawerItem s3 = new SecondaryDrawerItem().withIdentifier(4).withName("Resources").withIcon(R.drawable.ic_outline_folder_open_24px);
         SecondaryDrawerItem s4 = new SecondaryDrawerItem().withIdentifier(5).withName("Assignments").withIcon(R.drawable.assignment);
         SecondaryDrawerItem s5 = new SecondaryDrawerItem().withIdentifier(6).withName("Gradebook").withIcon(R.drawable.gradebook);
+        SecondaryDrawerItem s6 = new SecondaryDrawerItem().withIdentifier(7).withName("Course Lecturer Evaluation").withIcon(R.drawable.ic_outline_show_chart_24px);
 
         //create the drawer and remember the `Drawer` result object
         final Drawer result = new DrawerBuilder()
@@ -172,7 +173,8 @@ public class CourseSiteActivity extends AppCompatActivity {
                         s2,
                         s3,
                         s4,
-                        s5
+                        s5,
+                        s6
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -207,6 +209,11 @@ public class CourseSiteActivity extends AppCompatActivity {
                             toolbar.setTitle("Gradebook");
                             fm.beginTransaction().hide(active).show(gradebookFragment).commit();
                             active = gradebookFragment;
+                        }else if (drawerItem.getIdentifier() == 7) {
+                            // load gradebook screen
+                            Intent goToCLE = new Intent(CourseSiteActivity.this, CourseLecturerEvaluationActivity.class);
+                            goToCLE.putExtras(bundle1);
+                            startActivity(goToCLE);
                         }
                         return false;
                     }

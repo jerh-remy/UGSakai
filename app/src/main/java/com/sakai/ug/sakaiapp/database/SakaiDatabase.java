@@ -21,6 +21,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.sakai.ug.sakaiapp.Question;
 import com.sakai.ug.sakaiapp.callback.AnnouncementFetchListener;
 import com.sakai.ug.sakaiapp.callback.AssignmentFetchListener;
 import com.sakai.ug.sakaiapp.callback.CourseSiteFetchListener;
@@ -43,6 +44,16 @@ import com.sakai.ug.sakaiapp.models.syllabus.Item;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.sakai.ug.sakaiapp.helper.Constants.DATABASE.CLE_SITE_ID;
+import static com.sakai.ug.sakaiapp.helper.Constants.DATABASE.CLE_TABLE_NAME;
+import static com.sakai.ug.sakaiapp.helper.Constants.DATABASE.KEY_OPTA;
+import static com.sakai.ug.sakaiapp.helper.Constants.DATABASE.KEY_OPTB;
+import static com.sakai.ug.sakaiapp.helper.Constants.DATABASE.KEY_OPTC;
+import static com.sakai.ug.sakaiapp.helper.Constants.DATABASE.KEY_OPTD;
+import static com.sakai.ug.sakaiapp.helper.Constants.DATABASE.KEY_OPTE;
+import static com.sakai.ug.sakaiapp.helper.Constants.DATABASE.KEY_QUES;
+import static com.sakai.ug.sakaiapp.helper.Constants.DATABASE.KEY_RESPONSE;
+
 /**
  * @author Filippo Engidashet
  * @version 1.0
@@ -51,6 +62,7 @@ import java.util.List;
 public class SakaiDatabase extends SQLiteOpenHelper {
 
     private static final String TAG = SakaiDatabase.class.getSimpleName();
+    private SQLiteDatabase dbase;
 
     public SakaiDatabase(Context context) {
         super(context, Constants.DATABASE.DB_NAME, null, Constants.DATABASE.DB_VERSION);
@@ -59,12 +71,16 @@ public class SakaiDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
+            dbase = db;
             db.execSQL(Constants.DATABASE.CREATE_ASSIGNMENT_TABLE_QUERY);
             db.execSQL(Constants.DATABASE.CREATE_ANNOUNCEMENT_TABLE_QUERY);
             db.execSQL(Constants.DATABASE.CREATE_SITES_TABLE_QUERY);
             db.execSQL(Constants.DATABASE.CREATE_RESOURCES_TABLE_QUERY);
             db.execSQL(Constants.DATABASE.CREATE_SYLLABUS_TABLE_QUERY);
             db.execSQL(Constants.DATABASE.CREATE_GRADEBOOK_TABLE_QUERY);
+            db.execSQL(Constants.DATABASE.CREATE_QUESTIONS_TABLE_QUERY);
+            addQuestions();
+
         } catch (SQLException ex) {
             Log.d(TAG, ex.getMessage());
         }
@@ -78,6 +94,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         db.execSQL(Constants.DATABASE.SYLLABUS_DROP_QUERY);
         db.execSQL(Constants.DATABASE.RESOURCES_DROP_QUERY);
         db.execSQL(Constants.DATABASE.GRADEBOOK_DROP_QUERY);
+        db.execSQL(Constants.DATABASE.QUESTIONS_DROP_QUERY);
         this.onCreate(db);
     }
 
@@ -104,7 +121,106 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         db.delete(Constants.DATABASE.GRADEBOOK_TABLE_NAME, null, null);
         db.delete(Constants.DATABASE.COURSE_SITE_TABLE_NAME, null, null);
         db.delete(Constants.DATABASE.SYLLABUS_TABLE_NAME, null, null);
+        db.delete(Constants.DATABASE.CLE_TABLE_NAME, null, null);
         db.close();
+    }
+
+
+    //course lecturer evaluation
+    private void addQuestions() {
+        Question q1 = new Question("A detailed course syllabus was provided at the beginning of this course", "Strongly Agree", "Agree ", "Moderately agree", "Disagree", "Strongly Disagree");
+        addQuestion(q1);
+        Question q2 = new Question("The objectives/goals and learning outcomes of the course were clear to me", "Strongly Agree", "Agree ", "Moderately agree", "Disagree", "Strongly Disagree");
+        addQuestion(q2);
+        Question q3 = new Question("In my opinion, the workload required for the course was adequate for the allocated credit hours ", "Strongly Agree", "Agree ", "Moderately agree", "Disagree", "Strongly Disagree");
+        addQuestion(q3);
+        Question q4 = new Question("Taking the course was a positive learning experience for me", "Strongly Agree", "Agree ", "Moderately agree", "Disagree", "Strongly Disagree");
+        addQuestion(q4);
+        Question q5 = new Question("Recommended textbooks and other reference lists were provided", "Strongly Agree", "Agree ", "Moderately agree", "Disagree", "Strongly Disagree");
+        addQuestion(q5);
+        Question q6 = new Question("The procedure by which student will be assessed were explained", "Strongly Agree", "Agree ", "Moderately agree", "Disagree", "Strongly Disagree");
+        addQuestion(q6);
+        Question q7 = new Question("The lecturer was firm but was fair to and treated students with respect", "Strongly Agree", "Agree ", "Moderately agree", "Disagree", "Strongly Disagree");
+        addQuestion(q7);
+        Question q8 = new Question("Useful feedback and comments on the assignment and Interim Assessments (IAs) were provided either in class or during tutorials", "Strongly Agree", "Agree ", "Moderately agree", "Disagree", "Strongly Disagree");
+        addQuestion(q8);
+        Question q9 = new Question("The lecturer was available during his/her stated hours to be consulted by the students ", "Strongly Agree", "Agree ", "Moderately agree", "Disagree", "Strongly Disagree");
+        addQuestion(q9);
+        Question q10 = new Question("The lecturer was approachable", "Strongly Agree", "Agree ", "Moderately agree", "Disagree", "Strongly Disagree");
+        addQuestion(q10);
+
+    }
+
+
+    // Adding new question
+    public void addQuestion(Question quest) {
+        ContentValues values = new ContentValues();
+        values.put(KEY_QUES, quest.getQUESTION());
+        values.put(KEY_OPTA, quest.getOPTA());
+        values.put(KEY_OPTB, quest.getOPTB());
+        values.put(KEY_OPTC, quest.getOPTC());
+        values.put(KEY_OPTD, quest.getOPTD());
+        values.put(KEY_OPTE, quest.getOPTE());
+        Log.d("question values", "addQuestion: " + values);
+        // Inserting Row
+        dbase.insert(CLE_TABLE_NAME, null, values);
+    }
+
+
+    //Adding responses
+    public void addResponse(String response, String questionID, String siteID) {
+        SQLiteDatabase dbase = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_RESPONSE, response);
+        values.put(CLE_SITE_ID, siteID);
+
+        Log.d("question responses", "addResponse: " + values);
+        // Inserting Row
+        dbase.update(CLE_TABLE_NAME, values, "id = ?", new String[]{questionID});
+    }
+
+    public List<Question> getAllQuestions() {
+        SQLiteDatabase dbase = this.getReadableDatabase();
+        List<Question> quesList = new ArrayList<Question>();
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + CLE_TABLE_NAME;
+        Cursor cursor = dbase.rawQuery(selectQuery, null);
+        Log.d(TAG, "getAllQuestions: " + cursor.getCount());
+        // looping through all rows and adding to list
+        if (cursor.getCount() > 0) {
+            try {
+                if (cursor.moveToFirst()) {
+                    do {
+                        Question quest = new Question();
+                        quest.setID(cursor.getInt(0));
+                        quest.setQUESTION(cursor.getString(1));
+                        quest.setOPTA(cursor.getString(3));
+                        quest.setOPTB(cursor.getString(4));
+                        quest.setOPTC(cursor.getString(5));
+                        quest.setOPTD(cursor.getString(6));
+                        quest.setOPTE(cursor.getString(7));
+                        quesList.add(quest);
+                    } while (cursor.moveToNext());
+                }
+            } catch (Exception e) {
+                e.getMessage();
+                Log.d(TAG, "getAllQuestions: " + cursor.getCount());
+
+            }
+        }
+
+        // return quest list
+        return quesList;
+    }
+
+    public int rowcount() {
+        int row = 0;
+        String selectQuery = "SELECT  * FROM " + CLE_TABLE_NAME;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        row = cursor.getCount();
+        return row;
     }
 
 
@@ -195,9 +311,9 @@ public class SakaiDatabase extends SQLiteOpenHelper {
 
 
     // FOLDERS
-    public void fetchFolder(String title, QueryCallback<ContentCollection> listener) {
+    public void fetchFolder(String title, String siteID, QueryCallback<ContentCollection> listener) {
         listener.onInit();
-        FolderFetcher fetcher = new FolderFetcher(title, listener, this.getWritableDatabase());
+        FolderFetcher fetcher = new FolderFetcher(title, siteID, listener, this.getWritableDatabase());
         fetcher.start();
     }
 
@@ -206,17 +322,19 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         private final QueryCallback<ContentCollection> callback;
         private final SQLiteDatabase mDb;
         private final String folderName;
+        private final String siteid;
 
 
-        public FolderFetcher(String folderName, QueryCallback<ContentCollection> callback, SQLiteDatabase db) {
+        public FolderFetcher(String folderName, String siteID, QueryCallback<ContentCollection> callback, SQLiteDatabase db) {
             this.callback = callback;
             this.mDb = db;
             this.folderName = folderName;
+            this.siteid = siteID;
         }
 
         @Override
         public void run() {
-            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_FOLDER_QUERY, new String[]{folderName});
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_FOLDER_QUERY, new String[]{folderName, siteid});
             //Log.d(TAG, "number of columns in table: " + cursor.getColumnCount());
 
             List<ContentCollection> folders = new ArrayList<>(0);
@@ -229,7 +347,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                     do {
                         ContentCollection collection = new ContentCollection();
                         collection.setContainer(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CONTAINER)));
-                        collection.setEntityTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.RES_TITLE)));
+                        collection.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.RES_TITLE)));
                         collection.setSiteID(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.RES_SITE_ID)));
                         Log.d(TAG, "folder fetched: " + collection);
 
@@ -246,7 +364,7 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                 @Override
                 public void run() {
                     if (folders.isEmpty()) {
-                        Log.d(TAG, "course site list fetched: " + folders);
+                        Log.d(TAG, "folder fetched: " + folders);
                         callback.onSuccess(null);
                     } else {
                         callback.onSuccess(folders.get(0));
@@ -262,19 +380,18 @@ public class SakaiDatabase extends SQLiteOpenHelper {
 
         private final QueryCallback<List<ContentCollection>> callback;
         private final SQLiteDatabase mDb;
-        //private final String siteID;
+        private final String siteID;
 
 
-
-        public FilesFetcher(QueryCallback<List<ContentCollection>> callback, SQLiteDatabase db) { //, String site_id
+        public FilesFetcher(QueryCallback<List<ContentCollection>> callback, SQLiteDatabase db, String courseID) { //, String site_id
             this.callback = callback;
             this.mDb = db;
-            //this.siteID = site_id;
+            this.siteID = courseID;
         }
 
         @Override
         public void run() {
-            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_RESOURCES_QUERY, new String[]{"eba67216-dd9c-4535-9a96-7c703ba0499f"}); //new String[]{siteID}
+            Cursor cursor = mDb.rawQuery(Constants.DATABASE.GET_RESOURCES_QUERY, new String[]{siteID}); //new String[]{siteID}
             //Log.d(TAG, "number of columns in table: " + cursor.getColumnCount());
 
             List<ContentCollection> files = new ArrayList<>(0);
@@ -286,9 +403,9 @@ public class SakaiDatabase extends SQLiteOpenHelper {
                         ContentCollection collection = new ContentCollection();
                         collection.setContainer(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.CONTAINER)));
                         collection.setUrl(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.URL)));
-                        // TODO: 5/27/2019 add url field to result for comparison
-                        collection.setEntityTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.RES_TITLE)));
-                        Log.d(TAG, "files fetched: " + collection);
+                        collection.setTitle(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.RES_TITLE)));
+                        collection.setType(cursor.getString(cursor.getColumnIndex(Constants.DATABASE.TYPE)));
+                        Log.d(TAG, "file fetched: " + collection.getTitle());
 
                         files.add(collection);
 
@@ -308,9 +425,9 @@ public class SakaiDatabase extends SQLiteOpenHelper {
         }
     }
 
-    public void fetchFilesFromFolder(QueryCallback<List<ContentCollection>> callback) {
+    public void fetchFilesFromFolder(QueryCallback<List<ContentCollection>> callback, String courseID) {
         callback.onInit();
-        new FilesFetcher(callback, this.getWritableDatabase()).start();
+        new FilesFetcher(callback, this.getWritableDatabase(), courseID).start();
     }
 
 

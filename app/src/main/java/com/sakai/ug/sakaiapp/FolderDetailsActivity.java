@@ -36,10 +36,12 @@ import java.util.List;
 public class FolderDetailsActivity extends AppCompatActivity {
     public static final String EXTRA_FOLDER_NAME = "EXTRA_FOLDER_NAME";
     public static final String EXTRA_FOLDER_CONTAINER = "EXTRA_FOLDER_CONTAINER";
+    public static final String EXTRA_SITE_ID = "EXTRA_SITE_ID";
 
     private SakaiDatabase sakaiDatabase;
     private static final String TAG = "FolderDetailsActivity";
     private ActivityFolderBinding binding;
+    String siteid;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,10 +71,12 @@ public class FolderDetailsActivity extends AppCompatActivity {
 
             String folderTitle = intent.getStringExtra(EXTRA_FOLDER_NAME);
             String folderContainer = intent.getStringExtra(EXTRA_FOLDER_CONTAINER);
+            siteid = intent.getStringExtra(EXTRA_SITE_ID);
+            Log.d(TAG, "site ID extra " + siteid);
             Log.d(TAG, "Folder Name: " + folderTitle);
             binding.toolbar.setTitle(folderTitle);
 
-            sakaiDatabase.fetchFolder(folderTitle, new QueryCallback<ContentCollection>() {
+            sakaiDatabase.fetchFolder(folderTitle, siteid, new QueryCallback<ContentCollection>() {
                 @Override
                 public void onError(@Nullable String errorMessage) {
                     Log.d(TAG, "onError: " + errorMessage);
@@ -80,7 +84,7 @@ public class FolderDetailsActivity extends AppCompatActivity {
 
                 @Override
                 public void onSuccess(@Nullable ContentCollection response) {
-                    Log.d(TAG, "onSuccess: " + response);
+                    //Log.d(TAG, "onSuccess: " + response.getContainer());
                     if (response == null) {
                         Log.d(TAG, "onSuccess: response is null");
                         return;
@@ -94,20 +98,20 @@ public class FolderDetailsActivity extends AppCompatActivity {
 
                         @Override
                         public void onSuccess(@Nullable List<ContentCollection> files) {
-                            String compareString = response.getContainer() /*+ "/" */+ response.getSiteID();
+                            String compareString = folderContainer + folderTitle + "/";
                             Log.d(TAG, "Response: " + compareString);
 
                             if (files != null) {
                                 for (ContentCollection collection : files) {
-                                    Log.d(TAG, "Collection: " + collection.getUrl());
-                                    if (collection.getUrl().contains(compareString))
+                                    Log.d(TAG, "Collection: " + collection.getUrl() + " " + collection.getType());
+                                    if (collection.getUrl().contains(compareString) && !(collection.getUrl().endsWith("/")))
                                         adapter.addResourceItem(collection);
                                 }
                             } else {
                                 Log.d(TAG, "onSuccess: Response is null");
                             }
                         }
-                    });
+                    }, siteid);
 
                 }
 

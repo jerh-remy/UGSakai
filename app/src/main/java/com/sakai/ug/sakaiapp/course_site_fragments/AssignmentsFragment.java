@@ -1,9 +1,6 @@
 package com.sakai.ug.sakaiapp.course_site_fragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,11 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.sakai.ug.sakaiapp.APIservices.ApiClient;
 import com.sakai.ug.sakaiapp.APIservices.AssignmentInterface;
-import com.sakai.ug.sakaiapp.APIservices.LoginSessionInterface;
 import com.sakai.ug.sakaiapp.R;
 import com.sakai.ug.sakaiapp.adapters.AssignmentAdapter;
 import com.sakai.ug.sakaiapp.callback.AssignmentFetchListener;
@@ -30,8 +25,6 @@ import com.sakai.ug.sakaiapp.helper.Utils;
 import com.sakai.ug.sakaiapp.models.assignment.Assignment;
 import com.sakai.ug.sakaiapp.models.assignment.AssignmentCollection;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 import retrofit2.Call;
@@ -64,7 +57,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
                              @Nullable Bundle savedInstanceState) {
         Bundle bundle2 = this.getArguments();
         courseid = bundle2.getString("COURSE_ID");
-        Log.d("SiteIDSakai(Assignment)", "Course id: " + courseid );
+        Log.d("SiteIDSakai(Assignment)", "Course id: " + courseid);
 
         View view = inflater.inflate(R.layout.fragment_assignments, container, false);
 
@@ -120,17 +113,20 @@ public class AssignmentsFragment extends Fragment implements AssignmentAdapter.o
                 assignment = response.body();
                 //Log.d("Response body", "onResponse: " + assignment.getAssignmentCollection().get(0).getEntityId());
 
-                for (int i = 0; i < assignment.getAssignmentCollection().size(); i++) {
-                    assignmentCollection = assignment.getAssignmentCollection().get(i);
+                if (assignment != null) {
+                    for (int i = 0; i < assignment.getAssignmentCollection().size(); i++) {
+                        assignmentCollection = assignment.getAssignmentCollection().get(i);
 
-                    SaveIntoDatabase task = new SaveIntoDatabase();
-                    task.execute(assignmentCollection);
+                        SaveIntoDatabase task = new SaveIntoDatabase();
+                        task.execute(assignmentCollection);
 
-                    assignmentAdapter.addAssignment(assignmentCollection);
+                        assignmentAdapter.addAssignment(assignmentCollection);
+                    }
+
 
                 }
-               // assignmentAdapter = new AssignmentAdapter(assignment, getContext(), AssignmentsFragment.this::onItemClick);
-               // recyclerView.setAdapter(assignmentAdapter);
+                // assignmentAdapter = new AssignmentAdapter(assignment, getContext(), AssignmentsFragment.this::onItemClick);
+                // recyclerView.setAdapter(assignmentAdapter);
             }
 
             @Override

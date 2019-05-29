@@ -20,11 +20,9 @@ import com.sakai.ug.sakaiapp.callback.GradebookFetchListener;
 import com.sakai.ug.sakaiapp.database.SakaiDatabase;
 import com.sakai.ug.sakaiapp.helper.Utils;
 import com.sakai.ug.sakaiapp.models.GradebookModel;
-import com.sakai.ug.sakaiapp.models.announcement.AnnouncementCollection;
 import com.sakai.ug.sakaiapp.models.gradebook.Assignment;
 import com.sakai.ug.sakaiapp.models.gradebook.Gradebook;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -101,15 +99,18 @@ public class GradebookFragment extends Fragment implements GradebookFetchListene
                 gradebook = response.body();
                 //Log.d("Response body", "onResponse: " + gradebook.getAssignments().get(0).getItemName());
 
-                for (int i = 0; i < gradebook.getAssignments().size(); i++) {
-                    assignment = gradebook.getAssignments().get(i);
-                    assignment.setSiteID(courseid);
+                if (gradebook != null) {
+                    for (int i = 0; i < gradebook.getAssignments().size(); i++) {
+                        assignment = gradebook.getAssignments().get(i);
+                        assignment.setSiteID(courseid);
 
-                    SaveIntoDatabase task = new SaveIntoDatabase();
-                    task.execute(assignment);
+                        SaveIntoDatabase task = new SaveIntoDatabase();
+                        task.execute(assignment);
 
-                    gradebookAdapter.addGrade(assignment);
+                        gradebookAdapter.addGrade(assignment);
+                    }
                 }
+
             }
 
             @Override

@@ -17,4 +17,5 @@
     <string name="student_id">10568557</string>
     <string name="student_fullname">Jeremy Selorm Offori</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="str_next">NEXT</string>
 </resources>

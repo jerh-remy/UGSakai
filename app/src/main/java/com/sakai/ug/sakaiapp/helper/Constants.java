@@ -21,7 +21,7 @@ public class Constants {
     public static final class DATABASE {
 
         public static final String DB_NAME = "sakaidatabase";
-        public static final int DB_VERSION = 15;
+        public static final int DB_VERSION = 16;
 
         //tables
         public static final String COURSE_SITE_TABLE_NAME = "courseSite";
@@ -30,6 +30,18 @@ public class Constants {
         public static final String SYLLABUS_TABLE_NAME = "syllabus";
         public static final String RESOURCES_TABLE_NAME = "resources";
         public static final String GRADEBOOK_TABLE_NAME = "gradebook";
+        public static final String CLE_TABLE_NAME = "course_lecturer_evaluation";
+
+        //course lecturer evaluation columns
+        public static final String KEY_ID = "id";
+        public static final String KEY_QUES = "question";
+        public static final String KEY_RESPONSE = "response"; //correct option
+        public static final String KEY_OPTA = "opta"; //option a
+        public static final String KEY_OPTB = "optb"; //option b
+        public static final String KEY_OPTC = "optc"; //option c
+        public static final String KEY_OPTD = "optd"; //option d
+        public static final String KEY_OPTE = "opte"; //option e
+        public static final String CLE_SITE_ID = "siteid"; //course id
 
 
         //course site table columns
@@ -83,6 +95,8 @@ public class Constants {
         public static final String SYLLABUS_DROP_QUERY = "DROP TABLE IF EXISTS " + SYLLABUS_TABLE_NAME;
         public static final String RESOURCES_DROP_QUERY = "DROP TABLE IF EXISTS " + RESOURCES_TABLE_NAME;
         public static final String GRADEBOOK_DROP_QUERY = "DROP TABLE IF EXISTS " + GRADEBOOK_TABLE_NAME;
+        public static final String QUESTIONS_DROP_QUERY = "DROP TABLE IF EXISTS " + CLE_TABLE_NAME;
+
 
         //get queries
         public static final String GET_ASSIGNMENTS_QUERY = "SELECT * FROM " + ASSIGNMENT_TABLE_NAME + " WHERE " + ASS_SITE_ID + " = ?";
@@ -90,7 +104,7 @@ public class Constants {
         public static final String GET_COURSE_SITE_QUERY = "SELECT * FROM " + COURSE_SITE_TABLE_NAME;
         public static final String GET_SYLLABUS_QUERY = "SELECT * FROM " + SYLLABUS_TABLE_NAME + " WHERE " + SYL_SITE_ID + " = ?";
         public static final String GET_RESOURCES_QUERY = "SELECT * FROM " + RESOURCES_TABLE_NAME + " WHERE " + RES_SITE_ID + " = ?";
-        public static final String GET_FOLDER_QUERY = "SELECT * FROM " + RESOURCES_TABLE_NAME + " WHERE " + RES_TITLE + " = ?";
+        public static final String GET_FOLDER_QUERY = "SELECT * FROM " + RESOURCES_TABLE_NAME + " WHERE " + RES_TITLE + " = ? AND " + RES_SITE_ID + " = ?";
         public static final String GET_GRADES_QUERY = "SELECT * FROM " + GRADEBOOK_TABLE_NAME + " WHERE " + GRD_SITE_ID + " = ?";
 
 
@@ -98,8 +112,12 @@ public class Constants {
         public static final String GET_RECENT_ANNOUNCEMENTS_QUERY = "SELECT * FROM announcement LEFT JOIN courseSite ON announcement.site_id = courseSite.siteId ORDER BY created_on DESC LIMIT 5";
 
 
-
         //create table queries
+        public static final String CREATE_QUESTIONS_TABLE_QUERY = "CREATE TABLE " + CLE_TABLE_NAME + " ( "
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_QUES
+                + " TEXT, " + KEY_RESPONSE + " TEXT, " + KEY_OPTA + " TEXT, "
+                + KEY_OPTB + " TEXT, " + KEY_OPTC + " TEXT, " + KEY_OPTD + " TEXT, " + KEY_OPTE + " TEXT," + CLE_SITE_ID + ")";
+
         public static final String CREATE_ASSIGNMENT_TABLE_QUERY = "CREATE TABLE " + ASSIGNMENT_TABLE_NAME + "" +
                 "(" + ASSIGNMENT_ID + " TEXT PRIMARY KEY not null," +
                 ASS_TITLE + " TEXT not null," +

@@ -131,15 +131,16 @@ public class ResourcesFragment extends Fragment implements ResourceFetchListener
                     contentCollection.setSiteID(courseid);
                     contentCollection.setSiteTitle(siteTitle);
 
-                    boolean isFolder = contentCollection.getUrl().endsWith("/");
-                    Log.d(TAG, "onResponse: " + isFolder);
+
+                    boolean rootResources = contentCollection.getContainer().endsWith(courseid + "/");
+                    Log.d(TAG, "onResponse: " + rootResources);
 
 
 
                     SaveIntoDatabase task = new SaveIntoDatabase();
                     task.execute(contentCollection);
 
-                    adapter.addResource(contentCollection);
+                    if(rootResources) adapter.addResource(contentCollection);
 
                 }
 

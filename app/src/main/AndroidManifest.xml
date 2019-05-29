@@ -42,6 +42,8 @@
         <activity android:name=".course_site_details.AnnouncementDetailActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".FolderDetailsActivity" />
+        <activity android:name=".ResponseSubmittedActivity" />
+        <activity android:name=".CourseLecturerEvaluationActivity" />
 
 
     </application>

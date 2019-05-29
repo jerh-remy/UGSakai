@@ -38,14 +38,24 @@ public class ResourcesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final int TYPE_EMPTY = -1;
     private static final int TYPE_FILE = 0;
     private static final int TYPE_FOLDER = 1;
+    //private static final int TYPE_NOT_ROOT_FOLDER = 2;
     private LayoutInflater inflater;
 
     @Override
     public int getItemViewType(int position) {
-        if (resourcesList.isEmpty()) return TYPE_EMPTY;
-        else if (resourcesList.get(position).getUrl().endsWith("/")) return TYPE_FOLDER;
-        return TYPE_FILE;
+
+
+        if (resourcesList.isEmpty()) {
+            return TYPE_EMPTY;
+        } else if (resourcesList.get(position).getType().equals("collection") &&
+                resourcesList.get(position).getContainer().endsWith(resourcesList.get(position).getSiteID() + "/")) {
+            return TYPE_FOLDER;
+        } else
+            return TYPE_FILE;
     }
+
+    /*if(!(resourcesList.get(position).getUrl().endsWith("/")) &&
+                    resourcesList.get(position).getContainer().endsWith(resourcesList.get(position).getSiteID() + "/")) {*/
 
     public ResourcesAdapter(Context context) {
         this.context = context;
@@ -65,8 +75,6 @@ public class ResourcesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             default:
                 return new FolderViewHolder(inflater.inflate(R.layout.item_folder, viewGroup, false));
         }
-//        View view = inflater.inflate(R.layout.item_resource, null);
-//        return new ResourcesViewHolder(view);
 
     }
 
@@ -74,7 +82,7 @@ public class ResourcesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int i) {
         switch (getItemViewType(i)) {
             case TYPE_EMPTY:
-                bindEmptyViewHolder((EmptyViewHolder)holder);
+                bindEmptyViewHolder((EmptyViewHolder) holder);
                 break;
             case TYPE_FILE:
                 bindFileHolder((FileViewHolder) holder, resourcesList.get(i));
@@ -95,6 +103,7 @@ public class ResourcesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             Bundle bundle = new Bundle(0);
             bundle.putString(FolderDetailsActivity.EXTRA_FOLDER_NAME, collection.getEntityTitle());
             bundle.putString(FolderDetailsActivity.EXTRA_FOLDER_CONTAINER, collection.getContainer());
+            bundle.putString(FolderDetailsActivity.EXTRA_SITE_ID, collection.getSiteID());
             intent.putExtras(bundle);
             context.startActivity(intent);
         });
@@ -204,21 +213,21 @@ public class ResourcesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return resourcesList.isEmpty() ? 1 : resourcesList.size();
     }
 
-    class ResourcesViewHolder extends RecyclerView.ViewHolder {
+class ResourcesViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewResource, textViewURL;
-        ImageView image;
-        ImageButton dloadmynote;
+    TextView textViewResource, textViewURL;
+    ImageView image;
+    ImageButton dloadmynote;
 
-        public ResourcesViewHolder(@NonNull View itemView) {
-            super(itemView);
+    public ResourcesViewHolder(@NonNull View itemView) {
+        super(itemView);
 
-            textViewResource = itemView.findViewById(R.id.textViewResource);
-            //textViewURL = itemView.findViewById(R.id.textViewUrl);
-            image = itemView.findViewById(R.id.image);
-            dloadmynote = itemView.findViewById(R.id.dloadnote);
-        }
+        textViewResource = itemView.findViewById(R.id.textViewResource);
+        //textViewURL = itemView.findViewById(R.id.textViewUrl);
+        image = itemView.findViewById(R.id.image);
+        dloadmynote = itemView.findViewById(R.id.dloadnote);
     }
+}
 
     public void addResource(ContentCollection contentCollection) {
         resourcesList.add(contentCollection);
@@ -232,38 +241,38 @@ public class ResourcesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
 
-    public class EmptyViewHolder extends RecyclerView.ViewHolder {
+public class EmptyViewHolder extends RecyclerView.ViewHolder {
 
-        public EmptyViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
+    public EmptyViewHolder(@NonNull View itemView) {
+        super(itemView);
     }
+}
 
-    public class FileViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewResource, textViewURL;
-        ImageView image;
-        ImageButton dloadmynote;
+public class FileViewHolder extends RecyclerView.ViewHolder {
+    TextView textViewResource, textViewURL;
+    ImageView image;
+    ImageButton dloadmynote;
 
-        public FileViewHolder(@NonNull View itemView) {
-            super(itemView);
-            textViewResource = itemView.findViewById(R.id.textViewResource);
-            //textViewURL = itemView.findViewById(R.id.textViewUrl);
-            image = itemView.findViewById(R.id.image);
-            dloadmynote = itemView.findViewById(R.id.dloadnote);
-        }
+    public FileViewHolder(@NonNull View itemView) {
+        super(itemView);
+        textViewResource = itemView.findViewById(R.id.textViewResource);
+        //textViewURL = itemView.findViewById(R.id.textViewUrl);
+        image = itemView.findViewById(R.id.image);
+        dloadmynote = itemView.findViewById(R.id.dloadnote);
     }
+}
 
-    public class FolderViewHolder extends RecyclerView.ViewHolder {
-        TextView foldername;
-        ImageView folderimage;
+public class FolderViewHolder extends RecyclerView.ViewHolder {
+    TextView foldername;
+    ImageView folderimage;
 
-        public FolderViewHolder(@NonNull View itemView) {
-            super(itemView);
+    public FolderViewHolder(@NonNull View itemView) {
+        super(itemView);
 
-            foldername = itemView.findViewById(R.id.foldername);
-            folderimage = itemView.findViewById(R.id.image_folder);
+        foldername = itemView.findViewById(R.id.foldername);
+        folderimage = itemView.findViewById(R.id.image_folder);
 
-        }
     }
+}
 
 }
